@@ -1,17 +1,20 @@
 package me.soo.helloworld.service;
 
+import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
-import me.soo.helloworld.model.User;
+import me.soo.helloworld.model.user.User;
+import me.soo.helloworld.model.user.UserLoginInfo;
 import me.soo.helloworld.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpSession;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
@@ -35,5 +38,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isUserIdDuplicate(String userId) {
         return userRepository.isUserIdDuplicate(userId);
+    }
+
+    @Override
+    public void loginRequest(UserLoginInfo userLoginInfo, HttpSession httpSession) {
+        if (httpSession.getAttribute("userId") != null) {
+            throw new DuplicateRequestException("해당 유저는 이미 로그인 되어 있습니다.");
+        }
+
+        if (!userRepository.isRegisteredUser(userLoginInfo)) {
+            throw new IllegalArgumentException("해당 유저는 존재하지 않습니다.");
+        }
+
+        httpSession.setAttribute("userId", userLoginInfo.getUserId());
+    }
+
+    @Override
+    public void logoutRequest(HttpSession httpSession) {
+        httpSession.invalidate();
     }
 }

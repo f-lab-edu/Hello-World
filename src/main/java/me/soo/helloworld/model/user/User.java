@@ -1,4 +1,4 @@
-package me.soo.helloworld.model;
+package me.soo.helloworld.model.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;

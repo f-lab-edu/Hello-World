@@ -1,29 +1,24 @@
-package me.soo.helloworld.service;
+package me.soo.helloworld.mapper;
 
-import me.soo.helloworld.model.User;
+import me.soo.helloworld.model.user.User;
+import me.soo.helloworld.model.user.UserLoginInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
-class UserServiceImplTest {
+class UserMapperTest {
     User testUser;
+    UserLoginInfo userLoginInfo1;
+    UserLoginInfo userLoginInfo2;
 
     @Autowired
-    UserService userService;
-
-    @Autowired
-    BCryptPasswordEncoder passwordEncoder;
+    UserMapper userMapper;
 
     @BeforeEach
     public void setUp() {
@@ -38,17 +33,14 @@ class UserServiceImplTest {
                 "Newcastle Upon Tyne",
                 ""
         );
+        userLoginInfo1 = new UserLoginInfo(testUser.getUserId(), testUser.getPassword());
+        userLoginInfo2 = new UserLoginInfo("msugo1045", "Gomsu1045!0$%");
     }
 
     @Test
-    public void insertUserServiceTest() {
-
-        userService.insertUser(testUser);
-    }
-
-    @Test
-    public void duplicateUserIdException() {
-        userService.isUserIdDuplicate(testUser.getUserId());
-
+    public void registeredUserCheckTest() {
+        userMapper.insertUser(testUser);
+        assertTrue(userMapper.isRegisteredUser(userLoginInfo1));
+        assertFalse(userMapper.isRegisteredUser(userLoginInfo2));
     }
 }

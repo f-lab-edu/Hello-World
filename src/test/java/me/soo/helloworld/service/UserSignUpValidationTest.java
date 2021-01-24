@@ -1,12 +1,9 @@
-package me.soo.helloworld.model;
+package me.soo.helloworld.service;
 
+import me.soo.helloworld.model.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.dao.DuplicateKeyException;
-
 import javax.validation.*;
 import java.sql.Date;
 import java.util.Set;
@@ -14,8 +11,6 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserSignUpValidationTest {
-    private static final Logger logger = LoggerFactory.getLogger(UserSignUpValidationTest.class);
-
     private Validator validator;
 
     private User getUserWithVariousName(String name) {
