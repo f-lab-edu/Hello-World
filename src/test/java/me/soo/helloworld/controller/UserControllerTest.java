@@ -74,7 +74,8 @@ class UserControllerTest {
     }
 
     @Test
-    public void duplicateIdCheckTest() throws Exception {
+    @DisplayName("이미 등록되어 있는 아이디일 경우 Http Status Code 409(Conflict)를 리턴합니다.")
+    public void duplicateIdCheckTestWithDuplicateID() throws Exception {
         String content = objectMapper.writeValueAsString(testUser);
 
         mockMvc.perform(post("/users/signup")
@@ -82,12 +83,22 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 
-        mockMvc.perform(get("/users/idCheck")
+        mockMvc.perform(get("/users/idcheck")
                 .param("userId", "gomsu1045"))
                 .andDo(print())
                 .andExpect(status().isConflict());
     }
 
+    @Test
+    @DisplayName("등록되어 있는 ID가 아닌 경우 Http Status Code 200(Ok)를 리턴합니다.")
+    public void duplicateIdCheckTestWithNoDuplicateId() throws Exception {
+        String content = objectMapper.writeValueAsString(testUser);
+        mockMvc.perform(get("/users/idcheck")
+                .param("userId", "gomsu1045"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+    }
 
     @Test
     public void userLogin() throws Exception {
@@ -104,5 +115,6 @@ class UserControllerTest {
         // 2. Login fail.
         // 2-1) already login.
         // 2-2) wrong id.
-    }
+
+
 }

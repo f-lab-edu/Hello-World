@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import static me.soo.helloworld.util.HttpResponses.*;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -20,16 +22,16 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<Void> userSignUp(@Valid @RequestBody User user) {
-        userService.insertUser(user);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        userService.userSignUp(user);
+        return HTTP_RESPONSE_CREATED;
     }
 
-    @GetMapping("/idCheck")
+    @GetMapping("/idcheck")
     public ResponseEntity<Void> isUserIdDuplicate(@RequestParam String userId) {
         if (userService.isUserIdDuplicate(userId)) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return HTTP_RESPONSE_CONFLICT;
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return HTTP_RESPONSE_OK;
     }
 
     @PostMapping("/login")

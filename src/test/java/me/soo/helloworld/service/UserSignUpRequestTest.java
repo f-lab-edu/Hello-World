@@ -47,14 +47,13 @@ class UserSignUpRequestTest {
     }
 
     @Test
-    public void insertUserServiceTest() {
+    public void loginUserServiceTest() {
         userService.insertUser(testUser);
     }
 
 
-    // create a failed case
     @Test
     public void duplicateUserIdException() {
         userService.isUserIdDuplicate(testUser.getUserId());
     }
-    }
+}
