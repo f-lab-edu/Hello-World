@@ -15,7 +15,7 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public void insertUser(User user) {
+    public void userSignUp(User user) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         User encodedUser = User.builder()
                 .userId(user.getUserId())
