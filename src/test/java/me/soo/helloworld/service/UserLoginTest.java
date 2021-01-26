@@ -66,8 +66,6 @@ public class UserLoginTest {
     @Test
     @DisplayName("로그인 된 회원을 로그아웃 시키는데 성공합니다.")
     public void successLogoutRequest() {
-        System.out.println(httpSession.getId());
-        httpSession.setAttribute("userId", testUser.getUserId());
         userService.logoutRequest(httpSession);
     }
 }

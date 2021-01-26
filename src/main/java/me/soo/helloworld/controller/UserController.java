@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserLoginInfo;
 import me.soo.helloworld.service.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,15 +38,15 @@ public class UserController {
                                           HttpSession httpSession) {
         try {
             userService.loginRequest(userLoginInfo, httpSession);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return HTTP_RESPONSE_OK;
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return HTTP_RESPONSE_UNAUTHORIZED;
         }
     }
 
     @GetMapping("/logout")
     public ResponseEntity<Void> userLogout(HttpSession httpSession) {
         userService.logoutRequest(httpSession);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return HTTP_RESPONSE_NO_CONTENT;
     }
 }

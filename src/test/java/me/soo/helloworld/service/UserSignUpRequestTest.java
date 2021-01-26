@@ -1,38 +1,38 @@
 package me.soo.helloworld.service;
 
-import com.sun.jdi.request.DuplicateRequestException;
 import me.soo.helloworld.model.user.User;
-import me.soo.helloworld.model.user.UserLoginInfo;
+import me.soo.helloworld.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.servlet.http.HttpSession;
 import java.sql.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.MatcherAssert.*;
+import static org.mockito.Mockito.*;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class UserSignUpRequestTest {
+    @Mock
     User testUser;
 
-    @Autowired
-    UserService userService;
+    @InjectMocks
+    UserServiceImpl userService;
 
-    @Autowired
+    @Mock
+    UserRepository userRepository;
+
+    @Mock
     BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
-    HttpSession httpSession;
-
     @BeforeEach
-    public void createUsers() {
+    public void setUp() {
         testUser = new User(
                 "Soo",
                 "Bakery",
@@ -47,13 +47,25 @@ class UserSignUpRequestTest {
     }
 
     @Test
-    public void loginUserServiceTest() {
-        userService.insertUser(testUser);
+    public void insertUserServiceTest() {
+        userService.userSignUp(testUser);
     }
 
+    @Test
+    @DisplayName("조회한 아이디가 DB에 존재하지 않는 경우 false를 리턴합니다.")
+    public void duplicateUserIdExceptionFalse() {
+        when(userRepository.isUserIdDuplicate(testUser.getUserId())).thenReturn(false);
+        assertThat(userService.isUserIdDuplicate(testUser.getUserId()), is(false));
+
+        userRepository.isUserIdDuplicate(testUser.getUserId());
+    }
 
     @Test
-    public void duplicateUserIdException() {
-        userService.isUserIdDuplicate(testUser.getUserId());
+    @DisplayName("조회한 아이디가 DB에 존재하는 경우 true를 리턴합니다.")
+    public void duplicateUserIdExceptionTrue() {
+        when(userRepository.isUserIdDuplicate(testUser.getUserId())).thenReturn(true);
+        assertThat(userService.isUserIdDuplicate(testUser.getUserId()), is(true));
+
+        userRepository.isUserIdDuplicate(testUser.getUserId());
     }
 }
