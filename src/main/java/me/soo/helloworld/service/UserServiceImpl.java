@@ -3,7 +3,7 @@ package me.soo.helloworld.service;
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.model.User;
 import me.soo.helloworld.repository.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import me.soo.helloworld.util.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,7 +12,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void userSignUp(User user) {
