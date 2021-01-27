@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserLoginInfo;
 import me.soo.helloworld.repository.UserRepository;
+import me.soo.helloworld.util.PasswordEncoder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +39,7 @@ class UserControllerTest {
     ObjectMapper objectMapper;
 
     @Autowired
-    BCryptPasswordEncoder passwordEncoder;
+    PasswordEncoder passwordEncoder;
 
     @Autowired
     MockMvc mockMvc;
@@ -67,7 +67,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("회원가입 요청에 성공시 HTTP Status Code 201(Created)를 리턴합니다.")
+    @DisplayName("회원가입에 성공할 경우 Http Status Code 201(Created)를 리턴합니다.")
     public void userSignUpController() throws Exception {
         String content = objectMapper.writeValueAsString(testUser);
 

@@ -2,6 +2,7 @@ package me.soo.helloworld.service;
 
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.repository.UserRepository;
+import me.soo.helloworld.util.PasswordEncoder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.Date;
 
@@ -29,7 +29,7 @@ class UserSignUpRequestTest {
     UserRepository userRepository;
 
     @Mock
-    BCryptPasswordEncoder passwordEncoder;
+    PasswordEncoder passwordEncoder;
 
     @BeforeEach
     public void setUp() {

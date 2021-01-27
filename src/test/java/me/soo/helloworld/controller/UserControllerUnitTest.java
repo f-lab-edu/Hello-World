@@ -4,21 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserLoginInfo;
 import me.soo.helloworld.repository.UserRepository;
-import me.soo.helloworld.service.UserLoginTest;
 import me.soo.helloworld.service.UserService;
-import me.soo.helloworld.service.UserServiceImpl;
+import me.soo.helloworld.util.PasswordEncoder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -49,8 +46,8 @@ public class UserControllerUnitTest {
     @MockBean
     UserRepository userRepository;
 
-    @Autowired
-    BCryptPasswordEncoder passwordEncoder;
+    @MockBean
+    PasswordEncoder passwordEncoder;
 
     @Autowired
     MockMvc mockMvc;
