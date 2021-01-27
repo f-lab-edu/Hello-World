@@ -8,5 +8,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserMapper {
     public void insertUser(User user);
     public boolean isUserIdDuplicate(String userId);
-    public boolean isRegisteredUser(UserLoginInfo userLoginInfo);
+    public UserLoginInfo getRegisteredUserInfo(UserLoginInfo userLoginInfo);
 }

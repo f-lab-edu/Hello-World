@@ -44,11 +44,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void loginRequest(UserLoginInfo userLoginInfo, HttpSession httpSession) {
         if (httpSession.getAttribute("userId") != null) {
-            throw new DuplicateRequestException("해당 유저는 이미 로그인 되어 있습니다.");
+            throw new DuplicateRequestException("이미 로그인 되어 있습니다.");
         }
 
-        if (!userRepository.isRegisteredUser(userLoginInfo)) {
+        UserLoginInfo storedUserInfo = userRepository.getRegisteredUserInfo(userLoginInfo);
+
+        if (storedUserInfo == null) {
             throw new IllegalArgumentException("해당 유저는 존재하지 않습니다.");
+        }
+
+        boolean isUserPasswordMatch = passwordEncoder.isMatch(userLoginInfo.getPassword(), storedUserInfo.getPassword());
+
+        if (!isUserPasswordMatch)  {
+            throw new IllegalArgumentException("비밀번호를 다시 한 번 확인해주세요.");
         }
 
         httpSession.setAttribute("userId", userLoginInfo.getUserId());

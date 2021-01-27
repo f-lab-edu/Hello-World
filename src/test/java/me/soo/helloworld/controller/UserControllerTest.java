@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -107,9 +106,16 @@ class UserControllerTest {
     @Test
     @DisplayName("DB에 등록된 정보와 일치하는 정보를 입력하면 로그인에 성공하고 Http Status Code 200(Ok)를 리턴합니다.")
     public void userLoginSuccess() throws Exception {
-        UserLoginInfo testUserLogin = new UserLoginInfo(testUser.getUserId(), testUser.getPassword());
+        String content = objectMapper.writeValueAsString(testUser);
 
-        doReturn(true).when(userRepository).isRegisteredUser(testUserLogin);
+        mockMvc.perform(post("/users/signup")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isCreated());
+
+        UserLoginInfo testUserLogin = new UserLoginInfo(testUser.getUserId(), testUser.getPassword());
 
         String loginContent = objectMapper.writeValueAsString(testUserLogin);
 
@@ -124,13 +130,6 @@ class UserControllerTest {
     @Test
     @DisplayName("이미 로그인된 회원의 경우 로그인에 실패하며 Http Status Code 401(Unauthorized)를 리턴합니다.")
     public void userLoginFailAlreadyLogin() throws Exception {
-        String content = objectMapper.writeValueAsString(testUser);
-
-        mockMvc.perform(post("/users/signup")
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
-
         httpSession.setAttribute("userId", testUser.getUserId());
 
         UserLoginInfo testUserLogin = new UserLoginInfo(testUser.getUserId(), testUser.getPassword());
@@ -147,14 +146,30 @@ class UserControllerTest {
     @Test
     @DisplayName("등록되지 않은 사용자의 경우 로그인에 실패하며 Http Status Code 401(Unauthorized)를 리턴합니다.")
     public void userLoginFailNoSuchUser() throws Exception {
+        UserLoginInfo testUserLogin = new UserLoginInfo(testUser.getUserId(), testUser.getPassword());
+        String loginContent = objectMapper.writeValueAsString(testUserLogin);
+
+        mockMvc.perform(post("/users/login")
+                .content(loginContent)
+                .session(httpSession)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("비밀번호를 잘못 입력한 회원의 경우 로그인에 실패하며 Http Status Code 401(Unauthorized)를 리턴합니다.")
+    public void userLoginFailWithWrongPassword() throws Exception {
         String content = objectMapper.writeValueAsString(testUser);
 
         mockMvc.perform(post("/users/signup")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isCreated());
 
-        UserLoginInfo testUserLogin = new UserLoginInfo("Hello", "NiceToMeetYou");
+        UserLoginInfo testUserLogin = new UserLoginInfo(testUser.getUserId(), "Hello");
         String loginContent = objectMapper.writeValueAsString(testUserLogin);
 
         mockMvc.perform(post("/users/login")

@@ -20,7 +20,7 @@ public class UserRepository {
         return userMapper.isUserIdDuplicate(userId);
     }
 
-    public boolean isRegisteredUser(UserLoginInfo userLoginInfo) {
-        return userMapper.isRegisteredUser(userLoginInfo);
+    public UserLoginInfo getRegisteredUserInfo(UserLoginInfo userLoginInfo) {
+        return userMapper.getRegisteredUserInfo(userLoginInfo);
     }
 }

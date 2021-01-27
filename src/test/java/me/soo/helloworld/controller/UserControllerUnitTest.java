@@ -66,7 +66,7 @@ public class UserControllerUnitTest {
                 .aboutMe("Hello, I'd love to make great friends here")
                 .build();
 
-        testUserLoginInfo = new UserLoginInfo("gomsu1045", "Gomsu1045!0$%");
+        testUserLoginInfo = new UserLoginInfo(testUser.getUserId(), testUser.getPassword());
         mockHttpSession = new MockHttpSession();
     }
 
@@ -85,7 +85,7 @@ public class UserControllerUnitTest {
     }
 
     @Test
-    @DisplayName("이미 등록되어 있는 아이디일 경우 Http Status Code 409(Conflict)를 리턴합니다.")
+    @DisplayName("등록되어 있는 ID가 아닌 경우 Http Status Code 200(Ok)를 리턴합니다.")
     public void userIdDuplicateTestSuccess() throws Exception {
         mockMvc.perform(get("/users/idcheck")
                 .param("userId", "Soo"))
@@ -96,7 +96,7 @@ public class UserControllerUnitTest {
     }
 
     @Test
-    @DisplayName("등록되어 있는 ID가 아닌 경우 Http Status Code 200(Ok)를 리턴합니다.")
+    @DisplayName("이미 등록되어 있는 아이디일 경우 Http Status Code 409(Conflict)를 리턴합니다.")
     public void userIdDuplicateTestFail() throws Exception {
         when(userService.isUserIdDuplicate("Soo")).thenReturn(true);
 
@@ -142,7 +142,6 @@ public class UserControllerUnitTest {
                 .andExpect(status().isUnauthorized());
 
         verify(userService).loginRequest(testUserLoginInfo, mockHttpSession);
-        mockHttpSession.invalidate();
     }
 
 
@@ -153,6 +152,25 @@ public class UserControllerUnitTest {
         String contentWrongTestUser = objectMapper.writeValueAsString(wrongTestUser);
 
         doThrow(new IllegalArgumentException("해당 유저는 존재하지 않습니다."))
+                .when(userService).loginRequest(wrongTestUser, mockHttpSession);
+
+        mockMvc.perform(post("/users/login")
+                .content(contentWrongTestUser)
+                .session(mockHttpSession)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+
+        verify(userService).loginRequest(wrongTestUser, mockHttpSession);
+    }
+
+    @Test
+    @DisplayName("비밀번호를 잘못 입력한 사용자는 로그인에 실패하며 Http Status Code 401(Unauthorized)를 리턴합니다.")
+    public void userLoginTestFailWithWrongPassword() throws Exception {
+        UserLoginInfo wrongTestUser = new UserLoginInfo(testUser.getUserId(), "Bakery");
+        String contentWrongTestUser = objectMapper.writeValueAsString(wrongTestUser);
+
+        doThrow(new IllegalArgumentException("비밀번호를 올바르게 입력해주세요."))
                 .when(userService).loginRequest(wrongTestUser, mockHttpSession);
 
         mockMvc.perform(post("/users/login")

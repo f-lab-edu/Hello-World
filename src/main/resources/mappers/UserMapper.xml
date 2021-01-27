@@ -13,8 +13,9 @@
             (SELECT userId FROM users WHERE userId = #{userId})
     </select>
     
-    <select id="isRegisteredUser" parameterType="me.soo.helloworld.model.user.UserLoginInfo" resultType="boolean">
-        SELECT EXISTS(SELECT * FROM users WHERE userId = #{userId} AND password = #{password})
+    <select id="getRegisteredUserInfo"
+            parameterType="me.soo.helloworld.model.user.UserLoginInfo" resultType="me.soo.helloworld.model.user.UserLoginInfo">
+        SELECT * FROM users WHERE userId = #{userId}
     </select>
 
 </mapper>
