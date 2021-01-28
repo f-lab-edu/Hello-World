@@ -1,6 +1,5 @@
 package me.soo.helloworld.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
@@ -10,11 +9,15 @@ import java.util.Date;
 /** Key Assignment
  * 1. How can it let only certain data (like some letters and special characters) inserted
  * 2. How to Handle Empty Data inserted?
+ *
+ * Sorted
  * */
 
-@Getter @Setter
-@Builder @AllArgsConstructor
+@Getter
+@Builder
+@AllArgsConstructor
 public class User {
+
     @NotBlank(message = "아이디를 입력해주세요. (5 ~ 20자 이내, 영문 대/소문자 혹은 숫자만 허용)")
     @Pattern(regexp = "^[0-9a-zA-Z]{5,20}$")
     private final String userId;

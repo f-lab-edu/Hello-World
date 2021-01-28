@@ -3,8 +3,6 @@ package me.soo.helloworld.model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.validation.*;
 import java.sql.Date;
@@ -13,6 +11,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserSignUpValidationTest {
+
     private Validator validator;
 
     private User getUserWithVariousName(String name) {

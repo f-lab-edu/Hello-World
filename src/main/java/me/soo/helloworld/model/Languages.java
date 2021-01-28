@@ -3,7 +3,6 @@ package me.soo.helloworld.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -12,9 +11,11 @@ import javax.validation.constraints.NotEmpty;
 /**
  * 차후 유저의 언어 등록에 활용하기 위한 languages 클래스
  */
-@Getter @Setter
-@AllArgsConstructor @Builder
+@Getter
+@Builder
+@AllArgsConstructor
 public class Languages {
+
     @NotBlank(message = "모국어 정보를 입력해주세요.")
     private final String nativeLanguage;
 
