@@ -19,13 +19,13 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceImplTest {
+class UserServiceTest {
 
     @Mock
     User testUser;
 
     @InjectMocks
-    UserServiceImpl userService;
+    UserService userService;
 
     @Mock
     UserRepository userRepository;
