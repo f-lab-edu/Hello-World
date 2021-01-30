@@ -5,6 +5,7 @@ import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserLoginInfo;
 import me.soo.helloworld.repository.UserRepository;
 import me.soo.helloworld.util.PasswordEncoder;
+import me.soo.helloworld.util.SessionKeys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 // 테스트용 Transaction 적용: 수동으로 DB에 있는 내용 삭제할 필요없이 각각 독립적인 테스트를 만들기 위해 @Transactional 추가함으로써 롤백기능 부여
 @Transactional
 class UserControllerTest {
+
     User testUser;
 
     @Autowired
@@ -188,6 +190,6 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        assertNull(httpSession.getAttribute("userId"));
+        assertNull(httpSession.getAttribute(SessionKeys.USER_ID));
     }
 }

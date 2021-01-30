@@ -12,9 +12,11 @@ import java.util.Date;
  * 2. How to Handle Empty Data inserted?
  * */
 
-@Getter @Setter
-@Builder @AllArgsConstructor
+@Getter
+@Builder
+@AllArgsConstructor
 public class User {
+
     @NotBlank(message = "아이디를 입력해주세요. (5 ~ 20자 이내, 영문 대/소문자 혹은 숫자만 허용)")
     @Pattern(regexp = "^[0-9a-zA-Z]{5,20}$")
     private final String userId;
@@ -44,4 +46,25 @@ public class User {
 
     @Nullable
     private final String aboutMe;
+
+
+    /**
+     * 객체의 생성과 구성을 담당하는 책임을 User 클래스 자체로 가지고 있다고 판단
+     * 따라서 암호화가 된 비밀번호를 가진 User 객체의 생성을 UserService 가 아닌  User 클래스 자체가 담당하도록 책임 분리
+     * @param encodedPassword
+     * @return User
+     */
+    public User buildUserWithEncodedPassword(String encodedPassword) {
+        return User.builder()
+                .userId(this.userId)
+                .password(encodedPassword)
+                .email(this.email)
+                .gender(this.gender)
+                .birthday(this.birthday)
+                .originCountry(this.originCountry)
+                .livingCountry(this.livingCountry)
+                .livingTown(this.livingTown)
+                .aboutMe(this.aboutMe)
+                .build();
+    }
 }

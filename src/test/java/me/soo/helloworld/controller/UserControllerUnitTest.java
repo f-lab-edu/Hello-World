@@ -3,9 +3,9 @@ package me.soo.helloworld.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserLoginInfo;
-import me.soo.helloworld.repository.UserRepository;
+import me.soo.helloworld.service.LoginService;
 import me.soo.helloworld.service.UserService;
-import me.soo.helloworld.util.PasswordEncoder;
+import me.soo.helloworld.util.SessionKeys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,6 @@ import java.sql.Date;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -32,8 +31,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
 public class UserControllerUnitTest {
+
     User testUser;
-    UserLoginInfo testUserLoginInfo;
+
+    UserLoginInfo correctLoginInfo;
+
+    UserLoginInfo wrongIdLoginInfo;
+
+    UserLoginInfo wrongPasswordLoginInfo;
 
     MockHttpSession mockHttpSession;
 
@@ -44,16 +49,14 @@ public class UserControllerUnitTest {
     UserService userService;
 
     @MockBean
-    UserRepository userRepository;
-
-    @MockBean
-    PasswordEncoder passwordEncoder;
+    LoginService loginService;
 
     @Autowired
     MockMvc mockMvc;
 
     @BeforeEach
     public void setUp() {
+
         testUser = User.builder()
                 .userId("gomsu1045")
                 .password("Gomsu1045!0$%")
@@ -66,13 +69,19 @@ public class UserControllerUnitTest {
                 .aboutMe("Hello, I'd love to make great friends here")
                 .build();
 
-        testUserLoginInfo = new UserLoginInfo(testUser.getUserId(), testUser.getPassword());
+        correctLoginInfo = new UserLoginInfo(testUser.getUserId(), testUser.getPassword());
+
+        wrongIdLoginInfo = new UserLoginInfo(testUser.getEmail(), testUser.getPassword());
+
+        wrongPasswordLoginInfo = new UserLoginInfo(testUser.getUserId(), testUser.getEmail());
+
         mockHttpSession = new MockHttpSession();
     }
 
     @Test
     @DisplayName("회원가입 요청에 성공시 HTTP Status Code 201(Created)를 리턴합니다.")
     public void userSignUpControllerTest() throws Exception {
+
         String content = objectMapper.writeValueAsString(testUser);
 
         mockMvc.perform(post("/users/signup")
@@ -87,6 +96,7 @@ public class UserControllerUnitTest {
     @Test
     @DisplayName("등록되어 있는 ID가 아닌 경우 Http Status Code 200(Ok)를 리턴합니다.")
     public void userIdDuplicateTestSuccess() throws Exception {
+
         mockMvc.perform(get("/users/idcheck")
                 .param("userId", "Soo"))
                 .andDo(print())
@@ -98,6 +108,7 @@ public class UserControllerUnitTest {
     @Test
     @DisplayName("이미 등록되어 있는 아이디일 경우 Http Status Code 409(Conflict)를 리턴합니다.")
     public void userIdDuplicateTestFail() throws Exception {
+
         when(userService.isUserIdDuplicate("Soo")).thenReturn(true);
 
         mockMvc.perform(get("/users/idcheck")
@@ -111,7 +122,13 @@ public class UserControllerUnitTest {
     @Test
     @DisplayName("DB에 등록된 정보와 일치하는 정보를 입력하면 로그인에 성공하고 Http Status Code 200(Ok)를 리턴합니다.")
     public void userLoginTestSuccess() throws Exception {
-        String content = objectMapper.writeValueAsString(testUserLoginInfo);
+
+        UserLoginInfo correctLoginInfo = new UserLoginInfo(testUser.getUserId(), testUser.getPassword());
+
+        when(userService.getLoginUser(correctLoginInfo)).thenReturn(correctLoginInfo);
+        doNothing().when(loginService).login(correctLoginInfo, correctLoginInfo, mockHttpSession);
+
+        String content = objectMapper.writeValueAsString(correctLoginInfo);
 
         mockMvc.perform(post("/users/login")
                 .content(content)
@@ -120,19 +137,21 @@ public class UserControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        verify(userService, times(1)).loginRequest(testUserLoginInfo, mockHttpSession);
+        verify(loginService).login(correctLoginInfo, correctLoginInfo, mockHttpSession);
     }
 
-
+//
     @Test
     @DisplayName("이미 로그인된 회원의 경우 로그인에 실패하며 Http Status Code 401(Unauthorized)를 리턴합니다.")
     public void userLoginTestFailWithAlreadyLoginUser() throws Exception {
-        mockHttpSession.setAttribute("userId", testUserLoginInfo.getUserId());
 
-        String content = objectMapper.writeValueAsString(testUserLoginInfo);
+        mockHttpSession.setAttribute(SessionKeys.USER_ID, correctLoginInfo.getUserId());
 
+        String content = objectMapper.writeValueAsString(correctLoginInfo);
+
+        when(userService.getLoginUser(correctLoginInfo)).thenReturn(correctLoginInfo);
         doThrow(new DuplicateKeyException("해당 유저는 이미 로그인 되어 있습니다."))
-                .when(userService).loginRequest(testUserLoginInfo, mockHttpSession);
+                .when(loginService).login(correctLoginInfo, correctLoginInfo, mockHttpSession);
 
         mockMvc.perform(post("/users/login")
                 .content(content)
@@ -141,46 +160,47 @@ public class UserControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
 
-        verify(userService).loginRequest(testUserLoginInfo, mockHttpSession);
+        verify(loginService).login(correctLoginInfo, correctLoginInfo, mockHttpSession);
     }
 
 
     @Test
     @DisplayName("등록되지 않은 사용자의 경우 로그인에 실패하며 Http Status Code 401(Unauthorized)를 리턴합니다.")
     public void userLoginTestFailWithNoSuchUser() throws Exception {
-        UserLoginInfo wrongTestUser = new UserLoginInfo("Soo", "Bakery");
-        String contentWrongTestUser = objectMapper.writeValueAsString(wrongTestUser);
+
+        String content = objectMapper.writeValueAsString(wrongIdLoginInfo);
 
         doThrow(new IllegalArgumentException("해당 유저는 존재하지 않습니다."))
-                .when(userService).loginRequest(wrongTestUser, mockHttpSession);
+                .when(userService).getLoginUser(wrongIdLoginInfo);
 
         mockMvc.perform(post("/users/login")
-                .content(contentWrongTestUser)
+                .content(content)
                 .session(mockHttpSession)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
 
-        verify(userService).loginRequest(wrongTestUser, mockHttpSession);
+        verify(userService).getLoginUser(wrongIdLoginInfo);
     }
 
     @Test
     @DisplayName("비밀번호를 잘못 입력한 사용자는 로그인에 실패하며 Http Status Code 401(Unauthorized)를 리턴합니다.")
     public void userLoginTestFailWithWrongPassword() throws Exception {
-        UserLoginInfo wrongTestUser = new UserLoginInfo(testUser.getUserId(), "Bakery");
-        String contentWrongTestUser = objectMapper.writeValueAsString(wrongTestUser);
 
-        doThrow(new IllegalArgumentException("비밀번호를 올바르게 입력해주세요."))
-                .when(userService).loginRequest(wrongTestUser, mockHttpSession);
+        String content = objectMapper.writeValueAsString(wrongPasswordLoginInfo);
+
+        when(userService.getLoginUser(wrongPasswordLoginInfo)).thenReturn(correctLoginInfo);
+        doThrow(new IllegalArgumentException("비밀번호를 다시 한 번 확인해주세요."))
+                .when(loginService).login(wrongPasswordLoginInfo, correctLoginInfo, mockHttpSession);
 
         mockMvc.perform(post("/users/login")
-                .content(contentWrongTestUser)
+                .content(content)
                 .session(mockHttpSession)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
 
-        verify(userService).loginRequest(wrongTestUser, mockHttpSession);
+        verify(loginService).login(wrongPasswordLoginInfo, correctLoginInfo, mockHttpSession);
     }
 
     @Test
@@ -191,6 +211,6 @@ public class UserControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        verify(userService).logoutRequest(any(MockHttpSession.class));
+        verify(loginService).logout(any(MockHttpSession.class));
     }
 }

@@ -17,8 +17,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 class UserRepositoryTest {
+
     User testUser;
+
     UserLoginInfo testUserLoginInfo;
+
     UserLoginInfo wrongIdUserLoginInfo;
 
     @Autowired
@@ -37,7 +40,9 @@ class UserRepositoryTest {
                 .livingTown("Newcastle Upon Tyne")
                 .aboutMe("Hello, I'd love to make great friends here")
                 .build();
+
         testUserLoginInfo = new UserLoginInfo("gomsu1045", "Gomsu1045!0$%");
+
         wrongIdUserLoginInfo = new UserLoginInfo("Soo", "Gomsu1045!0$%");
     }
 

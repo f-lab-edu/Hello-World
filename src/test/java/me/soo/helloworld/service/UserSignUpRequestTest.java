@@ -19,11 +19,12 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserSignUpRequestTest {
+
     @Mock
     User testUser;
 
     @InjectMocks
-    UserServiceImpl userService;
+    UserService userService;
 
     @Mock
     UserRepository userRepository;
