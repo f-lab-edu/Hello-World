@@ -1,7 +1,7 @@
 package me.soo.helloworld.mapper;
 
 import me.soo.helloworld.model.user.User;
-import me.soo.helloworld.model.user.UserLoginInfo;
+import me.soo.helloworld.model.user.UserIdAndPassword;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
@@ -11,5 +11,5 @@ public interface UserMapper {
 
     public boolean isUserIdDuplicate(String userId);
 
-    public UserLoginInfo getRegisteredUserInfo(UserLoginInfo userLoginInfo);
+    public UserIdAndPassword getRegisteredUserById(String userId);
 }

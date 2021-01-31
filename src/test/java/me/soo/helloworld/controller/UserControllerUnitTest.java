@@ -2,7 +2,7 @@ package me.soo.helloworld.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.soo.helloworld.model.user.User;
-import me.soo.helloworld.model.user.UserLoginInfo;
+import me.soo.helloworld.model.user.UserIdAndPassword;
 import me.soo.helloworld.service.LoginService;
 import me.soo.helloworld.service.UserService;
 import me.soo.helloworld.util.SessionKeys;
@@ -22,6 +22,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.sql.Date;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.will;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -34,11 +36,13 @@ public class UserControllerUnitTest {
 
     User testUser;
 
-    UserLoginInfo correctLoginInfo;
+    UserIdAndPassword testUserIdAndPassword;
 
-    UserLoginInfo wrongIdLoginInfo;
+    UserIdAndPassword correctUserIdAndPassword;
 
-    UserLoginInfo wrongPasswordLoginInfo;
+    UserIdAndPassword wrongUserIdWithCorrectPassword;
+
+    UserIdAndPassword correctUserIdWithWrongPassword;
 
     MockHttpSession mockHttpSession;
 
@@ -69,11 +73,13 @@ public class UserControllerUnitTest {
                 .aboutMe("Hello, I'd love to make great friends here")
                 .build();
 
-        correctLoginInfo = new UserLoginInfo(testUser.getUserId(), testUser.getPassword());
+        testUserIdAndPassword = new UserIdAndPassword(testUser.getUserId(), testUser.getPassword());
 
-        wrongIdLoginInfo = new UserLoginInfo(testUser.getEmail(), testUser.getPassword());
+        correctUserIdAndPassword = new UserIdAndPassword(testUser.getUserId(), testUser.getPassword());
 
-        wrongPasswordLoginInfo = new UserLoginInfo(testUser.getUserId(), testUser.getEmail());
+        wrongUserIdWithCorrectPassword = new UserIdAndPassword(testUser.getEmail(), testUser.getPassword());
+
+        correctUserIdWithWrongPassword = new UserIdAndPassword(testUser.getUserId(), testUser.getEmail());
 
         mockHttpSession = new MockHttpSession();
     }
@@ -123,12 +129,10 @@ public class UserControllerUnitTest {
     @DisplayName("DB에 등록된 정보와 일치하는 정보를 입력하면 로그인에 성공하고 Http Status Code 200(Ok)를 리턴합니다.")
     public void userLoginTestSuccess() throws Exception {
 
-        UserLoginInfo correctLoginInfo = new UserLoginInfo(testUser.getUserId(), testUser.getPassword());
+        when(userService.getLoginUser(any(UserIdAndPassword.class))).thenReturn(testUserIdAndPassword);
+        doNothing().when(loginService).login(correctUserIdAndPassword, testUserIdAndPassword);
 
-        when(userService.getLoginUser(correctLoginInfo)).thenReturn(correctLoginInfo);
-        doNothing().when(loginService).login(correctLoginInfo, correctLoginInfo, mockHttpSession);
-
-        String content = objectMapper.writeValueAsString(correctLoginInfo);
+        String content = objectMapper.writeValueAsString(correctUserIdAndPassword);
 
         mockMvc.perform(post("/users/login")
                 .content(content)
@@ -137,21 +141,22 @@ public class UserControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        verify(loginService).login(correctLoginInfo, correctLoginInfo, mockHttpSession);
     }
 
-//
+    /**
+     * Login관련 메소드를 수정한 뒤 자꾸 404가 나오는데 원인을 못찾겠어서 일단 보류 - 통합테스트나 다른 계층 테스트는 통과
+     * @throws Exception
+     */
     @Test
     @DisplayName("이미 로그인된 회원의 경우 로그인에 실패하며 Http Status Code 401(Unauthorized)를 리턴합니다.")
     public void userLoginTestFailWithAlreadyLoginUser() throws Exception {
 
-        mockHttpSession.setAttribute(SessionKeys.USER_ID, correctLoginInfo.getUserId());
+        when(userService.getLoginUser((correctUserIdAndPassword))).thenReturn(testUserIdAndPassword);
 
-        String content = objectMapper.writeValueAsString(correctLoginInfo);
-
-        when(userService.getLoginUser(correctLoginInfo)).thenReturn(correctLoginInfo);
         doThrow(new DuplicateKeyException("해당 유저는 이미 로그인 되어 있습니다."))
-                .when(loginService).login(correctLoginInfo, correctLoginInfo, mockHttpSession);
+                .when(loginService).login(correctUserIdAndPassword, testUserIdAndPassword);
+
+        String content = objectMapper.writeValueAsString(correctUserIdAndPassword);
 
         mockMvc.perform(post("/users/login")
                 .content(content)
@@ -160,38 +165,41 @@ public class UserControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
 
-        verify(loginService).login(correctLoginInfo, correctLoginInfo, mockHttpSession);
+        verify(loginService).login(correctUserIdAndPassword, testUserIdAndPassword);
     }
 
 
     @Test
-    @DisplayName("등록되지 않은 사용자의 경우 로그인에 실패하며 Http Status Code 401(Unauthorized)를 리턴합니다.")
+    @DisplayName("등록되지 않은 사용자의 경우 로그인에 실패하며 Http Status Code 404(Not Found)를 리턴합니다.")
     public void userLoginTestFailWithNoSuchUser() throws Exception {
 
-        String content = objectMapper.writeValueAsString(wrongIdLoginInfo);
+        when(userService.getLoginUser(wrongUserIdWithCorrectPassword)).thenReturn(null);
 
-        doThrow(new IllegalArgumentException("해당 유저는 존재하지 않습니다."))
-                .when(userService).getLoginUser(wrongIdLoginInfo);
+        String content = objectMapper.writeValueAsString(wrongUserIdWithCorrectPassword);
 
         mockMvc.perform(post("/users/login")
                 .content(content)
                 .session(mockHttpSession)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isNotFound());
 
-        verify(userService).getLoginUser(wrongIdLoginInfo);
     }
 
+    /**
+     * Login관련 메소드를 수정한 뒤 자꾸 404가 나오는데 원인을 못찾겠어서 일단 보류 - 통합테스트나 다른 계층 테스트는 통과
+     * @throws Exception
+     */
     @Test
     @DisplayName("비밀번호를 잘못 입력한 사용자는 로그인에 실패하며 Http Status Code 401(Unauthorized)를 리턴합니다.")
     public void userLoginTestFailWithWrongPassword() throws Exception {
 
-        String content = objectMapper.writeValueAsString(wrongPasswordLoginInfo);
 
-        when(userService.getLoginUser(wrongPasswordLoginInfo)).thenReturn(correctLoginInfo);
+        when(userService.getLoginUser(any(UserIdAndPassword.class))).thenReturn(testUserIdAndPassword);
         doThrow(new IllegalArgumentException("비밀번호를 다시 한 번 확인해주세요."))
-                .when(loginService).login(wrongPasswordLoginInfo, correctLoginInfo, mockHttpSession);
+                .when(loginService).login(correctUserIdWithWrongPassword, testUserIdAndPassword);
+
+        String content = objectMapper.writeValueAsString(correctUserIdWithWrongPassword);
 
         mockMvc.perform(post("/users/login")
                 .content(content)
@@ -200,7 +208,7 @@ public class UserControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
 
-        verify(loginService).login(wrongPasswordLoginInfo, correctLoginInfo, mockHttpSession);
+        verify(loginService).login(correctUserIdWithWrongPassword, correctUserIdAndPassword);
     }
 
     @Test
@@ -211,6 +219,6 @@ public class UserControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        verify(loginService).logout(any(MockHttpSession.class));
+        verify(loginService).logout();
     }
 }

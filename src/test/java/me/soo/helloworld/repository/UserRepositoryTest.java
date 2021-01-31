@@ -2,7 +2,7 @@ package me.soo.helloworld.repository;
 
 import me.soo.helloworld.mapper.UserMapper;
 import me.soo.helloworld.model.user.User;
-import me.soo.helloworld.model.user.UserLoginInfo;
+import me.soo.helloworld.model.user.UserIdAndPassword;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,9 +20,9 @@ class UserRepositoryTest {
 
     User testUser;
 
-    UserLoginInfo testUserLoginInfo;
+    UserIdAndPassword correctUserIdAndPassword;
 
-    UserLoginInfo wrongIdUserLoginInfo;
+    UserIdAndPassword wrongUserIdWithCorrectPassword;
 
     @Autowired
     UserMapper userMapper;
@@ -41,9 +41,9 @@ class UserRepositoryTest {
                 .aboutMe("Hello, I'd love to make great friends here")
                 .build();
 
-        testUserLoginInfo = new UserLoginInfo("gomsu1045", "Gomsu1045!0$%");
+        correctUserIdAndPassword = new UserIdAndPassword(testUser.getUserId(), testUser.getPassword());
 
-        wrongIdUserLoginInfo = new UserLoginInfo("Soo", "Gomsu1045!0$%");
+        wrongUserIdWithCorrectPassword = new UserIdAndPassword("WrongID", testUser.getPassword());
     }
 
 
@@ -52,8 +52,10 @@ class UserRepositoryTest {
     public void getRegisteredUserTestSuccess() {
         userMapper.insertUser(testUser);
 
-        UserLoginInfo registeredUserInfo = userMapper.getRegisteredUserInfo(testUserLoginInfo);
-        assertEquals(registeredUserInfo, testUserLoginInfo);
+        UserIdAndPassword registeredUserIdAndPassword = userMapper.getRegisteredUserById(correctUserIdAndPassword.getUserId());
+        assertEquals(testUser.getUserId(), registeredUserIdAndPassword.getUserId());
+        assertEquals(testUser.getPassword(), registeredUserIdAndPassword.getPassword());
+
     }
 
     @Test
@@ -61,8 +63,7 @@ class UserRepositoryTest {
     public void getRegisteredUserTestFailWithDifferentName() {
         userMapper.insertUser(testUser);
 
-        UserLoginInfo registeredUserInfo = userMapper.getRegisteredUserInfo(wrongIdUserLoginInfo);
-        assertNotEquals(registeredUserInfo, wrongIdUserLoginInfo);
+        UserIdAndPassword registeredUserInfo = userMapper.getRegisteredUserById(wrongUserIdWithCorrectPassword.getUserId());
         assertNull(registeredUserInfo);
     }
 }

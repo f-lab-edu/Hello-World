@@ -2,13 +2,12 @@ package me.soo.helloworld.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.model.user.User;
-import me.soo.helloworld.model.user.UserLoginInfo;
+import me.soo.helloworld.model.user.UserIdAndPassword;
 import me.soo.helloworld.service.LoginService;
 import me.soo.helloworld.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import static me.soo.helloworld.util.HttpResponses.*;
@@ -41,11 +40,16 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> userLogin(@Valid @RequestBody UserLoginInfo requestedUserLoginInfo, HttpSession httpSession) {
+    public ResponseEntity<Void> userLogin(@Valid @RequestBody UserIdAndPassword requestedIdAndPassword) {
 
         try {
-            UserLoginInfo storedUserLoginInfo = userService.getLoginUser(requestedUserLoginInfo);
-            loginService.login(requestedUserLoginInfo, storedUserLoginInfo, httpSession);
+            UserIdAndPassword storedUserIdAndPassword = userService.getLoginUser(requestedIdAndPassword);
+
+           if (storedUserIdAndPassword == null) {
+               return HTTP_RESPONSE_NOT_FOUND;
+           }
+
+            loginService.login(requestedIdAndPassword, storedUserIdAndPassword);
 
             return HTTP_RESPONSE_OK;
 
@@ -55,9 +59,9 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<Void> userLogout(HttpSession httpSession) {
+    public ResponseEntity<Void> userLogout() {
 
-        loginService.logout(httpSession);
+        loginService.logout();
 
         return HTTP_RESPONSE_NO_CONTENT;
     }

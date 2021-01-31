@@ -1,52 +1,59 @@
 package me.soo.helloworld.service;
 
 import com.sun.jdi.request.DuplicateRequestException;
-import me.soo.helloworld.model.user.UserLoginInfo;
+import me.soo.helloworld.model.user.UserIdAndPassword;
 import me.soo.helloworld.util.PasswordEncoder;
+import me.soo.helloworld.util.PasswordEncoderBcrypt;
 import me.soo.helloworld.util.SessionKeys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpSession;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
+import javax.servlet.http.HttpSession;
 
-@ExtendWith(MockitoExtension.class)
+import static org.junit.jupiter.api.Assertions.*;
+
 public class UserLoginTest {
 
-    UserLoginInfo testUser;
+    UserIdAndPassword testUserIdAndPassword;
 
-    UserLoginInfo correctLoginInfo;
+    UserIdAndPassword correctUserIdAndPassword;
 
-    UserLoginInfo wrongPasswordLoginInfo;
+    UserIdAndPassword correctUserIdWithWrongPassword;
 
-    UserLoginInfo wrongIdLoginInfo;
+    UserIdAndPassword wrongUserIdAndPassword;
 
-    @InjectMocks
-    SessionLoginService loginService;
+    LoginService loginService;
 
-    @Mock
     PasswordEncoder passwordEncoder;
 
-    MockHttpSession httpSession;
+    HttpSession httpSession;
 
+
+    /**
+     * Mockito 사용이 익숙치 않아서 설정이 잘못되었는지 테스트가 실패로 나와서 수동으로 객체 생성/주입해서 테스트 완료하였습니다.
+     * 시간 소요가 너무 많이되어 차후 Mockito에 익숙해지면 테스트 수정할 계획입니다.
+     */
     @BeforeEach
     public void setUp() {
 
         httpSession = new MockHttpSession();
 
-        testUser = new UserLoginInfo("Soo", "Soo");
+        passwordEncoder = new PasswordEncoderBcrypt();
 
-        correctLoginInfo = new UserLoginInfo("Soo", passwordEncoder.encode(testUser.getPassword()));
+        loginService = new SessionLoginService(passwordEncoder, httpSession);
 
-        wrongPasswordLoginInfo = new UserLoginInfo("Soo","Bakery");
+        testUserIdAndPassword = new UserIdAndPassword("Soo", "Soo");
 
-        wrongIdLoginInfo = new UserLoginInfo("Bakery", "Bakery");
+        correctUserIdAndPassword = new UserIdAndPassword("Soo", passwordEncoder.encode(testUserIdAndPassword.getPassword()));
+
+        correctUserIdWithWrongPassword = new UserIdAndPassword("Soo","Bakery");
+
+        wrongUserIdAndPassword = new UserIdAndPassword("Bakery", "Bakery");
 
     }
 
@@ -54,21 +61,11 @@ public class UserLoginTest {
     @DisplayName("DB에 등록된 정보와 일치하는 정보를 입력하면 로그인에 성공합니다.")
     public void successLoginRequestWithRegisteredId() {
 
-        when(passwordEncoder.isMatch(testUser.getPassword(), correctLoginInfo.getPassword()))
-                .thenReturn(true);
+        loginService.login(testUserIdAndPassword, correctUserIdAndPassword);
 
-        loginService.login(testUser, correctLoginInfo, httpSession);
+        assertNotNull(httpSession.getAttribute(SessionKeys.USER_ID));
+        assertEquals(httpSession.getAttribute(SessionKeys.USER_ID), testUserIdAndPassword.getUserId());
 
-        assertEquals(httpSession.getAttribute(SessionKeys.USER_ID), testUser.getUserId());
-    }
-
-    @Test
-    @DisplayName("존재하지 않는 아이디를 입력하면 IllegalArgumentException 이 발생합니다.")
-    public void failLoginRequestWithNotValidId() {
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            loginService.login(testUser, wrongIdLoginInfo ,httpSession);
-        });
     }
 
     @Test
@@ -76,19 +73,18 @@ public class UserLoginTest {
     public void failLoginRequestWithWrongPassword() {
 
         assertThrows(IllegalArgumentException.class, () -> {
-            loginService.login(testUser, wrongPasswordLoginInfo, httpSession);
+            loginService.login(testUserIdAndPassword, wrongUserIdAndPassword);
         });
-
     }
 
     @Test
     @DisplayName("이미 로그인한 회원의 경우 DuplicateRequestException 이 발생합니다.")
     public void failLoginRequestWithAlreadyLoginId() {
 
-        httpSession.setAttribute(SessionKeys.USER_ID, testUser.getUserId());
+        httpSession.setAttribute(SessionKeys.USER_ID, testUserIdAndPassword.getUserId());
 
         assertThrows(DuplicateRequestException.class, () -> {
-            loginService.login(testUser, correctLoginInfo, httpSession);
+            loginService.login(testUserIdAndPassword, correctUserIdAndPassword);
         });
     }
 
@@ -96,6 +92,6 @@ public class UserLoginTest {
     @DisplayName("로그인 된 회원을 로그아웃 시키는데 성공합니다.")
     public void successLogoutRequest() {
 
-        loginService.logout(httpSession);
+        loginService.logout();
     }
 }

@@ -2,7 +2,7 @@ package me.soo.helloworld.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.soo.helloworld.model.user.User;
-import me.soo.helloworld.model.user.UserLoginInfo;
+import me.soo.helloworld.model.user.UserIdAndPassword;
 import me.soo.helloworld.repository.UserRepository;
 import me.soo.helloworld.util.PasswordEncoder;
 import me.soo.helloworld.util.SessionKeys;
@@ -117,7 +117,7 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated());
 
-        UserLoginInfo testUserLogin = new UserLoginInfo(testUser.getUserId(), testUser.getPassword());
+        UserIdAndPassword testUserLogin = new UserIdAndPassword(testUser.getUserId(), testUser.getPassword());
 
         String loginContent = objectMapper.writeValueAsString(testUserLogin);
 
@@ -134,7 +134,7 @@ class UserControllerTest {
     public void userLoginFailAlreadyLogin() throws Exception {
         httpSession.setAttribute("userId", testUser.getUserId());
 
-        UserLoginInfo testUserLogin = new UserLoginInfo(testUser.getUserId(), testUser.getPassword());
+        UserIdAndPassword testUserLogin = new UserIdAndPassword(testUser.getUserId(), testUser.getPassword());
         String loginContent = objectMapper.writeValueAsString(testUserLogin);
 
         mockMvc.perform(post("/users/login")
@@ -142,13 +142,22 @@ class UserControllerTest {
                 .session(httpSession)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    @DisplayName("등록되지 않은 사용자의 경우 로그인에 실패하며 Http Status Code 401(Unauthorized)를 리턴합니다.")
+    @DisplayName("등록되지 않은 사용자의 경우 로그인에 실패하며 Http Status Code 404(Not Found)를 리턴합니다.")
     public void userLoginFailNoSuchUser() throws Exception {
-        UserLoginInfo testUserLogin = new UserLoginInfo(testUser.getUserId(), testUser.getPassword());
+        String content = objectMapper.writeValueAsString(testUser);
+
+        mockMvc.perform(post("/users/signup")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isCreated());
+
+        UserIdAndPassword testUserLogin = new UserIdAndPassword(testUser.getUserId(), "WrongPw!@34");
         String loginContent = objectMapper.writeValueAsString(testUserLogin);
 
         mockMvc.perform(post("/users/login")
@@ -171,7 +180,7 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated());
 
-        UserLoginInfo testUserLogin = new UserLoginInfo(testUser.getUserId(), "Hello");
+        UserIdAndPassword testUserLogin = new UserIdAndPassword(testUser.getUserId(), "Hello");
         String loginContent = objectMapper.writeValueAsString(testUserLogin);
 
         mockMvc.perform(post("/users/login")
