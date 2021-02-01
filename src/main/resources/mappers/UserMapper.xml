@@ -14,7 +14,7 @@
     </select>
     
     <select id="getUserById"
-            parameterType="map" resultType="me.soo.helloworld.model.user.User">
+            parameterType="String" resultType="me.soo.helloworld.model.user.User">
         SELECT userId, password, email, gender, birthDay, originCountry,
                livingCountry, livingTown, aboutMe FROM users WHERE userId = #{userId}
     </select>
