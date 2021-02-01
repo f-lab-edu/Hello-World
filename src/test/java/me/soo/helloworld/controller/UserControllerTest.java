@@ -2,7 +2,7 @@ package me.soo.helloworld.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.soo.helloworld.model.user.User;
-import me.soo.helloworld.model.user.LoginRequest;
+import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.repository.UserRepository;
 import me.soo.helloworld.util.PasswordEncoder;
 import me.soo.helloworld.util.SessionKeys;
@@ -117,7 +117,7 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated());
 
-        LoginRequest testLoginRequest = new LoginRequest(testUser.getUserId(), testUser.getPassword());
+        UserLoginRequest testLoginRequest = new UserLoginRequest(testUser.getUserId(), testUser.getPassword());
 
         String loginContent = objectMapper.writeValueAsString(testLoginRequest);
 
@@ -143,7 +143,7 @@ class UserControllerTest {
 
         httpSession.setAttribute("userId", testUser.getUserId());
 
-        LoginRequest testUserLogin = new LoginRequest(testUser.getUserId(), testUser.getPassword());
+        UserLoginRequest testUserLogin = new UserLoginRequest(testUser.getUserId(), testUser.getPassword());
         String loginContent = objectMapper.writeValueAsString(testUserLogin);
 
         mockMvc.perform(post("/users/login")
@@ -166,7 +166,7 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated());
 
-        LoginRequest testUserLogin = new LoginRequest("WrongID!@34", "WrongPw!@34");
+        UserLoginRequest testUserLogin = new UserLoginRequest("WrongID!@34", "WrongPw!@34");
         String loginContent = objectMapper.writeValueAsString(testUserLogin);
 
         mockMvc.perform(post("/users/login")

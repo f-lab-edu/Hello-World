@@ -23,4 +23,8 @@ public class UserRepository {
         return userMapper.getUserById(userId);
     }
 
+    public void updateUserPassword(String userId, String password) {
+        userMapper.updateUserPassword(userId, password);
+    }
+
 }

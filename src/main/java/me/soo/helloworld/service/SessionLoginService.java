@@ -15,7 +15,7 @@ public class SessionLoginService implements LoginService {
 
     public void login(String userId) {
 
-        if (httpSession.getAttribute(SessionKeys.USER_ID) != null) {
+        if (getCurrentUserId() != null) {
             throw new DuplicateRequestException("이미 로그인 되어 있습니다.");
         }
 
@@ -25,5 +25,11 @@ public class SessionLoginService implements LoginService {
     public void logout() {
         httpSession.invalidate();
     }
+
+    @Override
+    public String getCurrentUserId() {
+        return (String) httpSession.getAttribute(SessionKeys.USER_ID);
+    }
+
 
 }

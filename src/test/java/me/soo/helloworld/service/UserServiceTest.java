@@ -1,8 +1,9 @@
 package me.soo.helloworld.service;
 
 import me.soo.helloworld.exception.IncorrectUserInfoException;
-import me.soo.helloworld.model.user.LoginRequest;
+import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
+import me.soo.helloworld.model.user.UserPasswordUpdateRequest;
 import me.soo.helloworld.repository.UserRepository;
 import me.soo.helloworld.util.PasswordEncoder;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,32 +53,29 @@ class UserServiceTest {
     }
 
     @Test
-    public void insertUserServiceTest() {
-        userService.userSignUp(testUser);
-    }
-
-    @Test
     @DisplayName("조회한 아이디가 DB에 존재하지 않는 경우 false를 리턴합니다.")
     public void duplicateUserIdExceptionFalse() {
         when(userRepository.isUserIdDuplicate(testUser.getUserId())).thenReturn(false);
+
         assertThat(userService.isUserIdDuplicate(testUser.getUserId()), is(false));
 
-        userRepository.isUserIdDuplicate(testUser.getUserId());
+        verify(userRepository, times(1)).isUserIdDuplicate(testUser.getUserId());
     }
 
     @Test
     @DisplayName("조회한 아이디가 DB에 존재하는 경우 true를 리턴합니다.")
     public void duplicateUserIdExceptionTrue() {
         when(userRepository.isUserIdDuplicate(testUser.getUserId())).thenReturn(true);
+
         assertThat(userService.isUserIdDuplicate(testUser.getUserId()), is(true));
 
-        userRepository.isUserIdDuplicate(testUser.getUserId());
+        verify(userRepository, times(1)).isUserIdDuplicate(testUser.getUserId());
     }
 
     @Test
     @DisplayName("LoginRequest를 통해 DB에 보관되어 있는 사용자의 ID와 일치하는 ID와 Password를 보낼 경우 그에 맞는 사용자를 리턴하는데 성공합니다.")
     public void getUserWithCorrectLoginRequestSuccess() {
-        LoginRequest loginRequest = new LoginRequest(testUser.getUserId(), "Typo is everywhere~");
+        UserLoginRequest loginRequest = new UserLoginRequest(testUser.getUserId(), "Typo is everywhere~");
 
         when(userRepository.getUserById(loginRequest.getUserId())).thenReturn(testUser);
         when(passwordEncoder.isMatch(loginRequest.getPassword(), testUser.getPassword())).thenReturn(true);
@@ -91,7 +89,7 @@ class UserServiceTest {
     @Test
     @DisplayName("LoginRequest를 통해 받은 유저 ID가 존재하지 않는 경우 IncorrectUserInfoException 이 발생합니다.")
     public void getUserWithWrongIdFail() {
-        LoginRequest loginRequest = new LoginRequest("I'm a wrong user", testUser.getPassword());
+        UserLoginRequest loginRequest = new UserLoginRequest("I'm a wrong user", testUser.getPassword());
 
         when(userRepository.getUserById(loginRequest.getUserId())).thenReturn(null);
 
@@ -105,7 +103,7 @@ class UserServiceTest {
     @Test
     @DisplayName("LoginRequest를 통해 받은 유저의 Password가 일치하지 않는 경우 IncorrectUserInfoException 이 발생합니다.")
     public void getUserWithWrongPasswordFail() {
-        LoginRequest loginRequest = new LoginRequest(testUser.getUserId(), "Typo is everywhere~");
+        UserLoginRequest loginRequest = new UserLoginRequest(testUser.getUserId(), "Typo is everywhere~");
 
         when(userRepository.getUserById(loginRequest.getUserId())).thenReturn(testUser);
         when(passwordEncoder.isMatch(loginRequest.getPassword(), testUser.getPassword())).thenReturn(false);
