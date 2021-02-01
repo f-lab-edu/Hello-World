@@ -1,8 +1,10 @@
 package me.soo.helloworld.controller;
 
+import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
+import me.soo.helloworld.exception.IncorrectUserInfoException;
 import me.soo.helloworld.model.user.User;
-import me.soo.helloworld.model.user.UserIdAndPassword;
+import me.soo.helloworld.model.user.LoginRequest;
 import me.soo.helloworld.service.LoginService;
 import me.soo.helloworld.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -40,20 +42,18 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> userLogin(@Valid @RequestBody UserIdAndPassword requestedIdAndPassword) {
+    public ResponseEntity<Void> userLogin(@Valid @RequestBody LoginRequest loginRequest) {
 
         try {
-            UserIdAndPassword storedUserIdAndPassword = userService.getLoginUser(requestedIdAndPassword);
-
-           if (storedUserIdAndPassword == null) {
-               return HTTP_RESPONSE_NOT_FOUND;
-           }
-
-            loginService.login(requestedIdAndPassword, storedUserIdAndPassword);
+            User user = userService.getUser(loginRequest);
+            loginService.login(user.getUserId());
 
             return HTTP_RESPONSE_OK;
 
-        } catch (RuntimeException e) {
+        } catch (IncorrectUserInfoException e) {
+            return HTTP_RESPONSE_NOT_FOUND;
+
+        } catch (DuplicateRequestException e) {
             return HTTP_RESPONSE_UNAUTHORIZED;
         }
     }

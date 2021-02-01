@@ -2,27 +2,26 @@ package me.soo.helloworld.repository;
 
 import me.soo.helloworld.mapper.UserMapper;
 import me.soo.helloworld.model.user.User;
-import me.soo.helloworld.model.user.UserIdAndPassword;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
-class UserRepositoryTest {
+public class UserRepositoryTest {
 
     User testUser;
-
-    UserIdAndPassword correctUserIdAndPassword;
-
-    UserIdAndPassword wrongUserIdWithCorrectPassword;
 
     @Autowired
     UserMapper userMapper;
@@ -40,30 +39,33 @@ class UserRepositoryTest {
                 .livingTown("Newcastle Upon Tyne")
                 .aboutMe("Hello, I'd love to make great friends here")
                 .build();
-
-        correctUserIdAndPassword = new UserIdAndPassword(testUser.getUserId(), testUser.getPassword());
-
-        wrongUserIdWithCorrectPassword = new UserIdAndPassword("WrongID", testUser.getPassword());
-    }
-
-
-    @Test
-    @DisplayName("DB에 존재하는 사용자의 이름을 호출하면 해당하는 로그인 정보를 호출하는데 성공합니다.")
-    public void getRegisteredUserTestSuccess() {
-        userMapper.insertUser(testUser);
-
-        UserIdAndPassword registeredUserIdAndPassword = userMapper.getRegisteredUserById(correctUserIdAndPassword.getUserId());
-        assertEquals(testUser.getUserId(), registeredUserIdAndPassword.getUserId());
-        assertEquals(testUser.getPassword(), registeredUserIdAndPassword.getPassword());
-
     }
 
     @Test
-    @DisplayName("DB에 존재하지 않는 사용자의 이름을 호출하면 Null을 리턴합니다.")
-    public void getRegisteredUserTestFailWithDifferentName() {
+    @DisplayName("DB에 등록된 회원과 일치하는 ID를 입력하면 해당 사용자의 정보를 담은 객체를 받아옵니다.")
+    public void getUserByIdAndPasswordSuccess() {
         userMapper.insertUser(testUser);
 
-        UserIdAndPassword registeredUserInfo = userMapper.getRegisteredUserById(wrongUserIdWithCorrectPassword.getUserId());
-        assertNull(registeredUserInfo);
+        User dbUser = userMapper.getUserById(testUser.getUserId());
+
+        assertEquals(testUser.getUserId(), dbUser.getUserId());
+        assertEquals(testUser.getPassword(), dbUser.getPassword());
+        assertEquals(testUser.getEmail(), dbUser.getEmail());
+        assertEquals(testUser.getGender(), dbUser.getGender());
+        assertEquals(testUser.getBirthday(), dbUser.getBirthday());
+        assertEquals(testUser.getOriginCountry(), dbUser.getOriginCountry());
+        assertEquals(testUser.getLivingCountry(), dbUser.getLivingCountry());
+        assertEquals(testUser.getLivingTown(), dbUser.getLivingTown());
+        assertEquals(testUser.getAboutMe(), dbUser.getAboutMe());
+    }
+
+    @Test
+    @DisplayName("DB에 등록되지 않은 사용자의 ID를 입력하면 null을 리턴합니다.")
+    public void getUserByIdAndPasswordFailWithWrongId() {
+        userMapper.insertUser(testUser);
+
+        User dbUser = userMapper.getUserById("Hello World");
+
+        assertNull(dbUser);
     }
 }

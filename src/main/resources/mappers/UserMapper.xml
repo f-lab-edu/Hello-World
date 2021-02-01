@@ -13,9 +13,10 @@
             (SELECT userId FROM users WHERE userId = #{userId})
     </select>
     
-    <select id="getRegisteredUserById"
-            parameterType="String" resultType="me.soo.helloworld.model.user.UserIdAndPassword">
-        SELECT userId, password FROM users WHERE userId = #{userId}
+    <select id="getUserById"
+            parameterType="map" resultType="me.soo.helloworld.model.user.User">
+        SELECT userId, password, email, gender, birthDay, originCountry,
+               livingCountry, livingTown, aboutMe FROM users WHERE userId = #{userId}
     </select>
 
 </mapper>

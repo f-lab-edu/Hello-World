@@ -1,6 +1,5 @@
 package me.soo.helloworld.model.user;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
