@@ -2,9 +2,11 @@ package me.soo.helloworld.controller;
 
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
+import me.soo.helloworld.annotation.CurrentUser;
 import me.soo.helloworld.exception.IncorrectUserInfoException;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserLoginRequest;
+import me.soo.helloworld.model.user.UserPasswordRequest;
 import me.soo.helloworld.service.LoginService;
 import me.soo.helloworld.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -64,5 +66,18 @@ public class UserController {
         loginService.logout();
 
         return HTTP_RESPONSE_NO_CONTENT;
+    }
+
+    @PutMapping("/account/password")
+    public ResponseEntity<Void> userPasswordUpdate(@RequestBody @Valid UserPasswordRequest userPasswordRequest,
+                                                   @CurrentUser User user) {
+        try {
+            userService.userPasswordUpdate(userPasswordRequest, user);
+            loginService.logout();
+
+            return HTTP_RESPONSE_OK;
+        } catch (IncorrectUserInfoException e) {
+            return HTTP_RESPONSE_UNAUTHORIZED;
+        }
     }
 }

@@ -2,7 +2,7 @@ package me.soo.helloworld.service;
 
 import me.soo.helloworld.exception.IncorrectUserInfoException;
 import me.soo.helloworld.model.user.User;
-import me.soo.helloworld.model.user.UserPasswordUpdateRequest;
+import me.soo.helloworld.model.user.UserPasswordRequest;
 import me.soo.helloworld.repository.UserRepository;
 import me.soo.helloworld.util.PasswordEncoder;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserInfoUpdateTest {
+public class UserUpdateTest {
 
     @Mock
     User testUser;
@@ -56,7 +56,7 @@ public class UserInfoUpdateTest {
 
         String differentPassword = "Do you wanna build a snow man?";
 
-        UserPasswordUpdateRequest newPassword = UserPasswordUpdateRequest.builder()
+        UserPasswordRequest newPassword = UserPasswordRequest.builder()
                 .currentPassword(testUser.getPassword())
                 .newPassword(differentPassword)
                 .checkNewPassword(differentPassword)
@@ -83,7 +83,7 @@ public class UserInfoUpdateTest {
 
         String differentPassword = "Do you wanna build a snow man?";
 
-        UserPasswordUpdateRequest newPassword = UserPasswordUpdateRequest.builder()
+        UserPasswordRequest newPassword = UserPasswordRequest.builder()
                 .currentPassword(differentPassword)
                 .newPassword(differentPassword)
                 .checkNewPassword(differentPassword)
@@ -107,7 +107,7 @@ public class UserInfoUpdateTest {
         String differentPassword = "Do you wanna build a snow man?";
         String distinctPassword = "Show yourself! Let me see who you are";
 
-        UserPasswordUpdateRequest newPassword = UserPasswordUpdateRequest.builder()
+        UserPasswordRequest newPassword = UserPasswordRequest.builder()
                 .currentPassword(testUser.getPassword())
                 .newPassword(differentPassword)
                 .checkNewPassword(distinctPassword)

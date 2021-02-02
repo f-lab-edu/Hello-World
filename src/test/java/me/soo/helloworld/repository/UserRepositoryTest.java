@@ -13,8 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -67,5 +66,21 @@ public class UserRepositoryTest {
         User dbUser = userMapper.getUserById("Hello World");
 
         assertNull(dbUser);
+    }
+
+    @Test
+    @DisplayName("DB에 등록되어 있는 사용자의 ID가 일치하면 해당 사용자의 비밀번호가 변경 됩니다.")
+    public void userPasswordUpdateSuccessWithCorrectId() {
+        userMapper.insertUser(testUser);
+
+        String newPassword = "Into the Unknown";
+
+        userMapper.updateUserPassword(testUser.getUserId(), newPassword);
+
+        User newPasswordUser = userMapper.getUserById(testUser.getUserId());
+
+        assertEquals(testUser.getUserId(), newPasswordUser.getUserId());
+        assertNotEquals(testUser.getPassword(), newPasswordUser.getPassword());
+        assertEquals(newPassword, newPasswordUser.getPassword());
     }
 }

@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 @Builder
 @AllArgsConstructor
-public class UserPasswordUpdateRequest {
+public class UserPasswordRequest {
 
     @NotBlank(message = "현재 비밀번호를 입력해주세요.")
     private final String currentPassword;

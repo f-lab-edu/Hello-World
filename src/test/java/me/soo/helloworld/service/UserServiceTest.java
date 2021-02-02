@@ -3,7 +3,6 @@ package me.soo.helloworld.service;
 import me.soo.helloworld.exception.IncorrectUserInfoException;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
-import me.soo.helloworld.model.user.UserPasswordUpdateRequest;
 import me.soo.helloworld.repository.UserRepository;
 import me.soo.helloworld.util.PasswordEncoder;
 import org.junit.jupiter.api.BeforeEach;
