@@ -1,4 +1,4 @@
-package me.soo.helloworld.model;
+package me.soo.helloworld.model.language;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 @Builder
 @AllArgsConstructor
-public class Languages {
+public class Language {
 
     @NotBlank(message = "모국어 정보를 입력해주세요.")
     private final String nativeLanguage;

@@ -2,7 +2,7 @@ package me.soo.helloworld.repository;
 
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.mapper.UserMapper;
-import me.soo.helloworld.model.User;
+import me.soo.helloworld.model.user.User;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -18,4 +18,9 @@ public class UserRepository {
     public boolean isUserIdDuplicate(String userId) {
         return userMapper.isUserIdDuplicate(userId);
     }
+
+    public User getUserById(String userId) {
+        return userMapper.getUserById(userId);
+    }
+
 }
