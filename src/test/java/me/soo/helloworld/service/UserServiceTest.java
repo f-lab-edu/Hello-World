@@ -1,10 +1,9 @@
 package me.soo.helloworld.service;
 
-import me.soo.helloworld.exception.IncorrectUserInfoException;
-import me.soo.helloworld.model.user.LoginRequest;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.repository.UserRepository;
 import me.soo.helloworld.util.PasswordEncoder;
+import me.soo.helloworld.util.PasswordEncoderBcrypt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,8 +16,6 @@ import java.sql.Date;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.*;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,6 +46,8 @@ class UserServiceTest {
                 "Newcastle Upon Tyne",
                 ""
         );
+
+        passwordEncoder = new PasswordEncoderBcrypt();
     }
 
     @Test
@@ -72,49 +71,5 @@ class UserServiceTest {
         assertThat(userService.isUserIdDuplicate(testUser.getUserId()), is(true));
 
         userRepository.isUserIdDuplicate(testUser.getUserId());
-    }
-
-    @Test
-    @DisplayName("LoginRequest를 통해 DB에 보관되어 있는 사용자의 ID와 일치하는 ID와 Password를 보낼 경우 그에 맞는 사용자를 리턴하는데 성공합니다.")
-    public void getUserWithCorrectLoginRequestSuccess() {
-        LoginRequest loginRequest = new LoginRequest(testUser.getUserId(), "Typo is everywhere~");
-
-        when(userRepository.getUserById(loginRequest.getUserId())).thenReturn(testUser);
-        when(passwordEncoder.isMatch(loginRequest.getPassword(), testUser.getPassword())).thenReturn(true);
-
-        userService.getUser(loginRequest);
-
-        verify(userRepository, times(1)).getUserById(loginRequest.getUserId());
-        verify(passwordEncoder, times(1)).isMatch(loginRequest.getPassword(), testUser.getPassword());
-    }
-
-    @Test
-    @DisplayName("LoginRequest를 통해 받은 유저 ID가 존재하지 않는 경우 IncorrectUserInfoException 이 발생합니다.")
-    public void getUserWithWrongIdFail() {
-        LoginRequest loginRequest = new LoginRequest("I'm a wrong user", testUser.getPassword());
-
-        when(userRepository.getUserById(loginRequest.getUserId())).thenReturn(null);
-
-        assertThrows(IncorrectUserInfoException.class, () -> {
-           userService.getUser(loginRequest);
-        });
-
-        verify(userRepository, times(1)).getUserById(loginRequest.getUserId());
-    }
-
-    @Test
-    @DisplayName("LoginRequest를 통해 받은 유저의 Password가 일치하지 않는 경우 IncorrectUserInfoException 이 발생합니다.")
-    public void getUserWithWrongPasswordFail() {
-        LoginRequest loginRequest = new LoginRequest(testUser.getUserId(), "Typo is everywhere~");
-
-        when(userRepository.getUserById(loginRequest.getUserId())).thenReturn(testUser);
-        when(passwordEncoder.isMatch(loginRequest.getPassword(), testUser.getPassword())).thenReturn(false);
-
-        assertThrows(IncorrectUserInfoException.class, () -> {
-            userService.getUser(loginRequest);
-        });
-
-        verify(userRepository, times(1)).getUserById(loginRequest.getUserId());
-        verify(passwordEncoder, times(1)).isMatch(loginRequest.getPassword(), testUser.getPassword());
     }
 }

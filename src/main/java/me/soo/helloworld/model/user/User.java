@@ -9,6 +9,8 @@ import java.util.Date;
 /** Key Assignment
  * 1. How can it let only certain data (like some letters and special characters) inserted
  * 2. How to Handle Empty Data inserted?
+ *
+ * Sorted
  * */
 
 @Getter
