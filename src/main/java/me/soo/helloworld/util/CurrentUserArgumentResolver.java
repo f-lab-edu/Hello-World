@@ -33,8 +33,6 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
 
     private final LoginService loginService;
 
-    private final UserMapper userMapper;
-
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(CurrentUser.class);
@@ -44,10 +42,6 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
-        String currentUserId = loginService.getCurrentUserId();
-        User currentUser = userMapper.getUserById(currentUserId);
-
-        if (currentUser == null) throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
-        return currentUser;
+        return loginService.getCurrentUserId();
     }
 }

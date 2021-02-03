@@ -69,15 +69,12 @@ public class UserController {
     }
 
     @PutMapping("/account/password")
-    public ResponseEntity<Void> userPasswordUpdate(@RequestBody @Valid UserPasswordRequest userPasswordRequest,
-                                                   @CurrentUser User user) {
-        try {
-            userService.userPasswordUpdate(userPasswordRequest, user);
+    public ResponseEntity<Void> userPasswordUpdate(@CurrentUser String userId,
+                                                   @RequestBody @Valid UserPasswordRequest userPasswordRequest) {
+
+            userService.userPasswordUpdate(userId, userPasswordRequest);
             loginService.logout();
 
             return HTTP_RESPONSE_OK;
-        } catch (IncorrectUserInfoException e) {
-            return HTTP_RESPONSE_UNAUTHORIZED;
-        }
     }
 }

@@ -192,28 +192,4 @@ class UserControllerTest {
 
     }
 
-    @Test
-    @DisplayName("비밀번호 변경에 실패하면 Http Status Code 401(Unauthorized)를 리턴합니다.")
-    public void userPasswordUpdateTest() throws Exception {
-        testUserSignUp(testUser);
-
-        String differentPassword = "!Msugo1@";
-
-        UserPasswordRequest newPassword = UserPasswordRequest.builder()
-                .currentPassword(differentPassword)
-                .newPassword(differentPassword)
-                .checkNewPassword(differentPassword)
-                .build();
-
-        String content = objectMapper.writeValueAsString(newPassword);
-        httpSession.setAttribute(SessionKeys.USER_ID, testUser.getUserId());
-
-        mockMvc.perform(put("/users/account/password")
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON)
-                .session(httpSession))
-                .andDo(print())
-                .andExpect(status().isUnauthorized());
-
-    }
 }
