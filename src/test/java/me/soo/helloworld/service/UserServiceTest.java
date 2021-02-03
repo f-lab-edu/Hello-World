@@ -1,6 +1,6 @@
 package me.soo.helloworld.service;
 
-import me.soo.helloworld.model.User;
+import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.repository.UserRepository;
 import me.soo.helloworld.util.PasswordEncoder;
 import me.soo.helloworld.util.PasswordEncoderBcrypt;

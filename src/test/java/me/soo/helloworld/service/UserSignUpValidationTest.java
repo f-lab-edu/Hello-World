@@ -1,9 +1,9 @@
-package me.soo.helloworld.model;
+package me.soo.helloworld.service;
 
+import me.soo.helloworld.model.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import javax.validation.*;
 import java.sql.Date;
 import java.util.Set;
