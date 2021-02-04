@@ -1,4 +1,4 @@
-package me.soo.helloworld.util;
+package me.soo.helloworld.util.http;
 
 public class SessionKeys {
 

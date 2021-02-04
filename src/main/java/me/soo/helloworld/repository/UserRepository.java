@@ -3,6 +3,7 @@ package me.soo.helloworld.repository;
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.mapper.UserMapper;
 import me.soo.helloworld.model.user.User;
+import me.soo.helloworld.model.user.UserUpdate;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -25,6 +26,10 @@ public class UserRepository {
 
     public void updateUserPassword(String userId, String password) {
         userMapper.updateUserPassword(userId, password);
+    }
+
+    public void updateUser(UserUpdate userUpdate) {
+        userMapper.updateUser(userUpdate);
     }
 
 }

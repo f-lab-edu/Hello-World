@@ -2,6 +2,7 @@ package me.soo.helloworld.repository;
 
 import me.soo.helloworld.mapper.UserMapper;
 import me.soo.helloworld.model.user.User;
+import me.soo.helloworld.model.user.UserUpdate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.sql.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -82,5 +84,24 @@ public class UserRepositoryTest {
         assertEquals(testUser.getUserId(), newPasswordUser.getUserId());
         assertNotEquals(testUser.getPassword(), newPasswordUser.getPassword());
         assertEquals(newPassword, newPasswordUser.getPassword());
+    }
+
+    @Test
+    public void userUpdateTest() {
+        String dir = "D:\\Project\\Hello-World\\Files";
+        String fileName = "soDifficult.txt";
+        File file = new File(fileName, dir);
+
+        UserUpdate updatedUSer = UserUpdate.builder()
+                .userId(testUser.getUserId())
+                .gender("M")
+                .livingCountry("Republic Of Ireland")
+                .livingTown("Dublin")
+                .aboutMe("I've just moved to Dublin today")
+                .profileImagePath(dir)
+                .profileImageName(fileName)
+                .build();
+
+        userMapper.updateUser(updatedUSer);
     }
 }

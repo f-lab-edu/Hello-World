@@ -23,4 +23,11 @@
         UPDATE users SET password = #{password} WHERE userId = #{userId}
     </update>
 
+    <update id="updateUser" parameterType="me.soo.helloworld.model.user.UserUpdate">
+        UPDATE users SET gender = #{gender}, livingCountry = #{livingCountry}, livingTown = #{livingTown},
+                         aboutMe = #{aboutMe}, profileImageName = #{profileImageName},
+                         profileImagePath = #{profileImagePath} WHERE userId = #{userId}
+
+    </update>
+
 </mapper>

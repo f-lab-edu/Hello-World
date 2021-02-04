@@ -1,10 +1,9 @@
 package me.soo.helloworld.service;
 
-import me.soo.helloworld.exception.IncorrectUserInfoException;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserPasswordRequest;
 import me.soo.helloworld.repository.UserRepository;
-import me.soo.helloworld.util.PasswordEncoder;
+import me.soo.helloworld.util.encoder.PasswordEncoder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,17 +34,17 @@ public class UserUpdateTest {
 
     @BeforeEach
     public void setUp() {
-        testUser = new User(
-                "Soo",
-                "Bakery",
-                "test@test.com",
-                "Male",
-                Date.valueOf("1993-09-25"),
-                "South Korea",
-                "The United Kingdom",
-                "Newcastle Upon Tyne",
-                ""
-        );
+        testUser = User.builder()
+                .userId("gomsu1045")
+                .password("Gomsu1045!0$%")
+                .email("test@test.com")
+                .gender("Male")
+                .birthday(Date.valueOf("1993-09-25"))
+                .originCountry("South Korea")
+                .livingCountry("United Kingdom")
+                .livingTown("Newcastle Upon Tyne")
+                .aboutMe("Hello, I'd love to make great friends here")
+                .build();
     }
 
 

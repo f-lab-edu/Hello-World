@@ -3,7 +3,7 @@ package me.soo.helloworld.service;
 import com.sun.jdi.request.DuplicateRequestException;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
-import me.soo.helloworld.util.SessionKeys;
+import me.soo.helloworld.util.http.SessionKeys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

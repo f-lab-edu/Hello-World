@@ -2,7 +2,7 @@ package me.soo.helloworld.service;
 
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
-import me.soo.helloworld.util.SessionKeys;
+import me.soo.helloworld.util.http.SessionKeys;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;

@@ -1,4 +1,4 @@
-package me.soo.helloworld.util;
+package me.soo.helloworld.util.http;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

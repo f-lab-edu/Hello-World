@@ -4,17 +4,20 @@ import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.annotation.CurrentUser;
 import me.soo.helloworld.exception.IncorrectUserInfoException;
-import me.soo.helloworld.model.user.User;
-import me.soo.helloworld.model.user.UserLoginRequest;
-import me.soo.helloworld.model.user.UserPasswordRequest;
+import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.service.LoginService;
 import me.soo.helloworld.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
-import static me.soo.helloworld.util.HttpResponses.*;
+
+import java.io.IOException;
+
+import static me.soo.helloworld.util.http.HttpResponses.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -76,5 +79,17 @@ public class UserController {
             loginService.logout();
 
             return HTTP_RESPONSE_OK;
+    }
+
+    @PutMapping("/account")
+    public ResponseEntity<UserUpdate> userInfoUpdate(@CurrentUser String userId,
+                                                     @RequestPart("profileImage") MultipartFile profileImage,
+                                                     UserUpdateRequest updateRequest) {
+        try {
+            UserUpdate updatedUser = userService.userInfoUpdate(userId, profileImage, updateRequest);
+            return new ResponseEntity<UserUpdate>(HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<UserUpdate>(HttpStatus.UNAUTHORIZED);
+        }
     }
 }
