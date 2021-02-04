@@ -5,6 +5,7 @@ import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.repository.UserRepository;
 import me.soo.helloworld.util.PasswordEncoder;
+import me.soo.helloworld.util.PasswordEncoderBcrypt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,8 +18,6 @@ import java.sql.Date;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.*;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,6 +48,8 @@ class UserServiceTest {
                 "Newcastle Upon Tyne",
                 ""
         );
+
+        passwordEncoder = new PasswordEncoderBcrypt();
     }
 
     @Test
