@@ -19,4 +19,8 @@
                livingCountry, livingTown, aboutMe FROM users WHERE userId = #{userId}
     </select>
 
+    <update id="updateUserPassword" parameterType="map">
+        UPDATE users SET password = #{password} WHERE userId = #{userId}
+    </update>
+
 </mapper>

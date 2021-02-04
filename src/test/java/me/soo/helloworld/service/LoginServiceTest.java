@@ -1,7 +1,7 @@
 package me.soo.helloworld.service;
 
 import com.sun.jdi.request.DuplicateRequestException;
-import me.soo.helloworld.model.user.LoginRequest;
+import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.util.SessionKeys;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,10 +18,9 @@ import javax.servlet.http.HttpSession;
 import java.sql.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserLoginTest {
+public class LoginServiceTest {
 
     User testUser;
 
@@ -51,7 +50,7 @@ public class UserLoginTest {
     @DisplayName("DB에 등록된 회원정보와 일치하는 로그인 요청이 오면 로그인에 성공합니다.")
     public void successLoginRequestWithCorrectLoginRequest() {
 
-        LoginRequest loginRequest = new LoginRequest(testUser.getUserId(), testUser.getPassword());
+        UserLoginRequest loginRequest = new UserLoginRequest(testUser.getUserId(), testUser.getPassword());
 
         loginService.login(loginRequest.getUserId());
 
@@ -62,7 +61,7 @@ public class UserLoginTest {
     @DisplayName("이미 로그인 된 회원에게서 또 다시 로그인 요청이 오면 DuplicateRequestException이 발생합니다.")
     public void failLoginRequestWithWrongLoginRequest() {
 
-        LoginRequest loginRequest = new LoginRequest(testUser.getUserId(), testUser.getPassword());
+        UserLoginRequest loginRequest = new UserLoginRequest(testUser.getUserId(), testUser.getPassword());
 
         httpSession.setAttribute(SessionKeys.USER_ID, loginRequest.getUserId());
 
