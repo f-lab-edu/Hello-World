@@ -1,6 +1,7 @@
 package me.soo.helloworld.service;
 
 import lombok.RequiredArgsConstructor;
+import me.soo.helloworld.exception.FileUploadException;
 import me.soo.helloworld.exception.IncorrectUserInfoException;
 import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.*;
@@ -51,29 +52,20 @@ public class UserService {
         userRepository.updateUserPassword(currentUserId, encodedPassword);
     }
 
-    public UserUpdate userInfoUpdate(String userId, MultipartFile profileImage, UserUpdateRequest updateRequest) throws IOException {
+    public void userUpdate(String userId, MultipartFile profileImage, UserUpdateRequest updateRequest) {
 
-        /*
-        * 할일
-        * 1. 컨트롤러 손보기
-        * 2. 서비스 손보기
-        * - 여기: 파일 경로/이름 얻는법 분리하기 (파일서비스로)
-        * - 여기: updateUser builder 메소드 책임 이관 -> user update 로 like user
-        *
-        * - 파일서비스: 파일 경로 얻는법 알아내기
-        *
-        *  파일경로만 얻어서 리턴할 수 있으면 되지 않을까?
-        *
-        * 4. 테스트 작성
-        *         * */
+        try {
+            FileData oldProfileImage = userRepository.getUserProfileImageById(userId);
 
-        // 기존에 있는 파일은 어떻게 지울까?
+            if (oldProfileImage != null) {
+                fileService.deleteFile(oldProfileImage);
+            }
 
-        FileData profileImageFileData = fileService.uploadFile(profileImage, userId);
-        UserUpdate updatedUser = UserUpdate.buildUpdatedUser(userId, updateRequest, profileImageFileData);
-
-        userRepository.updateUser(updatedUser);
-        return updatedUser;
+            FileData newProfileImage = fileService.uploadFile(profileImage, userId);
+            userRepository.updateUser(userId, updateRequest, newProfileImage);
+        } catch (IOException e) {
+            throw new FileUploadException("파일 업로드에 실패하였습니다. ", e.getCause());
+        }
     }
 
 

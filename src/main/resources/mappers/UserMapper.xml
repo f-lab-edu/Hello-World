@@ -12,22 +12,27 @@
         SELECT EXISTS
             (SELECT userId FROM users WHERE userId = #{userId})
     </select>
-    
+
     <select id="getUserById"
             parameterType="String" resultType="me.soo.helloworld.model.user.User">
         SELECT userId, password, email, gender, birthDay, originCountry,
                livingCountry, livingTown, aboutMe FROM users WHERE userId = #{userId}
     </select>
 
+    <select id="getUserProfileImageById"
+            parameterType="String" resultType="me.soo.helloworld.model.file.FileData">
+        SELECT profileImageName, profileImagePath FROM users WHERE userId = #{userId}
+    </select>
+
     <update id="updateUserPassword" parameterType="map">
         UPDATE users SET password = #{password} WHERE userId = #{userId}
     </update>
 
-    <update id="updateUser" parameterType="me.soo.helloworld.model.user.UserUpdate">
-        UPDATE users SET gender = #{gender}, livingCountry = #{livingCountry}, livingTown = #{livingTown},
-                         aboutMe = #{aboutMe}, profileImageName = #{profileImageName},
-                         profileImagePath = #{profileImagePath} WHERE userId = #{userId}
-
+    <update id="updateUser" parameterType="map">
+        UPDATE users SET gender = #{updateRequest.gender}, livingCountry = #{updateRequest.livingCountry},
+                         livingTown = #{updateRequest.livingTown}, aboutMe = #{updateRequest.aboutMe},
+                         profileImageName = #{imageData.fileName}, profileImagePath = #{imageData.filePath}
+        WHERE userId = #{userId}
     </update>
 
 </mapper>

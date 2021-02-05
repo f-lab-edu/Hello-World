@@ -1,8 +1,9 @@
 package me.soo.helloworld.repository;
 
 import me.soo.helloworld.mapper.UserMapper;
+import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.User;
-import me.soo.helloworld.model.user.UserUpdate;
+import me.soo.helloworld.model.user.UserUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,16 +11,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
 import java.sql.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@Transactional
+//@Transactional
 public class UserRepositoryTest {
 
     User testUser;
@@ -89,19 +88,16 @@ public class UserRepositoryTest {
     @Test
     public void userUpdateTest() {
         String dir = "D:\\Project\\Hello-World\\Files";
-        String fileName = "soDifficult.txt";
-        File file = new File(fileName, dir);
+        String fileName = "IsItSuccessful.txt";
+        FileData profileImage = new FileData(fileName, dir);
 
-        UserUpdate updatedUSer = UserUpdate.builder()
-                .userId(testUser.getUserId())
+        UserUpdateRequest updatedUSer = UserUpdateRequest.builder()
                 .gender("M")
                 .livingCountry("Republic Of Ireland")
                 .livingTown("Dublin")
                 .aboutMe("I've just moved to Dublin today")
-                .profileImagePath(dir)
-                .profileImageName(fileName)
                 .build();
 
-        userMapper.updateUser(updatedUSer);
+        userMapper.updateUser(testUser.getUserId(), updatedUSer, profileImage);
     }
 }

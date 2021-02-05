@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.UserPasswordRequest;
+import me.soo.helloworld.model.user.UserUpdateRequest;
 import me.soo.helloworld.repository.UserRepository;
 import me.soo.helloworld.util.encoder.PasswordEncoder;
 import me.soo.helloworld.util.http.SessionKeys;
@@ -15,10 +16,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.http.codec.multipart.Part;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.mock.web.MockPart;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Date;
 
@@ -56,7 +66,7 @@ class UserControllerTest {
                 .userId("gomsu1045")
                 .password("Gomsu1045!0$%")
                 .email("test@test.com")
-                .gender("Male")
+                .gender("M")
                 .birthday(Date.valueOf("1993-09-25"))
                 .originCountry("South Korea")
                 .livingCountry("United Kingdom")
@@ -190,6 +200,46 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
+    }
+
+    @Test
+    @DisplayName("유저정보 업데이트에 성공하면 Http Status Code 200(OK)를 리턴합니다.")
+    public void userUpdateTestSuccess() throws Exception {
+        testUserSignUp(testUser);
+
+        UserUpdateRequest updateRequest = UserUpdateRequest.builder()
+                .gender("F")
+                .livingCountry("South Korea")
+                .livingTown("Gwangju")
+                .aboutMe("I've just back to my hometown from abroad.")
+                .build();
+
+        MockMultipartFile testMultipartFile = new MockMultipartFile(
+                "profileImage",
+                "profileImage",
+                "image/jpeg",
+                "Hello There".getBytes());
+
+        String content = objectMapper.writeValueAsString(updateRequest);
+        httpSession.setAttribute(SessionKeys.USER_ID, testUser.getUserId());
+
+        MockMultipartHttpServletRequestBuilder builders = MockMvcRequestBuilders
+                .multipart("/users/account");
+
+        builders.with(new RequestPostProcessor() {
+            @Override
+            public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
+                request.setMethod("PUT");
+
+                return request;
+            }
+        });
+
+        mockMvc.perform(builders.file(testMultipartFile)
+                .session(httpSession)
+                .content(content))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
 }

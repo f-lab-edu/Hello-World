@@ -9,6 +9,6 @@ public class FileData {
 
     private final String fileName;
 
-    private final String fileDir;
+    private final String filePath;
 
 }

@@ -25,17 +25,17 @@ public class UpdateTest {
     public void update() throws Exception {
         String userId = "gomsu1045";
         UserUpdateRequest updateRequest = UserUpdateRequest.builder()
-                .gender("Female")
-                .livingCountry("Bellatrix")
-                .livingTown("Hermione Granger")
-                .aboutMe("Hosanna In the Highest")
+                .gender("M")
+                .livingCountry("South Korea")
+                .livingTown("Gwangju")
+                .aboutMe("It's Levio~~~~sa Not Leviosa~~~~")
                 .build();
 
-        String fileName = "I am ground.jpg";
+        String fileName = "Honestly.txt";
 
         MultipartFile multipartFile = new MockMultipartFile("profile", fileName, "text/plain", "Hello There".getBytes());
 
-        userService.userInfoUpdate(userId, multipartFile, updateRequest);
+        userService.userUpdate(userId, multipartFile, updateRequest);
 
     }
 

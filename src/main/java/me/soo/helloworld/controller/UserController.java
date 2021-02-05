@@ -3,19 +3,17 @@ package me.soo.helloworld.controller;
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.annotation.CurrentUser;
+import me.soo.helloworld.exception.FileUploadException;
 import me.soo.helloworld.exception.IncorrectUserInfoException;
 import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.service.LoginService;
 import me.soo.helloworld.service.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
-
-import java.io.IOException;
 
 import static me.soo.helloworld.util.http.HttpResponses.*;
 
@@ -75,21 +73,22 @@ public class UserController {
     public ResponseEntity<Void> userPasswordUpdate(@CurrentUser String userId,
                                                    @RequestBody @Valid UserPasswordRequest userPasswordRequest) {
 
-            userService.userPasswordUpdate(userId, userPasswordRequest);
-            loginService.logout();
+        userService.userPasswordUpdate(userId, userPasswordRequest);
+        loginService.logout();
 
-            return HTTP_RESPONSE_OK;
+        return HTTP_RESPONSE_OK;
     }
 
     @PutMapping("/account")
-    public ResponseEntity<UserUpdate> userInfoUpdate(@CurrentUser String userId,
-                                                     @RequestPart("profileImage") MultipartFile profileImage,
-                                                     UserUpdateRequest updateRequest) {
+    public ResponseEntity<Void> userUpdate(@CurrentUser String userId,
+                                           @RequestPart("profileImage") MultipartFile profileImage,
+                                           UserUpdateRequest updateRequest) {
+
         try {
-            UserUpdate updatedUser = userService.userInfoUpdate(userId, profileImage, updateRequest);
-            return new ResponseEntity<UserUpdate>(HttpStatus.OK);
-        } catch (IOException e) {
-            return new ResponseEntity<UserUpdate>(HttpStatus.UNAUTHORIZED);
+            userService.userUpdate(userId, profileImage, updateRequest);
+            return HTTP_RESPONSE_OK;
+        } catch (FileUploadException e) {
+            return HTTP_RESPONSE_BAD_REQUEST;
         }
     }
 }
