@@ -21,9 +21,7 @@ public interface UserMapper {
 
     public void updateUserPassword(@Param("userId") String userId, @Param("password") String password);
 
-    public void updateUser(
-            @Param("userId") String userId,
-            @Param("updateRequest") UserUpdateRequest updateRequest,
-            @Param("imageData") FileData profileImageData
-    );
+    public void updateUserProfileImage(@Param("userId") String userId, @Param("profileImage") FileData newProfileImage);
+
+    public void updateUserInfo(@Param("userId") String userId, @Param("updateRequest") UserUpdateRequest updateRequest);
 }

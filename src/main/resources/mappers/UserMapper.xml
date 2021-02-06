@@ -3,9 +3,10 @@
 
 <mapper namespace="me.soo.helloworld.mapper.UserMapper">
     <insert id="insertUser" parameterType="me.soo.helloworld.model.user.User">
-        INSERT INTO users(userId, password, email, gender, birthday, originCountry, livingCountry, livingTown, aboutMe)
+        INSERT INTO users(userId, password, email, gender, birthday, originCountry, livingCountry, livingTown, aboutMe,
+                            profileImageName, profileImagePath)
         VALUES(#{userId}, #{password}, #{email}, #{gender}, #{birthday}, #{originCountry}, #{livingCountry}, #{livingTown},
-               #{aboutMe})
+               #{aboutMe}, #{profileImageName}, #{profileImagePath})
     </insert>
 
     <select id="isUserIdDuplicate" parameterType="String" resultType="boolean">
@@ -15,8 +16,8 @@
 
     <select id="getUserById"
             parameterType="String" resultType="me.soo.helloworld.model.user.User">
-        SELECT userId, password, email, gender, birthDay, originCountry,
-               livingCountry, livingTown, aboutMe FROM users WHERE userId = #{userId}
+        SELECT userId, password, email, gender, birthDay, originCountry, livingCountry, livingTown, aboutMe,
+               profileImageName, profileImagePath FROM users WHERE userId = #{userId}
     </select>
 
     <select id="getUserProfileImageById"
@@ -28,10 +29,14 @@
         UPDATE users SET password = #{password} WHERE userId = #{userId}
     </update>
 
-    <update id="updateUser" parameterType="map">
+    <update id="updateUserInfo" parameterType="map">
         UPDATE users SET gender = #{updateRequest.gender}, livingCountry = #{updateRequest.livingCountry},
-                         livingTown = #{updateRequest.livingTown}, aboutMe = #{updateRequest.aboutMe},
-                         profileImageName = #{imageData.fileName}, profileImagePath = #{imageData.filePath}
+                         livingTown = #{updateRequest.livingTown}, aboutMe = #{updateRequest.aboutMe}
+            WHERE userId = #{userId}
+    </update>
+
+    <update id="updateUserProfileImage" parameterType="map">
+        UPDATE users SET profileImageName = #{profileImage.fileName}, profileImagePath = #{profileImage.filePath}
         WHERE userId = #{userId}
     </update>
 

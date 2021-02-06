@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.lang.Nullable;
 
-import java.util.Date;
-
 @Getter
 @Builder
 @AllArgsConstructor

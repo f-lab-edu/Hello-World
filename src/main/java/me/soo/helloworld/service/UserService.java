@@ -1,7 +1,7 @@
 package me.soo.helloworld.service;
 
 import lombok.RequiredArgsConstructor;
-import me.soo.helloworld.exception.FileUploadException;
+import me.soo.helloworld.exception.file.FileNotUploadedException;
 import me.soo.helloworld.exception.IncorrectUserInfoException;
 import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.*;
@@ -52,9 +52,12 @@ public class UserService {
         userRepository.updateUserPassword(currentUserId, encodedPassword);
     }
 
-    public void userUpdate(String userId, MultipartFile profileImage, UserUpdateRequest updateRequest) {
+    public void userInfoUpdate(String userId, UserUpdateRequest updateRequest) {
+        userRepository.updateUserInfo(userId, updateRequest);
+    }
 
-        try {
+    public void userProfileImageUpdate(String userId, MultipartFile profileImage) {
+
             FileData oldProfileImage = userRepository.getUserProfileImageById(userId);
 
             if (oldProfileImage != null) {
@@ -62,11 +65,6 @@ public class UserService {
             }
 
             FileData newProfileImage = fileService.uploadFile(profileImage, userId);
-            userRepository.updateUser(userId, updateRequest, newProfileImage);
-        } catch (IOException e) {
-            throw new FileUploadException("파일 업로드에 실패하였습니다. ", e.getCause());
-        }
+            userRepository.updateUserProfileImage(userId, newProfileImage);
     }
-
-
 }

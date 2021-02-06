@@ -35,7 +35,6 @@ public class UpdateTest {
 
         MultipartFile multipartFile = new MockMultipartFile("profile", fileName, "text/plain", "Hello There".getBytes());
 
-        userService.userUpdate(userId, multipartFile, updateRequest);
 
     }
 

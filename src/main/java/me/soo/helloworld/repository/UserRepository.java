@@ -33,8 +33,11 @@ public class UserRepository {
         userMapper.updateUserPassword(userId, password);
     }
 
-    public void updateUser(String userId, UserUpdateRequest userUpdate, FileData profileImageData) {
-        userMapper.updateUser(userId, userUpdate, profileImageData);
+    public void updateUserInfo(String userId, UserUpdateRequest updateRequest) {
+        userMapper.updateUserInfo(userId, updateRequest);
     }
 
+    public void updateUserProfileImage(String userId, FileData newProfileImage) {
+        userMapper.updateUserProfileImage(userId, newProfileImage);
+    }
 }

@@ -17,5 +17,6 @@ public class HttpResponses {
 
     public static final ResponseEntity<Void> HTTP_RESPONSE_NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-    public static final ResponseEntity<Void> HTTP_RESPONSE_BAD_REQUEST = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public static final ResponseEntity<Void> HTTP_RESPONSE_INTERNAL_SERVER_ERROR
+            = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 }

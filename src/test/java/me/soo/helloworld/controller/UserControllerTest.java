@@ -28,6 +28,8 @@ import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequ
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Date;
@@ -204,28 +206,44 @@ class UserControllerTest {
 
     @Test
     @DisplayName("유저정보 업데이트에 성공하면 Http Status Code 200(OK)를 리턴합니다.")
-    public void userUpdateTestSuccess() throws Exception {
+    public void userInfoUpdateTestSuccess() throws Exception {
         testUserSignUp(testUser);
 
-        UserUpdateRequest updateRequest = UserUpdateRequest.builder()
-                .gender("F")
-                .livingCountry("South Korea")
-                .livingTown("Gwangju")
-                .aboutMe("I've just back to my hometown from abroad.")
+        UserUpdateRequest updatedUser = UserUpdateRequest.builder()
+                .gender("M")
+                .livingCountry("Republic Of Ireland")
+                .livingTown("Dublin")
+                .aboutMe("I've just moved to Dublin today")
                 .build();
 
-        MockMultipartFile testMultipartFile = new MockMultipartFile(
+        String content = objectMapper.writeValueAsString(updatedUser);
+        httpSession.setAttribute(SessionKeys.USER_ID, testUser.getUserId());
+
+        mockMvc.perform(put("/users/account/info")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .session(httpSession))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("사용자의 프로파일 사진 업데이트에 성공하면 Http Status Code 200(OK)를 리턴합니다.")
+    public void userProfileUpdateTestSuccess() throws Exception {
+//        testUserSignUp(testUser);
+
+        MockMultipartFile testImageFile = new MockMultipartFile(
                 "profileImage",
                 "profileImage",
                 "image/jpeg",
                 "Hello There".getBytes());
 
-        String content = objectMapper.writeValueAsString(updateRequest);
-        httpSession.setAttribute(SessionKeys.USER_ID, testUser.getUserId());
-
         MockMultipartHttpServletRequestBuilder builders = MockMvcRequestBuilders
-                .multipart("/users/account");
+                .multipart("/users/account/profile-image");
 
+        /*
+            기존의 multipart 메소드가 POST 메소드로 고정되어 있기 때문에 PUT 으로 바꿔주기 위해 아래의 방법을 사용
+         */
         builders.with(new RequestPostProcessor() {
             @Override
             public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
@@ -235,9 +253,11 @@ class UserControllerTest {
             }
         });
 
-        mockMvc.perform(builders.file(testMultipartFile)
-                .session(httpSession)
-                .content(content))
+        httpSession.setAttribute(SessionKeys.USER_ID, testUser.getUserId());
+
+        mockMvc.perform(builders.file(testImageFile)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .session(httpSession))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
