@@ -5,8 +5,6 @@ import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.UserPasswordRequest;
 import me.soo.helloworld.model.user.UserUpdateRequest;
-import me.soo.helloworld.repository.UserRepository;
-import me.soo.helloworld.util.encoder.PasswordEncoder;
 import me.soo.helloworld.util.http.SessionKeys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,21 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.http.codec.multipart.Part;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.mock.web.MockPart;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Date;
 
@@ -52,13 +44,7 @@ class UserControllerTest {
     ObjectMapper objectMapper;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
     MockMvc mockMvc;
-
-    @Autowired
-    UserRepository userRepository;
 
     MockHttpSession httpSession;
 
@@ -178,88 +164,4 @@ class UserControllerTest {
 
         assertNull(httpSession.getAttribute(SessionKeys.USER_ID));
     }
-
-    @Test
-    @DisplayName("비밀번호 변경에 성공하면 Http Status Code 200(OK)를 리턴합니다.")
-    public void userPasswordUpdateTestSuccess() throws Exception {
-        testUserSignUp(testUser);
-
-        String differentPassword = "!Msugo1@";
-
-        UserPasswordRequest newPassword = UserPasswordRequest.builder()
-                .currentPassword(testUser.getPassword())
-                .newPassword(differentPassword)
-                .checkNewPassword(differentPassword)
-                .build();
-
-        String content = objectMapper.writeValueAsString(newPassword);
-        httpSession.setAttribute(SessionKeys.USER_ID, testUser.getUserId());
-
-        mockMvc.perform(put("/users/account/password")
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON)
-                .session(httpSession))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-    }
-
-    @Test
-    @DisplayName("유저정보 업데이트에 성공하면 Http Status Code 200(OK)를 리턴합니다.")
-    public void userInfoUpdateTestSuccess() throws Exception {
-        testUserSignUp(testUser);
-
-        UserUpdateRequest updatedUser = UserUpdateRequest.builder()
-                .gender("M")
-                .livingCountry("Republic Of Ireland")
-                .livingTown("Dublin")
-                .aboutMe("I've just moved to Dublin today")
-                .build();
-
-        String content = objectMapper.writeValueAsString(updatedUser);
-        httpSession.setAttribute(SessionKeys.USER_ID, testUser.getUserId());
-
-        mockMvc.perform(put("/users/account/info")
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON)
-                .session(httpSession))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("사용자의 프로파일 사진 업데이트에 성공하면 Http Status Code 200(OK)를 리턴합니다.")
-    public void userProfileUpdateTestSuccess() throws Exception {
-//        testUserSignUp(testUser);
-
-        MockMultipartFile testImageFile = new MockMultipartFile(
-                "profileImage",
-                "profileImage",
-                "image/jpeg",
-                "Hello There".getBytes());
-
-        MockMultipartHttpServletRequestBuilder builders = MockMvcRequestBuilders
-                .multipart("/users/account/profile-image");
-
-        /*
-            기존의 multipart 메소드가 POST 메소드로 고정되어 있기 때문에 PUT 으로 바꿔주기 위해 아래의 방법을 사용
-         */
-        builders.with(new RequestPostProcessor() {
-            @Override
-            public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
-                request.setMethod("PUT");
-
-                return request;
-            }
-        });
-
-        httpSession.setAttribute(SessionKeys.USER_ID, testUser.getUserId());
-
-        mockMvc.perform(builders.file(testImageFile)
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .session(httpSession))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
 }

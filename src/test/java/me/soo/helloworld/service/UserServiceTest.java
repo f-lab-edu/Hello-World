@@ -17,7 +17,6 @@ import java.sql.Date;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.*;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -38,7 +37,7 @@ class UserServiceTest {
 
     @BeforeEach
     public void setUp() {
-        testUser = testUser = User.builder()
+        testUser = User.builder()
                 .userId("gomsu1045")
                 .password("Gomsu1045!0$%")
                 .email("test@test.com")

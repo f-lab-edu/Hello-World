@@ -44,6 +44,9 @@ public class UserUpdateTest {
     @Mock
     FileService fileService;
 
+    @Mock
+    LoginService loginService;
+
     @BeforeEach
     public void setUp() {
 

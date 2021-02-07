@@ -1,6 +1,6 @@
 package me.soo.helloworld.exception.file;
 
-public class FileNotDeletedException extends RuntimeException {
+public class FileNotDeletedException extends FileException {
 
     public FileNotDeletedException(String message, Throwable cause) {
         super(message, cause);
