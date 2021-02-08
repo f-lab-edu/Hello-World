@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.annotation.CurrentUser;
 import me.soo.helloworld.model.user.UserPasswordRequest;
 import me.soo.helloworld.model.user.UserUpdateRequest;
-import me.soo.helloworld.service.LoginService;
 import me.soo.helloworld.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

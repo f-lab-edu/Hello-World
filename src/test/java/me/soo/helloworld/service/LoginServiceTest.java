@@ -1,6 +1,6 @@
 package me.soo.helloworld.service;
 
-import com.sun.jdi.request.DuplicateRequestException;
+import me.soo.helloworld.exception.LoginException;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.util.http.SessionKeys;
@@ -65,7 +65,7 @@ public class LoginServiceTest {
 
         httpSession.setAttribute(SessionKeys.USER_ID, loginRequest.getUserId());
 
-        assertThrows(DuplicateRequestException.class, () -> {
+        assertThrows(LoginException.class, () -> {
             loginService.login(loginRequest.getUserId());
         });
 

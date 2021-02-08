@@ -1,7 +1,7 @@
 package me.soo.helloworld.service;
 
-import me.soo.helloworld.exception.file.FileNotDeletedException;
-import me.soo.helloworld.exception.file.FileNotUploadedException;
+import me.soo.helloworld.enums.FileExceptionCode;
+import me.soo.helloworld.exception.FileException;
 import me.soo.helloworld.model.file.FileData;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class LocalFileService implements FileService {
 
             return new FileData(fileName, String.valueOf(filePath));
         } catch (IOException e) {
-            throw new FileNotUploadedException("파일 업로드에 실패하였습니다.", e.getCause());
+            throw new FileException(FileExceptionCode.FILE_NOT_UPLOADED);
         }
     }
 
@@ -47,7 +47,7 @@ public class LocalFileService implements FileService {
             Files.deleteIfExists(file);
 
         } catch (IOException e) {
-            throw new FileNotDeletedException("파일 삭제에 실패하였습니다.", e.getCause());
+            throw new FileException(FileExceptionCode.FILE_NOT_DELETED);
         }
     }
 

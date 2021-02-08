@@ -1,7 +1,6 @@
 package me.soo.helloworld.service;
 
-import me.soo.helloworld.exception.file.FileNotDeletedException;
-import me.soo.helloworld.exception.file.FileNotUploadedException;
+import me.soo.helloworld.exception.FileException;
 import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserPasswordRequest;
@@ -15,15 +14,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 
-import java.io.IOException;
 import java.sql.Date;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.will;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -146,9 +141,9 @@ public class UserUpdateTest {
                 "Hello There".getBytes());
 
         when(userRepository.getUserProfileImageById(testUser.getUserId())).thenReturn(oldProfileImage);
-        doThrow(FileNotDeletedException.class).when(fileService).deleteFile(oldProfileImage);
+        doThrow(FileException.class).when(fileService).deleteFile(oldProfileImage);
 
-        assertThrows(FileNotDeletedException.class, () -> {
+        assertThrows(FileException.class, () -> {
             userService.userProfileImageUpdate(testUser.getUserId(), testImageFile);
         });
 
@@ -172,9 +167,9 @@ public class UserUpdateTest {
         when(userRepository.getUserProfileImageById(testUser.getUserId())).thenReturn(oldProfileImage);
         doNothing().when(fileService).deleteFile(oldProfileImage);
 
-        when(fileService.uploadFile(testImageFile, testUser.getUserId())).thenThrow(FileNotUploadedException.class);
+        when(fileService.uploadFile(testImageFile, testUser.getUserId())).thenThrow(FileException.class);
 
-        assertThrows(FileNotUploadedException.class, () -> {
+        assertThrows(FileException.class, () -> {
             userService.userProfileImageUpdate(testUser.getUserId(), testImageFile);
         });
 
