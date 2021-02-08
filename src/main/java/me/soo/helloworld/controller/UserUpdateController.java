@@ -21,19 +21,16 @@ public class UserUpdateController {
 
     private final UserService userService;
 
-    private final LoginService loginService;
-
-    @PutMapping("/account/update/password")
+    @PutMapping("/account/password")
     public ResponseEntity<Void> userPasswordUpdate(@CurrentUser String userId,
                                                    @RequestBody @Valid UserPasswordRequest userPasswordRequest) {
 
         userService.userPasswordUpdate(userId, userPasswordRequest);
-        loginService.logout();
 
         return HTTP_RESPONSE_OK;
     }
 
-    @PutMapping("/account/update/profile-image")
+    @PutMapping("/account/profile-image")
     public ResponseEntity<Void> userProfileImageUpdate(@CurrentUser String userId,
                                                        @RequestPart("profileImage") MultipartFile profileImage) {
 
@@ -41,7 +38,7 @@ public class UserUpdateController {
         return HTTP_RESPONSE_OK;
     }
 
-    @PutMapping("/account/update/info")
+    @PutMapping("/account/info")
     public ResponseEntity<Void> userInfoUpdate(@CurrentUser String userId,
                                                @Valid @RequestBody UserUpdateRequest updateRequest) {
         userService.userInfoUpdate(userId, updateRequest);

@@ -18,8 +18,7 @@ public class ControllerExceptionHandler {
             FileNotDeletedException.class
     })
     public ResponseEntity<String> fileException(final FileException ex) {
-        log.error("### FileException");
-        log.error("### FileException has occurred during uploading or deleting files");
+        log.error("fail to upload or delete a file", ex);
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

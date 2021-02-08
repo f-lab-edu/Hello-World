@@ -6,18 +6,13 @@
 
         INSERT INTO users(userId, password, email, gender, birthday, originCountry, livingCountry, livingTown, aboutMe,
                             profileImageName, profileImagePath)
-
         VALUES(#{userId}, #{password}, #{email}, #{gender}, #{birthday}, #{originCountry}, #{livingCountry}, #{livingTown},
                #{aboutMe}, #{profileImageName}, #{profileImagePath})
 
     </insert>
 
     <select id="isUserIdDuplicate" parameterType="String" resultType="boolean">
-
-        SELECT EXISTS
-
-            (SELECT userId FROM users WHERE userId = #{userId})
-
+        SELECT EXISTS (SELECT userId FROM users WHERE userId = #{userId})
     </select>
 
     <select id="getUserById"
@@ -25,22 +20,16 @@
 
         SELECT userId, password, email, gender, birthDay, originCountry, livingCountry, livingTown, aboutMe,
                profileImageName, profileImagePath
-
         FROM users WHERE userId = #{userId}
-
     </select>
 
     <select id="getUserProfileImageById"
             parameterType="String" resultType="me.soo.helloworld.model.file.FileData">
-
         SELECT profileImageName, profileImagePath FROM users WHERE userId = #{userId}
-
     </select>
 
     <update id="updateUserPassword" parameterType="map">
-
         UPDATE users SET password = #{password} WHERE userId = #{userId}
-
     </update>
 
     <update id="updateUserInfo" parameterType="map">
@@ -48,15 +37,12 @@
         UPDATE users SET gender = #{updateRequest.gender}, livingCountry = #{updateRequest.livingCountry},
                          livingTown = #{updateRequest.livingTown}, aboutMe = #{updateRequest.aboutMe}
             WHERE userId = #{userId}
-
     </update>
 
     <update id="updateUserProfileImage" parameterType="map">
 
         UPDATE users SET profileImageName = #{profileImage.fileName}, profileImagePath = #{profileImage.filePath}
-
             WHERE userId = #{userId}
-
     </update>
 
 </mapper>

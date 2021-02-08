@@ -94,7 +94,7 @@ public class UserUpdateControllerTest {
         String content = objectMapper.writeValueAsString(newPassword);
         httpSession.setAttribute(SessionKeys.USER_ID, testUser.getUserId());
 
-        mockMvc.perform(put("/users/account/update/password")
+        mockMvc.perform(put("/users/account/password")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .session(httpSession))
@@ -118,7 +118,7 @@ public class UserUpdateControllerTest {
         String content = objectMapper.writeValueAsString(updatedUser);
         httpSession.setAttribute(SessionKeys.USER_ID, testUser.getUserId());
 
-        mockMvc.perform(put("/users/account/update/info")
+        mockMvc.perform(put("/users/account/info")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .session(httpSession))
@@ -138,7 +138,7 @@ public class UserUpdateControllerTest {
                 "Hello There".getBytes());
 
         MockMultipartHttpServletRequestBuilder builders = MockMvcRequestBuilders
-                .multipart("/users/account/update/profile-image");
+                .multipart("/users/account/profile-image");
 
         /*
             기존의 multipart 메소드가 POST 메소드로 고정되어 있기 때문에 PUT 으로 바꿔주기 위해 아래의 방법을 사용
