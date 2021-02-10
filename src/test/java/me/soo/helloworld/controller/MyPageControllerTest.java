@@ -34,9 +34,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class UserUpdateControllerTest {
+public class MyPageControllerTest {
 
-    User testUser;
+    User currentUser;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -48,7 +48,7 @@ public class UserUpdateControllerTest {
 
     @BeforeEach
     public void setUp() {
-        testUser = User.builder()
+        currentUser = User.builder()
                 .userId("gomsu1045")
                 .password("Gomsu1045!0$%")
                 .email("test@test.com")
@@ -79,22 +79,22 @@ public class UserUpdateControllerTest {
 
 
     @Test
-    @DisplayName("비밀번호 변경에 성공하면 Http Status Code 200(OK)를 리턴합니다.")
+    @DisplayName("현재 사용자의 비밀번호 변경에 성공하면 Http Status Code 200(OK)를 리턴합니다.")
     public void userPasswordUpdateTestSuccess() throws Exception {
-        testUserSignUp(testUser);
+        testUserSignUp(currentUser);
 
         String differentPassword = "!Msugo1@";
 
         UserPasswordRequest newPassword = UserPasswordRequest.builder()
-                .currentPassword(testUser.getPassword())
+                .currentPassword(currentUser.getPassword())
                 .newPassword(differentPassword)
                 .checkNewPassword(differentPassword)
                 .build();
 
         String content = objectMapper.writeValueAsString(newPassword);
-        httpSession.setAttribute(SessionKeys.USER_ID, testUser.getUserId());
+        httpSession.setAttribute(SessionKeys.USER_ID, currentUser.getUserId());
 
-        mockMvc.perform(put("/users/account/password")
+        mockMvc.perform(put("/my-page/password")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .session(httpSession))
@@ -104,9 +104,9 @@ public class UserUpdateControllerTest {
     }
 
     @Test
-    @DisplayName("유저정보 업데이트에 성공하면 Http Status Code 200(OK)를 리턴합니다.")
+    @DisplayName("현재 사용자의 유저정보 업데이트에 성공하면 Http Status Code 200(OK)를 리턴합니다.")
     public void userInfoUpdateTestSuccess() throws Exception {
-        testUserSignUp(testUser);
+        testUserSignUp(currentUser);
 
         UserUpdateRequest updatedUser = UserUpdateRequest.builder()
                 .gender("M")
@@ -116,9 +116,9 @@ public class UserUpdateControllerTest {
                 .build();
 
         String content = objectMapper.writeValueAsString(updatedUser);
-        httpSession.setAttribute(SessionKeys.USER_ID, testUser.getUserId());
+        httpSession.setAttribute(SessionKeys.USER_ID, currentUser.getUserId());
 
-        mockMvc.perform(put("/users/account/info")
+        mockMvc.perform(put("/my-page/infos")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .session(httpSession))
@@ -127,9 +127,9 @@ public class UserUpdateControllerTest {
     }
 
     @Test
-    @DisplayName("사용자의 프로파일 사진 업데이트에 성공하면 Http Status Code 200(OK)를 리턴합니다.")
+    @DisplayName("현재 사용자의 프로파일 사진 업데이트에 성공하면 Http Status Code 200(OK)를 리턴합니다.")
     public void userProfileUpdateTestSuccess() throws Exception {
-        testUserSignUp(testUser);
+        testUserSignUp(currentUser);
 
         MockMultipartFile testImageFile = new MockMultipartFile(
                 "profileImage",
@@ -138,7 +138,7 @@ public class UserUpdateControllerTest {
                 "Hello There".getBytes());
 
         MockMultipartHttpServletRequestBuilder builders = MockMvcRequestBuilders
-                .multipart("/users/account/profile-image");
+                .multipart("/my-page/profile-image");
 
         /*
             기존의 multipart 메소드가 POST 메소드로 고정되어 있기 때문에 PUT 으로 바꿔주기 위해 아래의 방법을 사용
@@ -152,7 +152,7 @@ public class UserUpdateControllerTest {
             }
         });
 
-        httpSession.setAttribute(SessionKeys.USER_ID, testUser.getUserId());
+        httpSession.setAttribute(SessionKeys.USER_ID, currentUser.getUserId());
 
         mockMvc.perform(builders.file(testImageFile)
                 .contentType(MediaType.MULTIPART_FORM_DATA)
