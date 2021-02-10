@@ -78,7 +78,7 @@ class UserServiceTest {
         when(userRepository.getUserById(loginRequest.getUserId())).thenReturn(testUser);
         when(passwordEncoder.isMatch(loginRequest.getPassword(), testUser.getPassword())).thenReturn(true);
 
-        userService.getUser(loginRequest);
+        userService.getUser(loginRequest.getUserId(), loginRequest.getPassword());
 
         verify(userRepository, times(1)).getUserById(loginRequest.getUserId());
         verify(passwordEncoder, times(1)).isMatch(loginRequest.getPassword(), testUser.getPassword());
@@ -92,7 +92,7 @@ class UserServiceTest {
         when(userRepository.getUserById(loginRequest.getUserId())).thenReturn(null);
 
         assertThrows(InvalidUserException.class, () -> {
-           userService.getUser(loginRequest);
+           userService.getUser(loginRequest.getUserId(), loginRequest.getPassword());
         });
 
         verify(userRepository, times(1)).getUserById(loginRequest.getUserId());
@@ -107,7 +107,7 @@ class UserServiceTest {
         when(passwordEncoder.isMatch(loginRequest.getPassword(), testUser.getPassword())).thenReturn(false);
 
         assertThrows(InvalidUserException.class, () -> {
-            userService.getUser(loginRequest);
+            userService.getUser(loginRequest.getUserId(), loginRequest.getPassword());
         });
 
         verify(userRepository, times(1)).getUserById(loginRequest.getUserId());

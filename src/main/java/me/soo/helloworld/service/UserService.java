@@ -28,14 +28,14 @@ public class UserService {
         return userRepository.isUserIdDuplicate(userId);
     }
 
-    public User getUser(UserLoginRequest loginRequest) {
-        User user = userRepository.getUserById(loginRequest.getUserId());
+    public User getUser(String requestId, String requestPassword) {
+        User user = userRepository.getUserById(requestId);
 
         if (user == null) {
             throw new InvalidUserException("해당 사용자는 존재하지 않습니다. 아이디를 다시 확인해 주세요.");
         }
 
-        boolean isMatchingPassword = passwordEncoder.isMatch(loginRequest.getPassword(), user.getPassword());
+        boolean isMatchingPassword = passwordEncoder.isMatch(requestPassword, user.getPassword());
 
         if (!isMatchingPassword) {
             throw new InvalidUserException("입력하신 비밀번호가 일치하지 않습니다. 비밀번호를 다시 확인해주세요.");
