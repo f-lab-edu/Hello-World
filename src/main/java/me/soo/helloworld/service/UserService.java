@@ -20,8 +20,6 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final LoginService loginService;
-
     public void userSignUp(User user) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         userRepository.insertUser(user.buildUserWithEncodedPassword(encodedPassword));
@@ -47,10 +45,9 @@ public class UserService {
         return user;
     }
 
-    public void userPasswordUpdate(String currentUserId, UserPasswordRequest userPasswordRequest) {
+    public void userPasswordUpdate(String userid, UserPasswordRequest userPasswordRequest) {
         String encodedPassword = passwordEncoder.encode(userPasswordRequest.getNewPassword());
-        userRepository.updateUserPassword(currentUserId, encodedPassword);
-        loginService.logout();
+        userRepository.updateUserPassword(userid, encodedPassword);
     }
 
     public void userInfoUpdate(String userId, UserUpdateRequest updateRequest) {
