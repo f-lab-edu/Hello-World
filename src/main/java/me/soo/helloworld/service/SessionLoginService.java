@@ -1,8 +1,7 @@
 package me.soo.helloworld.service;
 
+import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
-import me.soo.helloworld.enums.LoginExceptionCode;
-import me.soo.helloworld.exception.LoginException;
 import me.soo.helloworld.util.http.SessionKeys;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,7 @@ public class SessionLoginService implements LoginService {
     public void login(String userId) {
 
         if (getCurrentUserId() != null) {
-            throw new LoginException(LoginExceptionCode.DUPLICATE_LOGIN_REQUEST);
+            throw new DuplicateRequestException("이미 로그인 되어 있는 사용자입니다.");
         }
 
         httpSession.setAttribute(SessionKeys.USER_ID, userId);

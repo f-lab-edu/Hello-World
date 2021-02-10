@@ -1,6 +1,7 @@
 package me.soo.helloworld.service;
 
-import me.soo.helloworld.exception.FileException;
+import me.soo.helloworld.exception.FileNotDeletedException;
+import me.soo.helloworld.exception.FileNotUploadedException;
 import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserPasswordRequest;
@@ -141,9 +142,9 @@ public class UserUpdateTest {
                 "Hello There".getBytes());
 
         when(userRepository.getUserProfileImageById(testUser.getUserId())).thenReturn(oldProfileImage);
-        doThrow(FileException.class).when(fileService).deleteFile(oldProfileImage);
+        doThrow(FileNotDeletedException.class).when(fileService).deleteFile(oldProfileImage);
 
-        assertThrows(FileException.class, () -> {
+        assertThrows(FileNotDeletedException.class, () -> {
             userService.userProfileImageUpdate(testUser.getUserId(), testImageFile);
         });
 
@@ -167,9 +168,9 @@ public class UserUpdateTest {
         when(userRepository.getUserProfileImageById(testUser.getUserId())).thenReturn(oldProfileImage);
         doNothing().when(fileService).deleteFile(oldProfileImage);
 
-        when(fileService.uploadFile(testImageFile, testUser.getUserId())).thenThrow(FileException.class);
+        when(fileService.uploadFile(testImageFile, testUser.getUserId())).thenThrow(FileNotUploadedException.class);
 
-        assertThrows(FileException.class, () -> {
+        assertThrows(FileNotUploadedException.class, () -> {
             userService.userProfileImageUpdate(testUser.getUserId(), testImageFile);
         });
 

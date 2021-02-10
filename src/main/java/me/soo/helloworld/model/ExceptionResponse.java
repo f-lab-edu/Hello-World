@@ -1,18 +1,14 @@
 package me.soo.helloworld.model;
 
 import lombok.Getter;
-import me.soo.helloworld.enums.ExceptionCode;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public class ExceptionResponse {
 
-    private HttpStatus status;
+    private final int status;
 
-    private String message;
+    private final String message;
 
-    public ExceptionResponse(ExceptionCode exceptionCode) {
-        this.status = exceptionCode.getStatus();
-        this.message = exceptionCode.getDescription();
-    }
 }

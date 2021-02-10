@@ -1,8 +1,7 @@
 package me.soo.helloworld.service;
 
 import lombok.RequiredArgsConstructor;
-import me.soo.helloworld.enums.UserExceptionCode;
-import me.soo.helloworld.exception.UserException;
+import me.soo.helloworld.exception.InvalidUserException;
 import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.repository.UserRepository;
@@ -33,13 +32,13 @@ public class UserService {
         User user = userRepository.getUserById(loginRequest.getUserId());
 
         if (user == null) {
-            throw new UserException(UserExceptionCode.INVALID_USER_ID);
+            throw new InvalidUserException("해당 사용자는 존재하지 않습니다. 아이디를 다시 확인해 주세요.");
         }
 
         boolean isMatchingPassword = passwordEncoder.isMatch(loginRequest.getPassword(), user.getPassword());
 
         if (!isMatchingPassword) {
-            throw new UserException(UserExceptionCode.INVALID_USER_PASSWORD);
+            throw new InvalidUserException("입력하신 비밀번호가 일치하지 않습니다. 비밀번호를 다시 확인해주세요.");
         }
 
         return user;
