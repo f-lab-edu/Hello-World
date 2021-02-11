@@ -15,7 +15,7 @@ import static me.soo.helloworld.util.http.HttpResponses.HTTP_RESPONSE_OK;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/my-page")
+@RequestMapping("/my-infos")
 public class MyPageController {
 
     private final UserService userService;
@@ -38,7 +38,7 @@ public class MyPageController {
         return HTTP_RESPONSE_OK;
     }
 
-    @PutMapping("/infos")
+    @PutMapping("/details")
     public ResponseEntity<Void> myInfoUpdate(@CurrentUser String userId,
                                                @Valid @RequestBody UserUpdateRequest updateRequest) {
         userService.userInfoUpdate(userId, updateRequest);
