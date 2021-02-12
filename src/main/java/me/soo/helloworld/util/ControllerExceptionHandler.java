@@ -4,6 +4,7 @@ import com.sun.jdi.request.DuplicateRequestException;
 import lombok.extern.slf4j.Slf4j;
 import me.soo.helloworld.exception.FileNotDeletedException;
 import me.soo.helloworld.exception.FileNotUploadedException;
+import me.soo.helloworld.exception.InvalidEmailException;
 import me.soo.helloworld.exception.InvalidUserException;
 import me.soo.helloworld.model.ExceptionResponse;
 import org.springframework.http.HttpStatus;
@@ -27,9 +28,10 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler({
             InvalidUserException.class,
+            InvalidEmailException.class
     })
     public ResponseEntity<ExceptionResponse> invalidUserException(final InvalidUserException ex) {
-        log.error("해당 사용자 정보를 가지고 로그인하는데 실패하였습니다.", ex);
+        log.error("해당 사용자 정보를 가져오는데 실패하였습니다.", ex);
         ExceptionResponse response = new ExceptionResponse(404, ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
