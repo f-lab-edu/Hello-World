@@ -38,7 +38,7 @@ public class MyPageController {
         return HTTP_RESPONSE_OK;
     }
 
-    @PutMapping("/details")
+    @PutMapping
     public ResponseEntity<Void> myInfoUpdate(@CurrentUser String userId,
                                                @Valid @RequestBody UserUpdateRequest updateRequest) {
         userService.userInfoUpdate(userId, updateRequest);
