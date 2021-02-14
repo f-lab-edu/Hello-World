@@ -2,7 +2,9 @@ package me.soo.helloworld.repository;
 
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.mapper.UserMapper;
+import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.User;
+import me.soo.helloworld.model.user.UserUpdateRequest;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -23,8 +25,19 @@ public class UserRepository {
         return userMapper.getUserById(userId);
     }
 
+    public FileData getUserProfileImageById(String userId) {
+        return userMapper.getUserProfileImageById(userId);
+    }
+
     public void updateUserPassword(String userId, String password) {
         userMapper.updateUserPassword(userId, password);
     }
 
+    public void updateUserInfo(String userId, UserUpdateRequest updateRequest) {
+        userMapper.updateUserInfo(userId, updateRequest);
+    }
+
+    public void updateUserProfileImage(String userId, FileData newProfileImage) {
+        userMapper.updateUserProfileImage(userId, newProfileImage);
+    }
 }

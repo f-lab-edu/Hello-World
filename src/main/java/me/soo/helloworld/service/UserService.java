@@ -2,18 +2,20 @@ package me.soo.helloworld.service;
 
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.exception.IncorrectUserInfoException;
-import me.soo.helloworld.model.user.User;
-import me.soo.helloworld.model.user.UserLoginRequest;
-import me.soo.helloworld.model.user.UserPasswordRequest;
+import me.soo.helloworld.model.file.FileData;
+import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.repository.UserRepository;
-import me.soo.helloworld.util.PasswordEncoder;
+import me.soo.helloworld.util.encoder.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+
+    private final FileService fileService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -42,10 +44,24 @@ public class UserService {
         return user;
     }
 
-    public void userPasswordUpdate(String currentUserId, UserPasswordRequest userPasswordRequest) {
+    public void userPasswordUpdate(String userid, UserPasswordRequest userPasswordRequest) {
         String encodedPassword = passwordEncoder.encode(userPasswordRequest.getNewPassword());
-        userRepository.updateUserPassword(currentUserId, encodedPassword);
+        userRepository.updateUserPassword(userid, encodedPassword);
     }
 
+    public void userInfoUpdate(String userId, UserUpdateRequest updateRequest) {
+        userRepository.updateUserInfo(userId, updateRequest);
+    }
 
+    public void userProfileImageUpdate(String userId, MultipartFile profileImage) {
+
+            FileData oldProfileImage = userRepository.getUserProfileImageById(userId);
+
+            if (oldProfileImage != null) {
+                fileService.deleteFile(oldProfileImage);
+            }
+
+            FileData newProfileImage = fileService.uploadFile(profileImage, userId);
+            userRepository.updateUserProfileImage(userId, newProfileImage);
+    }
 }

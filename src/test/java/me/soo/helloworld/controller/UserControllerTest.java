@@ -4,9 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.UserPasswordRequest;
-import me.soo.helloworld.repository.UserRepository;
-import me.soo.helloworld.util.PasswordEncoder;
-import me.soo.helloworld.util.SessionKeys;
+import me.soo.helloworld.model.user.UserUpdateRequest;
+import me.soo.helloworld.util.http.SessionKeys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,9 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
@@ -40,13 +44,7 @@ class UserControllerTest {
     ObjectMapper objectMapper;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
     MockMvc mockMvc;
-
-    @Autowired
-    UserRepository userRepository;
 
     MockHttpSession httpSession;
 
@@ -56,7 +54,7 @@ class UserControllerTest {
                 .userId("gomsu1045")
                 .password("Gomsu1045!0$%")
                 .email("test@test.com")
-                .gender("Male")
+                .gender("M")
                 .birthday(Date.valueOf("1993-09-25"))
                 .originCountry("South Korea")
                 .livingCountry("United Kingdom")
@@ -166,30 +164,4 @@ class UserControllerTest {
 
         assertNull(httpSession.getAttribute(SessionKeys.USER_ID));
     }
-
-    @Test
-    @DisplayName("비밀번호 변경에 성공하면 Http Status Code 200(OK)를 리턴합니다.")
-    public void userPasswordUpdateTestSuccess() throws Exception {
-        testUserSignUp(testUser);
-
-        String differentPassword = "!Msugo1@";
-
-        UserPasswordRequest newPassword = UserPasswordRequest.builder()
-                .currentPassword(testUser.getPassword())
-                .newPassword(differentPassword)
-                .checkNewPassword(differentPassword)
-                .build();
-
-        String content = objectMapper.writeValueAsString(newPassword);
-        httpSession.setAttribute(SessionKeys.USER_ID, testUser.getUserId());
-
-        mockMvc.perform(put("/users/account/password")
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON)
-                .session(httpSession))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-    }
-
 }

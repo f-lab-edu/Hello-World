@@ -2,14 +2,10 @@ package me.soo.helloworld.util;
 
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.annotation.CurrentUser;
-import me.soo.helloworld.mapper.UserMapper;
-import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.service.LoginService;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;

@@ -41,6 +41,11 @@ public class User {
     @Nullable
     private final String aboutMe;
 
+    @Nullable
+    private final String profileImageName;
+
+    @Nullable
+    private final String profileImagePath;
 
     /**
      * 객체의 생성과 구성을 담당하는 책임을 User 클래스 자체로 가지고 있다고 판단

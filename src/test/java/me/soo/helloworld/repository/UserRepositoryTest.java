@@ -1,7 +1,9 @@
 package me.soo.helloworld.repository;
 
 import me.soo.helloworld.mapper.UserMapper;
+import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.User;
+import me.soo.helloworld.model.user.UserUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -82,5 +84,49 @@ public class UserRepositoryTest {
         assertEquals(testUser.getUserId(), newPasswordUser.getUserId());
         assertNotEquals(testUser.getPassword(), newPasswordUser.getPassword());
         assertEquals(newPassword, newPasswordUser.getPassword());
+    }
+
+    @Test
+    @DisplayName("해당 사용자의 업데이트 정보를 DB 내에 반영합니다.")
+    public void userUpdateInfoTestSuccess() {
+        userMapper.insertUser(testUser);
+
+        UserUpdateRequest updatedUser = UserUpdateRequest.builder()
+                .gender("M")
+                .livingCountry("Republic Of Ireland")
+                .livingTown("Dublin")
+                .aboutMe("I've just moved to Dublin today")
+                .build();
+
+        userMapper.updateUserInfo(testUser.getUserId(), updatedUser);
+
+        User userFromDB = userMapper.getUserById(testUser.getUserId());
+
+        assertEquals(testUser.getUserId(), userFromDB.getUserId());
+        assertEquals(testUser.getPassword(), userFromDB.getPassword());
+        assertEquals(testUser.getEmail(), userFromDB.getEmail());
+        assertNotEquals(testUser.getGender(), userFromDB.getGender());
+        assertEquals(testUser.getBirthday(), userFromDB.getBirthday());
+        assertEquals(testUser.getOriginCountry(), userFromDB.getOriginCountry());
+        assertNotEquals(testUser.getLivingCountry(), userFromDB.getLivingCountry());
+        assertNotEquals(testUser.getLivingTown(), userFromDB.getLivingTown());
+        assertNotEquals(testUser.getAboutMe(), userFromDB.getAboutMe());
+    }
+
+    @Test
+    @DisplayName("현재 사용자의 프로필 사진 정보를 DB에 추가합니다.")
+    public void userUpdateProfileImageTestSuccess() {
+        userMapper.insertUser(testUser);
+
+        String dir = "D:\\Project\\Hello-World\\Files";
+        String fileName = "IsItSuccessful.txt";
+        FileData profileImage = new FileData(fileName, dir);
+
+        userMapper.updateUserProfileImage(testUser.getUserId(), profileImage);
+
+        User userFromDB = userMapper.getUserById(testUser.getUserId());
+
+        assertEquals(profileImage.getFileName(), userFromDB.getProfileImageName());
+        assertEquals(profileImage.getFilePath(), userFromDB.getProfileImagePath());
     }
 }

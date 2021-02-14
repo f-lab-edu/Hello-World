@@ -1,4 +1,4 @@
-package me.soo.helloworld.util;
+package me.soo.helloworld.util.http;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,4 +16,5 @@ public class HttpResponses {
     public static final ResponseEntity<Void> HTTP_RESPONSE_NO_CONTENT = new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     public static final ResponseEntity<Void> HTTP_RESPONSE_NOT_FOUND = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
 }

@@ -1,4 +1,4 @@
-package me.soo.helloworld.util;
+package me.soo.helloworld.util.encoder;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Component;
