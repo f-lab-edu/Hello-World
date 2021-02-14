@@ -55,10 +55,10 @@ public class UserController {
         return HTTP_RESPONSE_NO_CONTENT;
     }
 
-    @PostMapping("/new-password")
+    @PostMapping("/password-finder")
     public ResponseEntity<Void> userFindPassword(@Valid @RequestBody UserFindPasswordRequest findPasswordRequest) {
 
-        userService.userFindPassword(findPasswordRequest);
+        userService.findUserPassword(findPasswordRequest);
 
         return HTTP_RESPONSE_OK;
     }

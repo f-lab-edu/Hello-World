@@ -1,7 +1,10 @@
 package me.soo.helloworld.service;
 
 import lombok.RequiredArgsConstructor;
+import me.soo.helloworld.exception.MailNotSentException;
+import me.soo.helloworld.model.email.EmailBase;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -18,27 +21,25 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String from;
 
-
-    // 이메일 작성하는 메소드와 보내는 메소드 분리하기
-    // 목표: 메일 발송은 send mail 로 놔두고 필요에 따라 이메일 내용만 바꾸어쓸 수 있도록 만들기
-    public void sendEmailWithNewPassword(String to, String newPassword) {
-
-        String title = "<Hello World> 회원님의 임시비밀번호 안내입니다.";
-        String content = "회원님의 임시 비밀번호는 " + newPassword + " 입니다. 로그인 후 비밀번호를 다시 변경해주세요.";
-
+    /*
+        비밀번호 찾기만 아니라 차후에 다른 내용의 이메일을 보내는데도 재사용할 수 있도록 (ex. 친구추가 요청 알림 등) EmailBase 클래스를 두고
+        내용에 맞는 subClass 들을 주입받아서 이메일 내용의 변화에는 영향받도록
+    */
+    public void sendEmail(String to, EmailBase content) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
             messageHelper.setTo(to);
             messageHelper.setFrom(from);
-            messageHelper.setSubject(title);
-            messageHelper.setText(content);
+            messageHelper.setSubject(content.getTitle());
+            messageHelper.setText(content.getBody());
+
             mailSender.send(message);
 
-        } catch (MessagingException e) {
-            // MimeMessageHelper 가 제대로 생성되지 않는 예외가 발생하면 복구가능할까? 불가능 시 전환, 가능 시 최대한 복구 해보자
-            throw new RuntimeException(e);
+        } catch (MessagingException | MailException e) {
+            throw new MailNotSentException("메일 시스템에 문제가 있어 해당 이메일 발송에 실패하였습니다. 잠시 후에 다시 시도해 주세요.");
         }
     }
+
 
 }
