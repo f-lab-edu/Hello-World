@@ -1,6 +1,6 @@
 package me.soo.helloworld.service;
 
-import me.soo.helloworld.exception.InvalidUserException;
+import me.soo.helloworld.exception.InvalidUserInfoException;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.repository.UserRepository;
@@ -91,7 +91,7 @@ class UserServiceTest {
 
         when(userRepository.getUserById(loginRequest.getUserId())).thenReturn(null);
 
-        assertThrows(InvalidUserException.class, () -> {
+        assertThrows(InvalidUserInfoException.class, () -> {
            userService.getUser(loginRequest.getUserId(), loginRequest.getPassword());
         });
 
@@ -106,7 +106,7 @@ class UserServiceTest {
         when(userRepository.getUserById(loginRequest.getUserId())).thenReturn(testUser);
         when(passwordEncoder.isMatch(loginRequest.getPassword(), testUser.getPassword())).thenReturn(false);
 
-        assertThrows(InvalidUserException.class, () -> {
+        assertThrows(InvalidUserInfoException.class, () -> {
             userService.getUser(loginRequest.getUserId(), loginRequest.getPassword());
         });
 

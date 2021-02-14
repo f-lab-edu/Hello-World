@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ExceptionResponse {
 
-    private final int status;
+    private final String title;
 
-    private final String message;
+    private final String detail;
 
 }
