@@ -1,8 +1,6 @@
 package me.soo.helloworld.controller;
 
-import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
-import me.soo.helloworld.exception.IncorrectUserInfoException;
 import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.service.LoginService;
 import me.soo.helloworld.service.UserService;
@@ -44,18 +42,9 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<Void> userLogin(@Valid @RequestBody UserLoginRequest loginRequest) {
 
-        try {
-            User user = userService.getUser(loginRequest);
-            loginService.login(user.getUserId());
+        loginService.login(loginRequest);
 
-            return HTTP_RESPONSE_OK;
-
-        } catch (IncorrectUserInfoException e) {
-            return HTTP_RESPONSE_NOT_FOUND;
-
-        } catch (DuplicateRequestException e) {
-            return HTTP_RESPONSE_UNAUTHORIZED;
-        }
+        return HTTP_RESPONSE_OK;
     }
 
     @GetMapping("/logout")

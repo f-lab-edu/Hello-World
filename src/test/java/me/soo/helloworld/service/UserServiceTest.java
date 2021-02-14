@@ -1,6 +1,6 @@
 package me.soo.helloworld.service;
 
-import me.soo.helloworld.exception.IncorrectUserInfoException;
+import me.soo.helloworld.exception.InvalidUserInfoException;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.repository.UserRepository;
@@ -78,36 +78,36 @@ class UserServiceTest {
         when(userRepository.getUserById(loginRequest.getUserId())).thenReturn(testUser);
         when(passwordEncoder.isMatch(loginRequest.getPassword(), testUser.getPassword())).thenReturn(true);
 
-        userService.getUser(loginRequest);
+        userService.getUser(loginRequest.getUserId(), loginRequest.getPassword());
 
         verify(userRepository, times(1)).getUserById(loginRequest.getUserId());
         verify(passwordEncoder, times(1)).isMatch(loginRequest.getPassword(), testUser.getPassword());
     }
 
     @Test
-    @DisplayName("LoginRequest를 통해 받은 유저 ID가 존재하지 않는 경우 IncorrectUserInfoException 이 발생합니다.")
+    @DisplayName("요청정보에 해당하는 유저의 아이디가 존재하지 않는 경우 InvalidUserException 이 발생합니다.")
     public void getUserWithWrongIdFail() {
         UserLoginRequest loginRequest = new UserLoginRequest("I'm a wrong user", testUser.getPassword());
 
         when(userRepository.getUserById(loginRequest.getUserId())).thenReturn(null);
 
-        assertThrows(IncorrectUserInfoException.class, () -> {
-           userService.getUser(loginRequest);
+        assertThrows(InvalidUserInfoException.class, () -> {
+           userService.getUser(loginRequest.getUserId(), loginRequest.getPassword());
         });
 
         verify(userRepository, times(1)).getUserById(loginRequest.getUserId());
     }
 
     @Test
-    @DisplayName("LoginRequest를 통해 받은 유저의 Password가 일치하지 않는 경우 IncorrectUserInfoException 이 발생합니다.")
+    @DisplayName("요청정보에 해당하는 유저의 비밀번호가 일치하지 않는 경우 InvalidUserException 이 발생합니다.")
     public void getUserWithWrongPasswordFail() {
         UserLoginRequest loginRequest = new UserLoginRequest(testUser.getUserId(), "Typo is everywhere~");
 
         when(userRepository.getUserById(loginRequest.getUserId())).thenReturn(testUser);
         when(passwordEncoder.isMatch(loginRequest.getPassword(), testUser.getPassword())).thenReturn(false);
 
-        assertThrows(IncorrectUserInfoException.class, () -> {
-            userService.getUser(loginRequest);
+        assertThrows(InvalidUserInfoException.class, () -> {
+            userService.getUser(loginRequest.getUserId(), loginRequest.getPassword());
         });
 
         verify(userRepository, times(1)).getUserById(loginRequest.getUserId());

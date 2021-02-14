@@ -1,7 +1,7 @@
 package me.soo.helloworld.service;
 
-import me.soo.helloworld.exception.file.FileNotDeletedException;
-import me.soo.helloworld.exception.file.FileNotUploadedException;
+import me.soo.helloworld.exception.FileNotDeletedException;
+import me.soo.helloworld.exception.FileNotUploadedException;
 import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserPasswordRequest;
@@ -15,15 +15,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 
-import java.io.IOException;
 import java.sql.Date;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.will;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

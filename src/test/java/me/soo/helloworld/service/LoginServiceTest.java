@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpSession;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.sql.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class LoginServiceTest {
@@ -29,6 +31,9 @@ public class LoginServiceTest {
 
     @Spy
     HttpSession httpSession = new MockHttpSession();
+
+    @Mock
+    UserService userService;
 
     @BeforeEach
     public void setUp() {
@@ -51,10 +56,11 @@ public class LoginServiceTest {
     public void successLoginRequestWithCorrectLoginRequest() {
 
         UserLoginRequest loginRequest = new UserLoginRequest(testUser.getUserId(), testUser.getPassword());
+        when(userService.getUser(loginRequest.getUserId(), loginRequest.getPassword())).thenReturn(testUser);
 
-        loginService.login(loginRequest.getUserId());
+        loginService.login(loginRequest);
 
-        assertEquals(httpSession.getAttribute(SessionKeys.USER_ID), loginRequest.getUserId());
+        assertEquals(httpSession.getAttribute(SessionKeys.USER_ID), testUser.getUserId());
     }
 
     @Test
@@ -66,7 +72,7 @@ public class LoginServiceTest {
         httpSession.setAttribute(SessionKeys.USER_ID, loginRequest.getUserId());
 
         assertThrows(DuplicateRequestException.class, () -> {
-            loginService.login(loginRequest.getUserId());
+            loginService.login(loginRequest);
         });
 
     }
