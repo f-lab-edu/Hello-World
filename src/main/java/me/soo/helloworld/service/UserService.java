@@ -1,8 +1,7 @@
 package me.soo.helloworld.service;
 
 import lombok.RequiredArgsConstructor;
-import me.soo.helloworld.exception.InvalidEmailException;
-import me.soo.helloworld.exception.InvalidUserException;
+import me.soo.helloworld.exception.InvalidUserInfoException;
 import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.repository.UserRepository;
@@ -37,13 +36,13 @@ public class UserService {
         User user = userRepository.getUserById(requestId);
 
         if (user == null) {
-            throw new InvalidUserException("해당 사용자는 존재하지 않습니다. 아이디를 다시 확인해 주세요.");
+            throw new InvalidUserInfoException("해당 사용자는 존재하지 않습니다. 아이디를 다시 확인해 주세요.");
         }
 
         boolean isMatchingPassword = passwordEncoder.isMatch(requestPassword, user.getPassword());
 
         if (!isMatchingPassword) {
-            throw new InvalidUserException("입력하신 비밀번호가 일치하지 않습니다. 비밀번호를 다시 확인해주세요.");
+            throw new InvalidUserInfoException("입력하신 비밀번호가 일치하지 않습니다. 비밀번호를 다시 확인해주세요.");
         }
 
         return user;
@@ -76,11 +75,11 @@ public class UserService {
 
         // 예외 체크 중복 없애보자
         if (user == null) {
-            throw new InvalidUserException("해당 사용자는 존재하지 않습니다. 아이디를 다시 확인해 주세요.");
+            throw new InvalidUserInfoException("해당 사용자는 존재하지 않습니다. 아이디를 다시 확인해 주세요.");
         }
 
         if (!user.getEmail().equals(findPasswordRequest.getEmail())) {
-            throw new InvalidEmailException("입력하신 이메일이 등록된 이메일과 일치하지 않습니다. 이메일을 다시 확인해주세요.");
+            throw new InvalidUserInfoException("입력하신 이메일이 등록된 이메일과 일치하지 않습니다. 이메일을 다시 확인해주세요.");
         }
 
         // 비밀번호를 어떻게 더 간결하게 전달해 줄 것인가
