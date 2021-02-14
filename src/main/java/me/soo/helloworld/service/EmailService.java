@@ -23,7 +23,7 @@ public class EmailService {
 
     /*
         비밀번호 찾기만 아니라 차후에 다른 내용의 이메일을 보내는데도 재사용할 수 있도록 (ex. 친구추가 요청 알림 등) EmailBase 클래스를 두고
-        내용에 맞는 subClass 들을 주입받아서 이메일 내용의 변화에는 영향받도록
+        내용에 맞는 subClass 들을 주입받아서 이메일 내용의 변화에는 영향받지 않도록 구성해봄
     */
     public void sendEmail(String to, EmailBase content) {
         try {
