@@ -25,7 +25,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class UserUpdateTest {
 
-    @Mock
     User testUser;
 
     @InjectMocks

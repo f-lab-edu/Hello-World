@@ -40,4 +40,12 @@ public class UserRepository {
     public void updateUserProfileImage(String userId, FileData newProfileImage) {
         userMapper.updateUserProfileImage(userId, newProfileImage);
     }
+
+    public String getUserPasswordById(String userId) {
+        return userMapper.getUserPasswordById(userId);
+    }
+
+    public void deleteUser(String userId) {
+        userMapper.deleteUser(userId);
+    }
 }

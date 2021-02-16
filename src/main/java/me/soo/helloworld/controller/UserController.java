@@ -1,6 +1,7 @@
 package me.soo.helloworld.controller;
 
 import lombok.RequiredArgsConstructor;
+import me.soo.helloworld.annotation.CurrentUser;
 import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.service.LoginService;
 import me.soo.helloworld.service.UserService;
@@ -59,5 +60,13 @@ public class UserController {
     public void userFindPassword(@Valid @RequestBody UserFindPasswordRequest findPasswordRequest) {
 
         userService.findUserPassword(findPasswordRequest);
+    }
+
+    @DeleteMapping("/account")
+    public ResponseEntity<Void> userDeleteAccount(@CurrentUser String userId, @RequestParam String requestPassword) {
+
+        userService.userDeleteAccount(userId, requestPassword);
+
+        return HTTP_RESPONSE_OK;
     }
 }
