@@ -3,7 +3,7 @@ package me.soo.helloworld.service;
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.exception.InvalidUserInfoException;
 import me.soo.helloworld.model.email.EmailBase;
-import me.soo.helloworld.model.email.EmailFindPassword;
+import me.soo.helloworld.util.EmailBuilder;
 import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.repository.UserRepository;
@@ -79,10 +79,14 @@ public class UserService {
         }
 
         String newPassword = UUID.randomUUID().toString();
-        EmailBase emailContent = new EmailFindPassword(newPassword);
-        emailService.sendEmail(findPasswordRequest.getEmail(), emailContent);
+        String title = "임시 비밀번호 안내입니다.";
+        String content = String.format("회원님의 임시 비밀번호는 %s 입니다. 로그인 후 비밀번호를 변경해주세요", newPassword);
+
+        EmailBase email = EmailBuilder.build(user.getEmail(), title, content);
+        emailService.sendEmail(email);
 
         userRepository.updateUserPassword(findPasswordRequest.getUserId(), passwordEncoder.encode(newPassword));
+
     }
 
 }

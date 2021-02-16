@@ -2,11 +2,11 @@ package me.soo.helloworld.service;
 
 import me.soo.helloworld.exception.InvalidUserInfoException;
 import me.soo.helloworld.model.email.EmailBase;
-import me.soo.helloworld.model.email.EmailFindPassword;
 import me.soo.helloworld.model.user.UserFindPasswordRequest;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.repository.UserRepository;
+import me.soo.helloworld.util.EmailBuilder;
 import me.soo.helloworld.util.encoder.PasswordEncoder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -137,8 +137,12 @@ class UserServiceTest {
         when(userRepository.getUserById(findPasswordRequest.getUserId())).thenReturn(userFromDB);
 
         String newPassword = UUID.randomUUID().toString();
-        EmailBase emailContent = new EmailFindPassword(newPassword);
-        doNothing().when(emailService).sendEmail(userFromDB.getEmail(), emailContent);
+
+        String title = "임시 비밀번호 안내입니다.";
+        String content = String.format("회원님의 임시 비밀번호는 %s 입니다. 로그인 후 비밀번호를 변경해주세요", newPassword);
+
+        EmailBase email = EmailBuilder.build(testUser.getEmail(), title, content);
+        doNothing().when(emailService).sendEmail(email);
 
         String encodedPassword = UUID.randomUUID().toString();
         when(passwordEncoder.encode(newPassword)).thenReturn(encodedPassword);

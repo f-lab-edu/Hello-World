@@ -1,13 +1,16 @@
 package me.soo.helloworld.model.email;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public abstract class EmailBase {
+@Builder
+public class EmailBase {
 
-    String title;
+    private final String to;
 
-    String body;
+    private final String title;
 
-    abstract String writeBody(String content);
+    private final String body;
+
 }
