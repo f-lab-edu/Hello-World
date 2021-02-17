@@ -61,14 +61,14 @@ public class UserService {
 
     public void userProfileImageUpdate(String userId, MultipartFile profileImage) {
 
-            FileData oldProfileImage = userRepository.getUserProfileImageById(userId);
+        FileData oldProfileImage = userRepository.getUserProfileImageById(userId);
 
-            if (oldProfileImage != null) {
-                fileService.deleteFile(oldProfileImage);
-            }
+        if (oldProfileImage != null) {
+            fileService.deleteFile(oldProfileImage);
+        }
 
-            FileData newProfileImage = fileService.uploadFile(profileImage, userId);
-            userRepository.updateUserProfileImage(userId, newProfileImage);
+        FileData newProfileImage = fileService.uploadFile(profileImage, userId);
+        userRepository.updateUserProfileImage(userId, newProfileImage);
     }
 
     public void findUserPassword(UserFindPasswordRequest findPasswordRequest) {
@@ -78,15 +78,17 @@ public class UserService {
             throw new InvalidUserInfoException("해당 사용자가 존재하지 않거나 이메일이 일치하지 않습니다. 입력하신 정보를 다시 확인해 주세요.");
         }
 
-        String newPassword = UUID.randomUUID().toString();
-        String title = "임시 비밀번호 안내입니다.";
-        String content = String.format("회원님의 임시 비밀번호는 %s 입니다. 로그인 후 비밀번호를 변경해주세요", newPassword);
+        String temporaryPassword = UUID.randomUUID().toString();
 
-        EmailBase email = EmailBuilder.build(user.getEmail(), title, content);
+        EmailBase email = EmailBuilder.build(
+                user.getEmail(),
+                EmailBuilder.FIND_PASSWORD_TITLE,
+                temporaryPassword,
+                EmailBuilder.FIND_PASSWORD_BODY
+        );
         emailService.sendEmail(email);
 
-        userRepository.updateUserPassword(findPasswordRequest.getUserId(), passwordEncoder.encode(newPassword));
+        userRepository.updateUserPassword(findPasswordRequest.getUserId(), passwordEncoder.encode(temporaryPassword));
 
     }
-
 }
