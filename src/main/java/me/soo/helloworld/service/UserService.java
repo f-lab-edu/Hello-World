@@ -3,7 +3,7 @@ package me.soo.helloworld.service;
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.exception.InvalidUserInfoException;
 import me.soo.helloworld.model.email.EmailBase;
-import me.soo.helloworld.util.EmailBuilder;
+import me.soo.helloworld.model.email.FindPasswordEmail;
 import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.repository.UserRepository;
@@ -79,16 +79,9 @@ public class UserService {
         }
 
         String temporaryPassword = UUID.randomUUID().toString();
-
-        EmailBase email = EmailBuilder.build(
-                user.getEmail(),
-                EmailBuilder.FIND_PASSWORD_TITLE,
-                temporaryPassword,
-                EmailBuilder.FIND_PASSWORD_BODY
-        );
+        EmailBase email = FindPasswordEmail.create(findPasswordRequest.getEmail(), temporaryPassword);
         emailService.sendEmail(email);
 
         userRepository.updateUserPassword(findPasswordRequest.getUserId(), passwordEncoder.encode(temporaryPassword));
-
     }
 }

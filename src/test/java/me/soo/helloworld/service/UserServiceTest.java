@@ -2,11 +2,11 @@ package me.soo.helloworld.service;
 
 import me.soo.helloworld.exception.InvalidUserInfoException;
 import me.soo.helloworld.model.email.EmailBase;
+import me.soo.helloworld.model.email.FindPasswordEmail;
 import me.soo.helloworld.model.user.UserFindPasswordRequest;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.repository.UserRepository;
-import me.soo.helloworld.util.EmailBuilder;
 import me.soo.helloworld.util.encoder.PasswordEncoder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -138,13 +138,8 @@ class UserServiceTest {
 
         String temporaryPassword = UUID.randomUUID().toString();
 
-        EmailBase email = EmailBuilder.build(
-                testUser.getEmail(),
-                EmailBuilder.FIND_PASSWORD_TITLE,
-                temporaryPassword,
-                EmailBuilder.FIND_PASSWORD_BODY
+        EmailBase email = FindPasswordEmail.create(findPasswordRequest.getEmail(), temporaryPassword);
 
-        );
         doNothing().when(emailService).sendEmail(email);
 
         String encodedPassword = UUID.randomUUID().toString();
