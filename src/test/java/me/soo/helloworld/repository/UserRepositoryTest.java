@@ -141,7 +141,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    @DisplayName("현재 사용자의 ID를 이용해 DB에서 비밀번호를 가져옵니다")
+    @DisplayName("DB에 존재하지 않는 사용자의 ID가 요청으로 들어오면 DB에서 해당 회원의 비밀번호를 가져오는데 실패하고 Null을 리턴합니다.")
     public void getUserPasswordByIdTestFailWithInvalidId() {
         userMapper.insertUser(testUser);
 
@@ -152,7 +152,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    @DisplayName("현재 사용자의 정보를 DB에서 삭제합니다.")
+    @DisplayName("현재 존재하는 회원의 경우 올바른 ID를 입력하면 DB에서 해당 회원에 대한 정보를 삭제합니다.")
     public void deleteUserTestSuccess() {
         userMapper.insertUser(testUser);
 
@@ -163,5 +163,24 @@ public class UserRepositoryTest {
         User userFromDBAgain = userMapper.getUserById(testUser.getUserId());
 
         assertNull(userFromDBAgain);
+    }
+
+    @Test
+    @DisplayName("이미 삭제처리 된 회원의 경우 DB 에서 해당 회원의 ID를 이용해 회원 정보를 가져올 수 없으므로 회원 정보 삭제가 실패합니다.")
+    public void deleteUserTestFailWithDuplicateRequest() {
+        userMapper.insertUser(testUser);
+
+        User userFromDB = userMapper.getUserById(testUser.getUserId());
+        assertNotNull(userFromDB);
+
+        userMapper.deleteUser(testUser.getUserId());
+
+        User userFromDBAgain = userMapper.getUserById(testUser.getUserId());
+
+        assertNull(userFromDBAgain);
+
+        assertThrows(NullPointerException.class, () -> {
+            userMapper.deleteUser(userFromDBAgain.getUserId());
+        });
     }
 }

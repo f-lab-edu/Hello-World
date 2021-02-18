@@ -61,14 +61,12 @@ public class UserDeleteTest {
         when(passwordEncoder.isMatch(password, testUser.getPassword())).thenReturn(true);
 
         doNothing().when(userRepository).deleteUser(userId);
-        doNothing().when(httpSession).invalidate();
 
         userService.userDeleteAccount(userId, password);
 
         verify(userRepository, times(1)).getUserPasswordById(userId);
         verify(passwordEncoder,times(1)).isMatch(password, testUser.getPassword());
         verify(userRepository, times(1)).deleteUser(userId);
-        verify(httpSession, times(1)).invalidate();
     }
 
     @Test
@@ -86,5 +84,31 @@ public class UserDeleteTest {
 
         verify(userRepository, times(1)).getUserPasswordById(userId);
         verify(passwordEncoder,times(1)).isMatch(password, testUser.getPassword());
+    }
+
+    @Test
+    @DisplayName("이미 삭제 처리된 사용자의 경우 다시 요청을 보내면 NullPointerException 이 발생하며 해당 회원의 계정삭제가 실패합니다.")
+    public void userDeleteAccountTestFailWithDuplicateAccountDeleteRequest() {
+        String userId = testUser.getUserId();
+        String password = testUser.getPassword();
+
+        when(userRepository.getUserPasswordById(userId)).thenReturn(testUser.getPassword());
+        when(passwordEncoder.isMatch(password, testUser.getPassword())).thenReturn(true);
+
+        doNothing().when(userRepository).deleteUser(userId);
+
+        userService.userDeleteAccount(userId, password);
+
+        when(userRepository.getUserPasswordById(userId)).thenReturn(testUser.getPassword());
+        when(passwordEncoder.isMatch(password, testUser.getPassword())).thenReturn(true);
+        doThrow(NullPointerException.class).when(userRepository).deleteUser(userId);
+
+        assertThrows(NullPointerException.class, () -> {
+            userService.userDeleteAccount(userId, password);
+        });
+
+        verify(userRepository, times(2)).getUserPasswordById(userId);
+        verify(passwordEncoder,times(2)).isMatch(password, testUser.getPassword());
+        verify(userRepository, times(2)).deleteUser(userId);
     }
 }

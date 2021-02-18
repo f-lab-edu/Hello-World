@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import static me.soo.helloworld.util.http.HttpResponses.HTTP_RESPONSE_OK;
@@ -19,6 +20,8 @@ import static me.soo.helloworld.util.http.HttpResponses.HTTP_RESPONSE_OK;
 public class MyPageController {
 
     private final UserService userService;
+
+    private final HttpSession httpSession;
 
     @PutMapping("/password")
     public ResponseEntity<Void> myPasswordUpdate(@CurrentUser String userId,
@@ -42,6 +45,15 @@ public class MyPageController {
     public ResponseEntity<Void> myInfoUpdate(@CurrentUser String userId,
                                                @Valid @RequestBody UserUpdateRequest updateRequest) {
         userService.userInfoUpdate(userId, updateRequest);
+
+        return HTTP_RESPONSE_OK;
+    }
+
+    @DeleteMapping("/account")
+    public ResponseEntity<Void> myAccountDelete(@CurrentUser String userId, @RequestParam String requestPassword) {
+
+        userService.userDeleteAccount(userId, requestPassword);
+        httpSession.invalidate();
 
         return HTTP_RESPONSE_OK;
     }

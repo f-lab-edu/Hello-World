@@ -61,12 +61,4 @@ public class UserController {
 
         userService.findUserPassword(findPasswordRequest);
     }
-
-    @DeleteMapping("/account")
-    public ResponseEntity<Void> userDeleteAccount(@CurrentUser String userId, @RequestParam String requestPassword) {
-
-        userService.userDeleteAccount(userId, requestPassword);
-
-        return HTTP_RESPONSE_OK;
-    }
 }

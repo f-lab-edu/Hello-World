@@ -20,7 +20,7 @@
 
         SELECT userId, password, email, gender, birthDay, originCountry, livingCountry, livingTown, aboutMe,
                profileImageName, profileImagePath
-        FROM users WHERE userId = #{userId} AND isDeactivated IS NULL;
+        FROM users WHERE userId = #{userId} AND isDeactivated = 'N';
     </select>
 
     <select id="getUserProfileImageById"
