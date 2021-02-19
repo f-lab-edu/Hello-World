@@ -9,9 +9,9 @@ public class FindPasswordEmail {
     static public EmailBase create(String to, String temporaryPassword) {
 
         return EmailBase.builder()
-        .to(to)
-        .title(FIND_PASSWORD_TITLE)
-        .body(FIND_PASSWORD_BODY + temporaryPassword)
-        .build();
+                .to(to)
+                .title(FIND_PASSWORD_TITLE)
+                .body(FIND_PASSWORD_BODY + temporaryPassword)
+                .build();
     }
 }
