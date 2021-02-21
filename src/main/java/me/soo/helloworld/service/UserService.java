@@ -41,11 +41,7 @@ public class UserService {
             throw new InvalidUserInfoException("해당 사용자는 존재하지 않습니다. 아이디를 다시 확인해 주세요.");
         }
 
-        boolean isMatchingPassword = passwordEncoder.isMatch(requestPassword, user.getPassword());
-
-        if (!isMatchingPassword) {
-            throw new InvalidUserInfoException("입력하신 비밀번호가 일치하지 않습니다. 비밀번호를 다시 확인해주세요.");
-        }
+        isValidPassword(requestPassword, user.getPassword());
 
         return user;
     }
@@ -83,5 +79,23 @@ public class UserService {
         emailService.sendEmail(email);
 
         userRepository.updateUserPassword(findPasswordRequest.getUserId(), passwordEncoder.encode(temporaryPassword));
+    }
+
+    /*
+        계정 삭제 요청을 받으면 해당 사용자의 정보를 바로 삭제하는 것이 아니라 일정기간 동안 보관했다가 삭제한다고 하여 물리삭제가 아니라
+        계정 비활성화 정보를 'Y'로 바꾸는 식으로 하여 논리삭제를 구현하였습니다.
+     */
+    public void userDeleteAccount(String userId, String requestPassword) {
+        String userPassword = userRepository.getUserPasswordById(userId);
+
+        isValidPassword(requestPassword, userPassword);
+
+        userRepository.deleteUser(userId);
+    }
+
+    private void isValidPassword(String requestPassword, String userPassword) {
+        if (!passwordEncoder.isMatch(requestPassword, userPassword)) {
+            throw new InvalidUserInfoException("입력하신 비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.");
+        }
     }
 }

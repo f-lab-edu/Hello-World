@@ -20,7 +20,7 @@
 
         SELECT userId, password, email, gender, birthDay, originCountry, livingCountry, livingTown, aboutMe,
                profileImageName, profileImagePath
-        FROM users WHERE userId = #{userId}
+        FROM users WHERE userId = #{userId} AND isDeactivated = 'N';
     </select>
 
     <select id="getUserProfileImageById"
@@ -43,6 +43,14 @@
 
         UPDATE users SET profileImageName = #{profileImage.fileName}, profileImagePath = #{profileImage.filePath}
             WHERE userId = #{userId}
+    </update>
+
+    <select id="getUserPasswordById" parameterType="String" resultType="String">
+        SELECT password FROM users WHERE userId = #{userId}
+    </select>
+
+    <update id="deleteUser" parameterType="String">
+        UPDATE users SET isDeactivated = 'Y' WHERE userId = #{userId}
     </update>
 
 </mapper>

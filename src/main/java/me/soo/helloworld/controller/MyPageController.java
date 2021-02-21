@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.annotation.CurrentUser;
 import me.soo.helloworld.model.user.UserPasswordRequest;
 import me.soo.helloworld.model.user.UserUpdateRequest;
+import me.soo.helloworld.service.LoginService;
 import me.soo.helloworld.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,8 @@ import static me.soo.helloworld.util.http.HttpResponses.HTTP_RESPONSE_OK;
 public class MyPageController {
 
     private final UserService userService;
+
+    private final LoginService loginService;
 
     @PutMapping("/password")
     public ResponseEntity<Void> myPasswordUpdate(@CurrentUser String userId,
@@ -42,6 +45,15 @@ public class MyPageController {
     public ResponseEntity<Void> myInfoUpdate(@CurrentUser String userId,
                                                @Valid @RequestBody UserUpdateRequest updateRequest) {
         userService.userInfoUpdate(userId, updateRequest);
+
+        return HTTP_RESPONSE_OK;
+    }
+
+    @DeleteMapping("/account")
+    public ResponseEntity<Void> myAccountDelete(@CurrentUser String userId, @RequestParam String requestPassword) {
+
+        userService.userDeleteAccount(userId, requestPassword);
+        loginService.logout();
 
         return HTTP_RESPONSE_OK;
     }

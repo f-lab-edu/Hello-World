@@ -1,6 +1,7 @@
 package me.soo.helloworld.controller;
 
 import lombok.RequiredArgsConstructor;
+import me.soo.helloworld.annotation.CurrentUser;
 import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.service.LoginService;
 import me.soo.helloworld.service.UserService;
