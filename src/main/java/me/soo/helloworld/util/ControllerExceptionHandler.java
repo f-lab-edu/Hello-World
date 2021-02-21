@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import me.soo.helloworld.exception.FileNotDeletedException;
 import me.soo.helloworld.exception.FileNotUploadedException;
 import me.soo.helloworld.exception.InvalidUserInfoException;
-import me.soo.helloworld.model.ExceptionResponse;
+import me.soo.helloworld.exception.MailNotSentException;
+import me.soo.helloworld.model.exception.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -25,9 +27,7 @@ public class ControllerExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({
-            InvalidUserInfoException.class,
-    })
+    @ExceptionHandler(InvalidUserInfoException.class)
     public ResponseEntity<ExceptionResponse> userInvalidException(final InvalidUserInfoException ex) {
         log.error(ex.getMessage(), ex);
         ExceptionResponse response = new ExceptionResponse("사용자 정보가 일치하지 않습니다.", ex.getMessage());
@@ -35,10 +35,17 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateRequestException.class)
-    public ResponseEntity<ExceptionResponse> loginFailedException(final RuntimeException ex) {
+    public ResponseEntity<ExceptionResponse> loginFailedException(final DuplicateRequestException ex) {
         log.error(ex.getMessage(), ex);
         ExceptionResponse response = new ExceptionResponse("로그인에 실패하였습니다.", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(MailNotSentException.class)
+    public ResponseEntity<ExceptionResponse> sendMailFailedException(final MailException ex) {
+        log.error(ex.getMessage(), ex);
+        ExceptionResponse response = new ExceptionResponse("이메일 발송에 실패하였습니다.", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

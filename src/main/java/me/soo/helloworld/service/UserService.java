@@ -2,12 +2,16 @@ package me.soo.helloworld.service;
 
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.exception.InvalidUserInfoException;
+import me.soo.helloworld.model.email.EmailBase;
+import me.soo.helloworld.model.email.FindPasswordEmail;
 import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.repository.UserRepository;
 import me.soo.helloworld.util.encoder.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +22,8 @@ public class UserService {
     private final FileService fileService;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final EmailService emailService;
 
     public void userSignUp(User user) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
@@ -55,13 +61,27 @@ public class UserService {
 
     public void userProfileImageUpdate(String userId, MultipartFile profileImage) {
 
-            FileData oldProfileImage = userRepository.getUserProfileImageById(userId);
+        FileData oldProfileImage = userRepository.getUserProfileImageById(userId);
 
-            if (oldProfileImage != null) {
-                fileService.deleteFile(oldProfileImage);
-            }
+        if (oldProfileImage != null) {
+            fileService.deleteFile(oldProfileImage);
+        }
 
-            FileData newProfileImage = fileService.uploadFile(profileImage, userId);
-            userRepository.updateUserProfileImage(userId, newProfileImage);
+        FileData newProfileImage = fileService.uploadFile(profileImage, userId);
+        userRepository.updateUserProfileImage(userId, newProfileImage);
+    }
+
+    public void findUserPassword(UserFindPasswordRequest findPasswordRequest) {
+        User user = userRepository.getUserById(findPasswordRequest.getUserId());
+
+        if (user == null || !user.getEmail().equals(findPasswordRequest.getEmail())) {
+            throw new InvalidUserInfoException("해당 사용자가 존재하지 않거나 이메일이 일치하지 않습니다. 입력하신 정보를 다시 확인해 주세요.");
+        }
+
+        String temporaryPassword = UUID.randomUUID().toString();
+        EmailBase email = FindPasswordEmail.create(findPasswordRequest.getEmail(), temporaryPassword);
+        emailService.sendEmail(email);
+
+        userRepository.updateUserPassword(findPasswordRequest.getUserId(), passwordEncoder.encode(temporaryPassword));
     }
 }

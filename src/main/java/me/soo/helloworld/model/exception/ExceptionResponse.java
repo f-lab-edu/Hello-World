@@ -1,4 +1,4 @@
-package me.soo.helloworld.model;
+package me.soo.helloworld.model.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
