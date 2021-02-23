@@ -65,14 +65,14 @@ public class LanguageService {
     private void checkDuplicateLanguage(List<LanguageData> existingLangData, List<LanguageData> newLangData) {
         List<Language> newLang = extractLanguageOnly(newLangData);
 
-        // 새로 요청 받은 언어목록에서 중복되는 부분이 있을 경우 예외 발생
+        // 새로 요청 받은 언어목록을 확인
         if (newLang.size() != newLang.stream().distinct().count()) {
             throw new DuplicateLanguageException("새로 요청 받은 언어들 중에 중복되는 언어가 존재합니다. 중복 선택은 불가능 합니다.");
         }
 
         List<Language> existingLang = extractLanguageOnly(existingLangData);
 
-        // 기존 언어목록과 새로 요청받은 언어 목록을 비교해서 중복 추가가 있을 경우 예외 발생
+        // 기존 언어목록과 새로 요청받은 언어목록을 비교
         if (newLang.stream().anyMatch(existingLang::contains)) {
             throw new DuplicateLanguageException("이미 추가되어 있는 언어는 다시 추가할 수 없습니다.");
         }

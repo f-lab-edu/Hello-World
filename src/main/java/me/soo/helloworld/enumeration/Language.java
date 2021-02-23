@@ -18,5 +18,5 @@ public enum Language {
     KOREAN,
     PORTUGUESE,
     RUSSIAN,
-    SPANISH,
+    SPANISH
 }
