@@ -1,4 +1,4 @@
-package me.soo.helloworld.service;
+package me.soo.helloworld.service.user;
 
 import me.soo.helloworld.exception.FileNotDeletedException;
 import me.soo.helloworld.exception.FileNotUploadedException;
@@ -7,6 +7,9 @@ import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserPasswordRequest;
 import me.soo.helloworld.model.user.UserUpdateRequest;
 import me.soo.helloworld.repository.UserRepository;
+import me.soo.helloworld.service.FileService;
+import me.soo.helloworld.service.LoginService;
+import me.soo.helloworld.service.UserService;
 import me.soo.helloworld.util.encoder.PasswordEncoder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

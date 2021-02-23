@@ -6,8 +6,6 @@ import me.soo.helloworld.model.user.UserUpdateRequest;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.io.File;
-
 @Mapper
 public interface UserMapper {
 

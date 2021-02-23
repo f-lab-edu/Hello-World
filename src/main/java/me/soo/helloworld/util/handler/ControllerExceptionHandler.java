@@ -1,11 +1,8 @@
-package me.soo.helloworld.util;
+package me.soo.helloworld.util.handler;
 
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.extern.slf4j.Slf4j;
-import me.soo.helloworld.exception.FileNotDeletedException;
-import me.soo.helloworld.exception.FileNotUploadedException;
-import me.soo.helloworld.exception.InvalidUserInfoException;
-import me.soo.helloworld.exception.MailNotSentException;
+import me.soo.helloworld.exception.*;
 import me.soo.helloworld.model.exception.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +43,17 @@ public class ControllerExceptionHandler {
         log.error(ex.getMessage(), ex);
         ExceptionResponse response = new ExceptionResponse("이메일 발송에 실패하였습니다.", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({
+            LanguageLimitExceededException.class,
+            DuplicateLanguageException.class,
+            InvalidLanguageLevelException.class
+    })
+    public ResponseEntity<ExceptionResponse> checkLanguageException(final RuntimeException ex) {
+        log.error(ex.getMessage(), ex);
+        ExceptionResponse response = new ExceptionResponse("언어 정보 추가에 실패하였습니다.", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
 }

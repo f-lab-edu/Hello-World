@@ -1,4 +1,4 @@
-package me.soo.helloworld.service;
+package me.soo.helloworld.service.user;
 
 import me.soo.helloworld.exception.InvalidUserInfoException;
 import me.soo.helloworld.model.email.EmailBase;
@@ -7,6 +7,8 @@ import me.soo.helloworld.model.user.UserFindPasswordRequest;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.repository.UserRepository;
+import me.soo.helloworld.service.EmailService;
+import me.soo.helloworld.service.UserService;
 import me.soo.helloworld.util.encoder.PasswordEncoder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

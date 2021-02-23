@@ -33,7 +33,7 @@ public class UserRepositoryTest {
                 .userId("gomsu1045")
                 .password("Gomsu1045!0$%")
                 .email("test@test.com")
-                .gender("Male")
+                .gender("M")
                 .birthday(Date.valueOf("1993-09-25"))
                 .originCountry("South Korea")
                 .livingCountry("United Kingdom")
@@ -92,7 +92,7 @@ public class UserRepositoryTest {
         userMapper.insertUser(testUser);
 
         UserUpdateRequest updatedUser = UserUpdateRequest.builder()
-                .gender("M")
+                .gender("F")
                 .livingCountry("Republic Of Ireland")
                 .livingTown("Dublin")
                 .aboutMe("I've just moved to Dublin today")

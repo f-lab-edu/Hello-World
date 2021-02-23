@@ -1,5 +1,7 @@
 package me.soo.helloworld.config;
 
+import me.soo.helloworld.enumeration.LanguageLevel;
+import me.soo.helloworld.enumeration.LanguageStatus;
 import me.soo.helloworld.mapper.UserMapper;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -24,8 +26,9 @@ public class MyBatisConfig {
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         sessionFactory.setMapperLocations(resolver.getResources("/mappers/*.xml"));
 
-        return sessionFactory.getObject();
+        sessionFactory.setTypeHandlers(new LanguageLevel.TypeHandler(), new LanguageStatus.TypeHandler());
 
+        return sessionFactory.getObject();
     }
 
     @Bean

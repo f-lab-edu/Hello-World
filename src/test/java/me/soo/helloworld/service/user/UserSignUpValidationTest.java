@@ -1,4 +1,4 @@
-package me.soo.helloworld.service;
+package me.soo.helloworld.service.user;
 
 import me.soo.helloworld.model.user.User;
 import org.junit.jupiter.api.BeforeEach;
