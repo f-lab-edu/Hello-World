@@ -1,11 +1,10 @@
 package me.soo.helloworld.service.language;
 
-import me.soo.helloworld.enumeration.Language;
 import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
 import me.soo.helloworld.exception.DuplicateLanguageException;
+import me.soo.helloworld.mapper.LanguageMapper;
 import me.soo.helloworld.model.language.LanguageData;
-import me.soo.helloworld.repository.LanguageRepository;
 import me.soo.helloworld.service.LanguageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +29,7 @@ public class LanguageServiceIntegrationTest {
     LanguageService languageService;
 
     @Autowired
-    LanguageRepository languageRepository;
+    LanguageMapper languageMapper;
 
     ArrayList<LanguageData> newLearningLang;
 
@@ -41,16 +40,16 @@ public class LanguageServiceIntegrationTest {
     @BeforeEach
     public void setUp() {
         newLearningLang = new ArrayList<>();
-        newLearningLang.add(new LanguageData(Language.ENGLISH, LanguageLevel.BEGINNER));
-        newLearningLang.add(new LanguageData(Language.KOREAN, LanguageLevel.UPPER_INTERMEDIATE));
+        newLearningLang.add(new LanguageData(TestLangId.English, LanguageLevel.BEGINNER));
+        newLearningLang.add(new LanguageData(TestLangId.KOREAN, LanguageLevel.UPPER_INTERMEDIATE));
 
         newCanSpeakLang = new ArrayList<>();
-        newCanSpeakLang.add(new LanguageData(Language.ENGLISH, LanguageLevel.ADVANCED));
-        newCanSpeakLang.add(new LanguageData(Language.FRENCH, LanguageLevel.ADVANCED));
+        newCanSpeakLang.add(new LanguageData(TestLangId.English, LanguageLevel.ADVANCED));
+        newCanSpeakLang.add(new LanguageData(TestLangId.FRENCH, LanguageLevel.ADVANCED));
 
         newNativeLang = new ArrayList<>();
-        newNativeLang.add(new LanguageData(Language.ENGLISH, LanguageLevel.NATIVE));
-        newNativeLang.add(new LanguageData(Language.SPANISH, LanguageLevel.NATIVE));
+        newNativeLang.add(new LanguageData(TestLangId.English, LanguageLevel.NATIVE));
+        newNativeLang.add(new LanguageData(TestLangId.SPANISH, LanguageLevel.NATIVE));
     }
     /*
         하나의 언어는 추가하려는 status 를 다르게 지정해도 중복으로 추가할 수 없습니다.

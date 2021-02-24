@@ -5,12 +5,12 @@
 
     <insert id="insertLanguages" parameterType="map">
 
-        INSERT INTO speak (userId, language, level, status)
+        INSERT INTO speak (userId, langId, level, status)
             VALUES
                 <foreach collection="newLangData" item="lang" separator=",">
                     (
                      #{userId},
-                     #{lang.name},
+                     #{lang.id},
                      #{lang.level},
                      #{status}
                     )
@@ -18,13 +18,13 @@
     </insert>
 
     <select id="countLanguages" parameterType="map" resultType="int">
-        SELECT COUNT(language) FROM speak
+        SELECT COUNT(langId) FROM speak
             WHERE userId = #{userId} AND status = #{status}
     </select>
 
     <select id="getLanguages" parameterType="String" resultType="me.soo.helloworld.model.language.LanguageData">
 
-        SELECT language, level FROM speak
+        SELECT langId, level FROM speak
             WHERE userId = #{userId}
     </select>
 </mapper>
