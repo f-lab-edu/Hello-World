@@ -40,15 +40,15 @@ public class LanguageServiceIntegrationTest {
     @BeforeEach
     public void setUp() {
         newLearningLang = new ArrayList<>();
-        newLearningLang.add(new LanguageData(TestLangId.English, LanguageLevel.BEGINNER));
+        newLearningLang.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.BEGINNER));
         newLearningLang.add(new LanguageData(TestLangId.KOREAN, LanguageLevel.UPPER_INTERMEDIATE));
 
         newCanSpeakLang = new ArrayList<>();
-        newCanSpeakLang.add(new LanguageData(TestLangId.English, LanguageLevel.ADVANCED));
+        newCanSpeakLang.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.ADVANCED));
         newCanSpeakLang.add(new LanguageData(TestLangId.FRENCH, LanguageLevel.ADVANCED));
 
         newNativeLang = new ArrayList<>();
-        newNativeLang.add(new LanguageData(TestLangId.English, LanguageLevel.NATIVE));
+        newNativeLang.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.NATIVE));
         newNativeLang.add(new LanguageData(TestLangId.SPANISH, LanguageLevel.NATIVE));
     }
     /*

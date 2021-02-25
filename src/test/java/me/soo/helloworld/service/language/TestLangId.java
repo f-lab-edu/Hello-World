@@ -4,7 +4,7 @@ public class TestLangId {
 
     final static int KOREAN = 1;
 
-    final static int English = 2;
+    final static int ENGLISH = 2;
 
     final static int FRENCH = 3;
 

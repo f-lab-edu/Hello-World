@@ -64,7 +64,7 @@ public class AddLanguageTest {
     public void setUp() {
         // 새로운 언어 8개 추가
         newLangRequestWithEight = new ArrayList<>();
-        newLangRequestWithEight.add(new LanguageData(TestLangId.English, LanguageLevel.BEGINNER));
+        newLangRequestWithEight.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.BEGINNER));
         newLangRequestWithEight.add(new LanguageData(TestLangId.KOREAN, LanguageLevel.ELEMENTARY));
         newLangRequestWithEight.add(new LanguageData(TestLangId.GERMAN, LanguageLevel.INTERMEDIATE));
         newLangRequestWithEight.add(new LanguageData(TestLangId.PORTUGUESE, LanguageLevel.UPPER_INTERMEDIATE));
@@ -75,26 +75,26 @@ public class AddLanguageTest {
 
         // 새로운 언어 2개 추가
         newLangRequestWithTwo = new ArrayList<>();
-        newLangRequestWithTwo.add(new LanguageData(TestLangId.English, LanguageLevel.BEGINNER));
+        newLangRequestWithTwo.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.BEGINNER));
         newLangRequestWithTwo.add(new LanguageData(TestLangId.KOREAN, LanguageLevel.BEGINNER));
 
         // 새로운 언어 4개 추가
         newLangRequestWithFour = new ArrayList<>();
-        newLangRequestWithFour.add(new LanguageData(TestLangId.English, LanguageLevel.INTERMEDIATE));
+        newLangRequestWithFour.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.INTERMEDIATE));
         newLangRequestWithFour.add(new LanguageData(TestLangId.KOREAN, LanguageLevel.UPPER_INTERMEDIATE));
         newLangRequestWithFour.add(new LanguageData(TestLangId.GERMAN, LanguageLevel.ADVANCED));
         newLangRequestWithFour.add(new LanguageData(TestLangId.PORTUGUESE, LanguageLevel.PROFICIENCY));
 
         // 새로운 모국어 4개 추가
         newNativeLangRequestWithFour = new ArrayList<>();
-        newNativeLangRequestWithFour.add(new LanguageData(TestLangId.English, LanguageLevel.NATIVE));
+        newNativeLangRequestWithFour.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.NATIVE));
         newNativeLangRequestWithFour.add(new LanguageData(TestLangId.KOREAN, LanguageLevel.NATIVE));
         newNativeLangRequestWithFour.add(new LanguageData(TestLangId.GERMAN, LanguageLevel.NATIVE));
         newNativeLangRequestWithFour.add(new LanguageData(TestLangId.PORTUGUESE, LanguageLevel.NATIVE));
 
         // 새로운 모국어 2개 추가
         newNativeLangRequestWithTwo = new ArrayList<>();
-        newNativeLangRequestWithTwo.add(new LanguageData(TestLangId.English, LanguageLevel.NATIVE));
+        newNativeLangRequestWithTwo.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.NATIVE));
         newNativeLangRequestWithTwo.add(new LanguageData(TestLangId.KOREAN, LanguageLevel.NATIVE));
 
         // 기존에 저장된 언어 데이터 2개
@@ -109,21 +109,21 @@ public class AddLanguageTest {
 
         // 새롭게 추가할 언어 2개, 요청 자체에 중복이 있는 경우
         duplicateInNewLangRequest = new ArrayList<>();
-        duplicateInNewLangRequest.add(new LanguageData(TestLangId.English, LanguageLevel.INTERMEDIATE));
-        duplicateInNewLangRequest.add(new LanguageData(TestLangId.English, LanguageLevel.BEGINNER));
+        duplicateInNewLangRequest.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.INTERMEDIATE));
+        duplicateInNewLangRequest.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.BEGINNER));
 
         // 새롭게 추가할 모국어 2개, 요청 자체에 중복이 있는 경우
         duplicateInNewNativeLangRequest = new ArrayList<>();
-        duplicateInNewNativeLangRequest.add(new LanguageData(TestLangId.English, LanguageLevel.NATIVE));
-        duplicateInNewNativeLangRequest.add(new LanguageData(TestLangId.English, LanguageLevel.NATIVE));
+        duplicateInNewNativeLangRequest.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.NATIVE));
+        duplicateInNewNativeLangRequest.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.NATIVE));
 
         // 새롭게 추가할 언어 2개, 기존에 등록된 언어와 중복된 언어를 가진 경우
         newLangDuplicateWithExisting = new ArrayList<>();
-        newLangDuplicateWithExisting.add(new LanguageData(TestLangId.English, LanguageLevel.INTERMEDIATE));
+        newLangDuplicateWithExisting.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.INTERMEDIATE));
         newLangDuplicateWithExisting.add(new LanguageData(TestLangId.FRENCH, LanguageLevel.BEGINNER));
 
         newNativeLangDuplicateWithExisting = new ArrayList<>();
-        newNativeLangDuplicateWithExisting.add(new LanguageData(TestLangId.English, LanguageLevel.NATIVE));
+        newNativeLangDuplicateWithExisting.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.NATIVE));
         newNativeLangDuplicateWithExisting.add(new LanguageData(TestLangId.FRENCH, LanguageLevel.NATIVE));
 
     }
@@ -192,7 +192,7 @@ public class AddLanguageTest {
         when(languageMapper.countLanguages(userId, learning)).thenReturn(existingLangData.size());
 
         List<LanguageData> newLangWithInappropriateLevel = new ArrayList<>();
-        newLangWithInappropriateLevel.add(new LanguageData(TestLangId.English, LanguageLevel.NATIVE));
+        newLangWithInappropriateLevel.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.NATIVE));
 
         assertThrows(InvalidLanguageLevelException.class, () -> {
             languageService.addLanguages(userId, newLangWithInappropriateLevel, learning);
@@ -291,7 +291,7 @@ public class AddLanguageTest {
         when(languageMapper.countLanguages(userId, canSpeak)).thenReturn(existingLangData.size());
 
         List<LanguageData> newLangWithInappropriateLevel = new ArrayList<>();
-        newLangWithInappropriateLevel.add(new LanguageData(TestLangId.English, LanguageLevel.NATIVE));
+        newLangWithInappropriateLevel.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.NATIVE));
         newLangWithInappropriateLevel.add(new LanguageData(TestLangId.PORTUGUESE, LanguageLevel.UPPER_INTERMEDIATE));
 
         assertThrows(InvalidLanguageLevelException.class, () -> {
@@ -395,7 +395,7 @@ public class AddLanguageTest {
         when(languageMapper.countLanguages(userId, nativeLang)).thenReturn(existingNativeLangData.size());
 
         List<LanguageData> newNativeLangWithInappropriateLevel = new ArrayList<>();
-        newNativeLangWithInappropriateLevel.add(new LanguageData(TestLangId.English, LanguageLevel.BEGINNER));
+        newNativeLangWithInappropriateLevel.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.BEGINNER));
         newNativeLangWithInappropriateLevel.add(new LanguageData(TestLangId.KOREAN, LanguageLevel.NATIVE));
 
         assertThrows(InvalidLanguageLevelException.class, () -> {
