@@ -18,4 +18,10 @@ public class LanguageController {
 
         languageService.addLanguages(userId, languageDataWrapper.getDataList(), languageDataWrapper.getStatus());
     }
+
+    @PutMapping
+    public void modifyLanguageLevel(@CurrentUser String userId, @RequestBody LanguageDataWrapper languageDataWrapper) {
+
+        languageService.modifyLevel(userId, languageDataWrapper.getDataList(), languageDataWrapper.getStatus());
+    }
 }

@@ -18,4 +18,7 @@ public interface LanguageMapper {
 
     public List<LanguageData> getLanguages(String userId);
 
+    public void updateLevel(@Param("userId") String userId,
+                            @Param("langNewLevel") List<LanguageData> langNewLevel,
+                            LanguageStatus status);
 }

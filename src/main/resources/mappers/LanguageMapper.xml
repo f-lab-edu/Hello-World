@@ -27,4 +27,13 @@
         SELECT langId, level FROM speak
             WHERE userId = #{userId}
     </select>
+
+    <update id="updateLevel" parameterType="map">
+        <foreach collection="langNewLevel" item="lang" separator=";">
+
+            UPDATE speak
+                SET level = #{lang.level}
+                WHERE langId = #{lang.id} AND status = #{status}
+        </foreach>
+    </update>
 </mapper>

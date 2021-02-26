@@ -9,6 +9,7 @@ import me.soo.helloworld.exception.LanguageLimitExceededException;
 import me.soo.helloworld.mapper.LanguageMapper;
 import me.soo.helloworld.model.language.LanguageData;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,6 +54,16 @@ public class LanguageService {
 
     public List<LanguageData> getLanguages(String userId) {
         return languageMapper.getLanguages(userId);
+    }
+
+    @Transactional
+    public void modifyLevel(String userId, List<LanguageData> langNewLevel, LanguageStatus status) {
+        if (status.equals(LanguageStatus.NATIVE)) {
+            throw new InvalidLanguageLevelException("언어 status 가 모국어(NATIVE)로 등록되어 있는 언어들은 레벨을 변경할 수 없습니다.");
+        }
+
+        validateLevel(langNewLevel, status);
+        languageMapper.updateLevel(userId, langNewLevel, status);
     }
 
     /*
@@ -113,8 +124,8 @@ public class LanguageService {
         }
 
         if (!isLevelValid) {
-            throw new InvalidLanguageLevelException("추가하실 언어에 대한 레벨을 잘못 입력하셨습니다. 모국어 추가는 NATIVE 레벨로만 설정이 가능하며," +
-                    " 모국어가 아닌 언어를 추가시에는 NATIVE 레벨로 설정이 불가능합니다.");
+            throw new InvalidLanguageLevelException("추가하실 언어에 대한 레벨을 잘못 입력하셨습니다. 모국어의 언어 레벨은 NATIVE 레벨로만 설정이 가능하며," +
+                    " 모국어가 아닌 언어에는 NATIVE 레벨로 설정이 불가능합니다.");
         }
     }
 
