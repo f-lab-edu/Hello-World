@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.soo.helloworld.mapper.LanguageMapper">
+
+    <insert id="insertLanguages" parameterType="map">
+
+        INSERT INTO speak (userId, langId, level, status)
+            VALUES
+                <foreach collection="newLangData" item="lang" separator=",">
+                    (
+                     #{userId},
+                     #{lang.id},
+                     #{lang.level},
+                     #{status}
+                    )
+                </foreach>
+    </insert>
+
+    <select id="countLanguages" parameterType="map" resultType="int">
+        SELECT COUNT(langId) FROM speak
+            WHERE userId = #{userId} AND status = #{status}
+    </select>
+
+    <select id="getLanguages" parameterType="String" resultType="me.soo.helloworld.model.language.LanguageData">
+
+        SELECT langId, level FROM speak
+            WHERE userId = #{userId}
+    </select>
+</mapper>
