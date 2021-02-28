@@ -30,4 +30,10 @@ public class TestLangId {
 
     final static int JAPANESE = 14;
 
+    final static int BULGARIAN = 15;
+
+    final static int SWEDISH = 16;
+
+    final static int OTHER = 17;
+
 }

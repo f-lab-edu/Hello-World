@@ -6,6 +6,8 @@ import me.soo.helloworld.model.language.LanguageDataWrapper;
 import me.soo.helloworld.service.LanguageService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/languages")
 @RequiredArgsConstructor
@@ -23,5 +25,12 @@ public class LanguageController {
     public void modifyLanguageLevel(@CurrentUser String userId, @RequestBody LanguageDataWrapper languageDataWrapper) {
 
         languageService.modifyLevel(userId, languageDataWrapper.getDataList(), languageDataWrapper.getStatus());
+    }
+
+    @DeleteMapping
+    public void deleteLanguages(@CurrentUser String userId,
+                                @RequestBody List<Integer> languageDeleteRequest) {
+
+        languageService.deleteLanguages(userId, languageDeleteRequest);
     }
 }

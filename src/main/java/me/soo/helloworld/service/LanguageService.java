@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class LanguageService {
+    private static final int MAX_TOTAL_LANGUAGES = 16;
 
     private final LanguageMapper languageMapper;
 
@@ -64,6 +65,14 @@ public class LanguageService {
 
         validateLevel(langNewLevel, status);
         languageMapper.updateLevel(userId, langNewLevel, status);
+    }
+
+    public void deleteLanguages(String userId, List<Integer> languages) {
+        if (languages.size() > MAX_TOTAL_LANGUAGES) {
+            throw new LanguageLimitExceededException("삭제하려는 언어의 개수는 등록 가능한 언어의 최대 개수를 넘을 수 없습니다.");
+        }
+
+        languageMapper.deleteLanguages(userId, languages);
     }
 
     /*
