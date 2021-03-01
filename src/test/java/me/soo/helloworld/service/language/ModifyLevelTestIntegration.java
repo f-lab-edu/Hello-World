@@ -101,8 +101,8 @@ public class ModifyLevelTestIntegration {
         languageService.addLanguages(userId, learningLang, LanguageStatus.LEARNING);
         languageService.addLanguages(userId, canSpeakLang, LanguageStatus.CAN_SPEAK);
 
-        languageService.modifyLevel(userId, learningLangValidLevelSet, LanguageStatus.LEARNING);
-        languageService.modifyLevel(userId, canSpeakLangValidLevelSet, LanguageStatus.CAN_SPEAK);
+        languageService.modifyLanguageLevels(userId, learningLangValidLevelSet, LanguageStatus.LEARNING);
+        languageService.modifyLanguageLevels(userId, canSpeakLangValidLevelSet, LanguageStatus.CAN_SPEAK);
 
         List<LanguageData> languageList = languageService.getLanguages(userId);
 
@@ -120,11 +120,11 @@ public class ModifyLevelTestIntegration {
         languageService.addLanguages(userId, canSpeakLang, LanguageStatus.CAN_SPEAK);
 
         assertThrows(InvalidLanguageLevelException.class, () -> {
-            languageService.modifyLevel(userId, learningLangInvalidLevelSet, LanguageStatus.LEARNING);
+            languageService.modifyLanguageLevels(userId, learningLangInvalidLevelSet, LanguageStatus.LEARNING);
         });
 
         assertThrows(InvalidLanguageLevelException.class, () -> {
-            languageService.modifyLevel(userId, canSpeakLangInValidLevelSet, LanguageStatus.CAN_SPEAK);
+            languageService.modifyLanguageLevels(userId, canSpeakLangInValidLevelSet, LanguageStatus.CAN_SPEAK);
         });
     }
 
@@ -134,7 +134,7 @@ public class ModifyLevelTestIntegration {
         languageService.addLanguages(userId, nativeLang, LanguageStatus.NATIVE);
 
         assertThrows(InvalidLanguageLevelException.class, () -> {
-            languageService.modifyLevel(userId, nativeLang, LanguageStatus.NATIVE);
+            languageService.modifyLanguageLevels(userId, nativeLang, LanguageStatus.NATIVE);
         });
     }
 }
