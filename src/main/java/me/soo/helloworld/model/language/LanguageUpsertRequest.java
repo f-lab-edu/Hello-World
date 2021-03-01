@@ -8,9 +8,9 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class LanguageDataWrapper {
+public class LanguageUpsertRequest {
 
-    private final List<LanguageData> dataList;
+    private final List<LanguageData> languagesRequest;
 
     private final LanguageStatus status;
 }
