@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class LanguageService {
+    private static final int MAX_TOTAL_LANGUAGES = 16;
 
     private final LanguageMapper languageMapper;
 
@@ -55,13 +56,21 @@ public class LanguageService {
         return languageMapper.getLanguages(userId);
     }
 
-    public void modifyLevel(String userId, List<LanguageData> languageNewLevels, LanguageStatus status) {
+    public void modifyLanguageLevels(String userId, List<LanguageData> languageNewLevels, LanguageStatus status) {
         if (status.equals(LanguageStatus.NATIVE)) {
             throw new InvalidLanguageLevelException("언어 status 가 모국어(NATIVE)로 등록되어 있는 언어들은 레벨을 변경할 수 없습니다.");
         }
 
         validateLevel(languageNewLevels, status);
         languageMapper.updateLevels(userId, languageNewLevels, status);
+    }
+
+    public void deleteLanguages(String userId, List<Integer> languages) {
+        if (languages.size() > MAX_TOTAL_LANGUAGES) {
+            throw new LanguageLimitExceededException("삭제하려는 언어의 개수는 등록 가능한 언어의 최대 개수를 넘을 수 없습니다.");
+        }
+
+        languageMapper.deleteLanguages(userId, languages);
     }
 
     /*

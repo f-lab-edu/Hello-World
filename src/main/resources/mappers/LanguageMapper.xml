@@ -41,4 +41,13 @@
                     </foreach>
                 AND userId = #{userId} AND status = #{status}
     </update>
+
+    <delete id="deleteLanguages" parameterType="map">
+
+        DELETE FROM speak WHERE langId IN
+            <foreach collection="languages" item="lang" open="(" close=")" separator=",">
+                #{lang}
+            </foreach>
+            AND userId = #{userId}
+    </delete>
 </mapper>

@@ -21,4 +21,7 @@ public interface LanguageMapper {
     public void updateLevels(@Param("userId") String userId,
                             @Param("languageNewLevels") List<LanguageData> languageNewLevels,
                             LanguageStatus status);
+
+    public void deleteLanguages(@Param("userId") String userId,
+                                @Param("languages") List<Integer> languages);
 }

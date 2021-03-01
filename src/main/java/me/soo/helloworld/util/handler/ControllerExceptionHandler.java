@@ -52,7 +52,7 @@ public class ControllerExceptionHandler {
     })
     public ResponseEntity<ExceptionResponse> checkLanguageException(final RuntimeException ex) {
         log.error(ex.getMessage(), ex);
-        ExceptionResponse response = new ExceptionResponse("언어 정보 추가/변경에 실패하였습니다.", ex.getMessage());
+        ExceptionResponse response = new ExceptionResponse("언어 정보 추가/변경/삭제에 실패하였습니다.", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
