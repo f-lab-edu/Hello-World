@@ -16,13 +16,15 @@ public class LanguageController {
     private final LanguageService languageService;
 
     @PostMapping("/languages")
-    public void addLanguages(@CurrentUser String userId, @RequestBody LanguageUpsertRequest languageAddRequest) {
+    public void addLanguages(@CurrentUser String userId,
+                             @RequestBody LanguageUpsertRequest languageAddRequest) {
 
         languageService.addLanguages(userId, languageAddRequest.getLanguagesRequest(), languageAddRequest.getStatus());
     }
 
     @PutMapping("/languages")
-    public void modifyLanguageLevels(@CurrentUser String userId, @RequestBody LanguageUpsertRequest languageModifyRequest) {
+    public void modifyLanguageLevels(@CurrentUser String userId,
+                                     @RequestBody LanguageUpsertRequest languageModifyRequest) {
 
         languageService.modifyLanguageLevels(userId, languageModifyRequest.getLanguagesRequest(), languageModifyRequest.getStatus());
     }
