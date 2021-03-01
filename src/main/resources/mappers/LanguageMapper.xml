@@ -28,12 +28,17 @@
             WHERE userId = #{userId}
     </select>
 
-    <update id="updateLevel" parameterType="map">
-        <foreach collection="langNewLevel" item="lang" separator=";">
-
-            UPDATE speak
-                SET level = #{lang.level}
-                WHERE langId = #{lang.id} AND status = #{status}
-        </foreach>
+    <update id="updateLevels" parameterType="map">
+            UPDATE speak SET level =
+            CASE
+                <foreach collection="languageNewLevels" item="lang">
+                    WHEN langId = #{lang.id} THEN #{lang.level}
+                </foreach>
+            END
+                WHERE langId IN
+                    <foreach collection="languageNewLevels" item="lang" open="(" close=")" separator=",">
+                        #{lang.id}
+                    </foreach>
+                AND userId = #{userId} AND status = #{status}
     </update>
 </mapper>
