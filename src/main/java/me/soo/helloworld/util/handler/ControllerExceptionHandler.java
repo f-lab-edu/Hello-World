@@ -56,4 +56,13 @@ public class ControllerExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({
+            InvalidFriendRequestException.class,
+            DuplicateFriendRequestException.class
+    })
+    public ResponseEntity<ExceptionResponse> friendRequestException(final RuntimeException ex) {
+        log.error(ex.getMessage(), ex);
+        ExceptionResponse response = new ExceptionResponse("친구 추가 요청을 보내는데 실패하였습니다.", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 }
