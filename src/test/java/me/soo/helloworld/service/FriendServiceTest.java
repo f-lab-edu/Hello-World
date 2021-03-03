@@ -64,7 +64,7 @@ public class FriendServiceTest {
     }
 
     @Test
-    @DisplayName("자기 자신에게 친구 추가 요청을 보낼 경우 InvalidRequestException 이 발생하며 요청에 실패합니다.")
+    @DisplayName("차단한 사용자에게 친구 추가 요청을 보낼 경우 InvalidRequestException 이 발생하며 요청에 실패합니다.")
     public void sendFriendRequestToBlockedUserFail() {
         when(userService.isUserIdDuplicate(anotherUserId)).thenReturn(true);
         when(friendMapper.getFriendStatus(userId, anotherUserId)).thenReturn(FriendStatus.BLOCKED);
