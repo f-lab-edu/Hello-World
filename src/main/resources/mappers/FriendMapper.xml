@@ -6,13 +6,13 @@
     <insert id="sendFriendRequest" parameterType="String">
 
         INSERT INTO friends (userId, friendId, status)
-            VALUES (#{userId}, #{anotherUserId}, 2), (#{anotherUserId}, #{userId}, 3)
+            VALUES (#{userId}, #{targetId}, 2), (#{targetId}, #{userId}, 3)
     </insert>
 
     <select id="getFriendStatus" parameterType="String" resultType="me.soo.helloworld.enumeration.FriendStatus">
 
         SELECT IFNULL(MAX(status), 1)
-            FROM friends WHERE userId = #{userId} AND friendId = #{anotherUserId}
+            FROM friends WHERE userId = #{userId} AND friendId = #{targetId}
     </select>
 
 </mapper>

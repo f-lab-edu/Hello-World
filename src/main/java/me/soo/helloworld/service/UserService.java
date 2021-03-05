@@ -30,7 +30,7 @@ public class UserService {
         userRepository.insertUser(user.buildUserWithEncodedPassword(encodedPassword));
     }
 
-    public boolean isUserIdDuplicate(String userId) {
+    public boolean doesUserIdExist(String userId) {
         return userRepository.isUserIdDuplicate(userId);
     }
 
