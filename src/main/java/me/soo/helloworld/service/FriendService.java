@@ -21,7 +21,7 @@ public class FriendService {
             throw new InvalidFriendRequestException("자기 자신에게는 친구추가 요청을 보낼 수 없습니다.");
         }
 
-        if (!userService.doesUserIdExist(targetId)) {
+        if (!userService.isUserIdExist(targetId)) {
             throw new InvalidFriendRequestException("존재하지 않는 사용자에게 친구추가 요청을 보낼 수 없습니다.");
         }
 

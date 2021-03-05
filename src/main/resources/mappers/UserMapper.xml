@@ -11,7 +11,7 @@
 
     </insert>
 
-    <select id="isUserIdDuplicate" parameterType="String" resultType="boolean">
+    <select id="isUserIdExist" parameterType="String" resultType="boolean">
         SELECT EXISTS (SELECT userId FROM users WHERE userId = #{userId})
     </select>
 
@@ -52,5 +52,9 @@
     <update id="deleteUser" parameterType="String">
         UPDATE users SET isDeactivated = 'Y' WHERE userId = #{userId}
     </update>
+
+    <select id="isEmailValid" parameterType="me.soo.helloworld.model.user.UserFindPasswordRequest" resultType="boolean">
+        SELECT EXISTS(SELECT email FROM users WHERE userId = #{userId} AND email = #{email} AND isDeactivated = 'N')
+    </select>
 
 </mapper>
