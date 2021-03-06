@@ -69,4 +69,10 @@ public class FriendService {
         isStatusValid(friendStatus, RECEIVED);
         friendMapper.updateFriendRequest(userId, targetId, FRIENDED);
     }
+
+    public void rejectFriendRequest(String userId, String targetId) {
+        FriendStatus friendStatus = getFriendStatus(userId, targetId);
+        isStatusValid(friendStatus, RECEIVED);
+        friendMapper.deleteFriendRequest(userId, targetId);
+    }
 }
