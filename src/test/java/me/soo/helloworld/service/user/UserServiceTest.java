@@ -66,7 +66,7 @@ class UserServiceTest {
     public void duplicateUserIdExceptionFalse() {
         when(userRepository.isUserIdDuplicate(testUser.getUserId())).thenReturn(false);
 
-        assertThat(userService.isUserIdDuplicate(testUser.getUserId()), is(false));
+        assertThat(userService.isUserIdExist(testUser.getUserId()), is(false));
 
         verify(userRepository, times(1)).isUserIdDuplicate(testUser.getUserId());
     }
@@ -76,7 +76,7 @@ class UserServiceTest {
     public void duplicateUserIdExceptionTrue() {
         when(userRepository.isUserIdDuplicate(testUser.getUserId())).thenReturn(true);
 
-        assertThat(userService.isUserIdDuplicate(testUser.getUserId()), is(true));
+        assertThat(userService.isUserIdExist(testUser.getUserId()), is(true));
 
         verify(userRepository, times(1)).isUserIdDuplicate(testUser.getUserId());
     }

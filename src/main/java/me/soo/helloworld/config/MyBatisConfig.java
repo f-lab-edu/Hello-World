@@ -1,5 +1,6 @@
 package me.soo.helloworld.config;
 
+import me.soo.helloworld.enumeration.FriendStatus;
 import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
 import me.soo.helloworld.mapper.UserMapper;
@@ -26,7 +27,8 @@ public class MyBatisConfig {
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         sessionFactory.setMapperLocations(resolver.getResources("/mappers/*.xml"));
 
-        sessionFactory.setTypeHandlers(new LanguageLevel.TypeHandler(), new LanguageStatus.TypeHandler());
+        sessionFactory.setTypeHandlers(new LanguageLevel.TypeHandler(), new LanguageStatus.TypeHandler(),
+                                        new FriendStatus.TypeHandler());
 
         return sessionFactory.getObject();
     }

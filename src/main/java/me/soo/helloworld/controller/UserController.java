@@ -1,7 +1,6 @@
 package me.soo.helloworld.controller;
 
 import lombok.RequiredArgsConstructor;
-import me.soo.helloworld.annotation.CurrentUser;
 import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.service.LoginService;
 import me.soo.helloworld.service.UserService;
@@ -33,7 +32,7 @@ public class UserController {
     @GetMapping("/idcheck")
     public ResponseEntity<Void> isUserIdDuplicate(@RequestParam String userId) {
 
-        if (userService.isUserIdDuplicate(userId)) {
+        if (userService.isUserIdExist(userId)) {
             return HTTP_RESPONSE_CONFLICT;
         }
 

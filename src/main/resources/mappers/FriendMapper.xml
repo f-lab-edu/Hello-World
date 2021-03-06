@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.soo.helloworld.mapper.FriendMapper">
+
+    <insert id="sendFriendRequest" parameterType="String">
+
+        INSERT INTO friends (userId, friendId, status)
+            VALUES (#{userId}, #{targetId}, 2), (#{targetId}, #{userId}, 3)
+    </insert>
+
+    <select id="getFriendStatus" parameterType="String" resultType="me.soo.helloworld.enumeration.FriendStatus">
+
+        SELECT IFNULL(MAX(status), 1)
+            FROM friends WHERE userId = #{userId} AND friendId = #{targetId}
+    </select>
+
+</mapper>
