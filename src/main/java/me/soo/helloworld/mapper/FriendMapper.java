@@ -10,5 +10,5 @@ public interface FriendMapper {
 
     public FriendStatus getFriendStatus(String userId, String targetId);
 
-
+    public void deleteFriendRequest(String userId, String targetId);
 }
