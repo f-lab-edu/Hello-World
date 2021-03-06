@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/friends")
+@RequestMapping("/my-friends")
 public class FriendController {
 
     private final FriendService friendService;
@@ -23,5 +23,11 @@ public class FriendController {
     @DeleteMapping("/friend-requests/to/{targetId}")
     public void cancelFriendRequest(@CurrentUser String userId, @PathVariable String targetId) {
         friendService.cancelFriendRequest(userId, targetId);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/friend-requests/from/{targetId}/acceptance")
+    public void acceptFriendRequest(@CurrentUser String userId, @PathVariable String targetId) {
+        friendService.acceptFriendRequest(userId, targetId);
     }
 }

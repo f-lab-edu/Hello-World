@@ -52,13 +52,21 @@ public class FriendService {
         }
     }
 
-    public void cancelFriendRequest(String userId, String targetId) {
-        FriendStatus friendStatus = getFriendStatus(userId, targetId);
-
-        if (!friendStatus.equals(REQUESTED)) {
+    private void isStatusValid(FriendStatus currentStatus, FriendStatus targetStatus) {
+        if (!currentStatus.equals(targetStatus)) {
             throw new InvalidFriendRequestException("잘못된 접근입니다.");
         }
+    }
 
+    public void cancelFriendRequest(String userId, String targetId) {
+        FriendStatus friendStatus = getFriendStatus(userId, targetId);
+        isStatusValid(friendStatus, REQUESTED);
         friendMapper.deleteFriendRequest(userId, targetId);
+    }
+
+    public void acceptFriendRequest(String userId, String targetId) {
+        FriendStatus friendStatus = getFriendStatus(userId, targetId);
+        isStatusValid(friendStatus, RECEIVED);
+        friendMapper.updateFriendRequest(userId, targetId, FRIENDED);
     }
 }

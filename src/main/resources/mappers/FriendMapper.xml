@@ -22,4 +22,11 @@
                 OR (userId = #{targetId} AND friendId = #{userId})
     </delete>
 
+    <update id="updateFriendRequest" parameterType="map">
+
+        UPDATE friends SET status = #{status}
+            WHERE (userId = #{userId} AND friendId = #{targetId})
+                OR (userId = #{targetId} AND friendId = #{userId})
+    </update>
+
 </mapper>
