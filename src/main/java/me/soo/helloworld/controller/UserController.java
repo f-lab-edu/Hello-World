@@ -32,7 +32,7 @@ public class UserController {
     @GetMapping("/idcheck")
     public ResponseEntity<Void> isUserIdDuplicate(@RequestParam String userId) {
 
-        if (userService.doesUserIdExist(userId)) {
+        if (userService.isUserIdExist(userId)) {
             return HTTP_RESPONSE_CONFLICT;
         }
 
