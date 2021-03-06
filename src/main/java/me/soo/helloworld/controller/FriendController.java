@@ -36,4 +36,10 @@ public class FriendController {
     public void rejectFriendRequest(@CurrentUser String userId, @PathVariable String targetId) {
         friendService.rejectFriendRequest(userId, targetId);
     }
+
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("/{targetId}")
+    public void unfriendFriend(@CurrentUser String userId, @PathVariable String targetId) {
+        friendService.unfriendFriend(userId, targetId);
+    }
 }

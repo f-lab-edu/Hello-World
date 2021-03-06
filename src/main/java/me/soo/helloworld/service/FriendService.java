@@ -54,14 +54,14 @@ public class FriendService {
 
     private void isStatusValid(FriendStatus currentStatus, FriendStatus targetStatus) {
         if (!currentStatus.equals(targetStatus)) {
-            throw new InvalidFriendRequestException("잘못된 접근입니다.");
+            throw new InvalidFriendRequestException("잘못된 status 로의 접근입니다. 해당 요청을 처리할 수 없습니다.");
         }
     }
 
     public void cancelFriendRequest(String userId, String targetId) {
         FriendStatus friendStatus = getFriendStatus(userId, targetId);
         isStatusValid(friendStatus, REQUESTED);
-        friendMapper.deleteFriendRequest(userId, targetId);
+        friendMapper.deleteFriend(userId, targetId);
     }
 
     public void acceptFriendRequest(String userId, String targetId) {
@@ -73,6 +73,12 @@ public class FriendService {
     public void rejectFriendRequest(String userId, String targetId) {
         FriendStatus friendStatus = getFriendStatus(userId, targetId);
         isStatusValid(friendStatus, RECEIVED);
-        friendMapper.deleteFriendRequest(userId, targetId);
+        friendMapper.deleteFriend(userId, targetId);
+    }
+
+    public void unfriendFriend(String userId, String targetId) {
+        FriendStatus friendStatus = getFriendStatus(userId, targetId);
+        isStatusValid(friendStatus, FRIENDED);
+        friendMapper.deleteFriend(userId, targetId);
     }
 }

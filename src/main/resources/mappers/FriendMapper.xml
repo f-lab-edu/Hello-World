@@ -15,7 +15,7 @@
             FROM friends WHERE userId = #{userId} AND friendId = #{targetId}
     </select>
 
-    <delete id="deleteFriendRequest" parameterType="String">
+    <delete id="deleteFriend" parameterType="String">
 
         DELETE FROM friends
             WHERE (userId = #{userId} AND friendId = #{targetId})
