@@ -19,13 +19,11 @@ public class FriendController {
         friendService.sendFriendRequest(userId, targetId);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/friend-requests/to/{targetId}")
     public void cancelFriendRequest(@CurrentUser String userId, @PathVariable String targetId) {
         friendService.cancelFriendRequest(userId, targetId);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/friend-requests/from/{targetId}/acceptance")
     public void acceptFriendRequest(@CurrentUser String userId, @PathVariable String targetId) {
         friendService.acceptFriendRequest(userId, targetId);
