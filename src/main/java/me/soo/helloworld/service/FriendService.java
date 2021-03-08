@@ -28,7 +28,7 @@ public class FriendService {
         }
 
         FriendStatus friendStatus = getFriendStatus(userId, targetId);
-        isStatusValid(friendStatus);
+        validateStatus(friendStatus);
 
         friendMapper.sendFriendRequest(userId, targetId);
     }
@@ -37,7 +37,31 @@ public class FriendService {
         return friendMapper.getFriendStatus(userId, targetId);
     }
 
-    private void isStatusValid(FriendStatus status) {
+    public void cancelFriendRequest(String userId, String targetId) {
+        FriendStatus friendStatus = getFriendStatus(userId, targetId);
+        validateStatus(friendStatus, REQUESTED);
+        friendMapper.deleteFriend(userId, targetId);
+    }
+
+    public void acceptFriendRequest(String userId, String targetId) {
+        FriendStatus friendStatus = getFriendStatus(userId, targetId);
+        validateStatus(friendStatus, RECEIVED);
+        friendMapper.updateFriendRequest(userId, targetId, FRIENDED);
+    }
+
+    public void rejectFriendRequest(String userId, String targetId) {
+        FriendStatus friendStatus = getFriendStatus(userId, targetId);
+        validateStatus(friendStatus, RECEIVED);
+        friendMapper.deleteFriend(userId, targetId);
+    }
+
+    public void unfriendFriend(String userId, String targetId) {
+        FriendStatus friendStatus = getFriendStatus(userId, targetId);
+        validateStatus(friendStatus, FRIENDED);
+        friendMapper.deleteFriend(userId, targetId);
+    }
+
+    private void validateStatus(FriendStatus status) {
         switch (status) {
             case NOT_YET:
                 break;
@@ -52,33 +76,9 @@ public class FriendService {
         }
     }
 
-    private void isStatusValid(FriendStatus currentStatus, FriendStatus targetStatus) {
+    private void validateStatus(FriendStatus currentStatus, FriendStatus targetStatus) {
         if (!currentStatus.equals(targetStatus)) {
             throw new InvalidFriendRequestException("잘못된 status 로의 접근입니다. 해당 요청을 처리할 수 없습니다.");
         }
-    }
-
-    public void cancelFriendRequest(String userId, String targetId) {
-        FriendStatus friendStatus = getFriendStatus(userId, targetId);
-        isStatusValid(friendStatus, REQUESTED);
-        friendMapper.deleteFriend(userId, targetId);
-    }
-
-    public void acceptFriendRequest(String userId, String targetId) {
-        FriendStatus friendStatus = getFriendStatus(userId, targetId);
-        isStatusValid(friendStatus, RECEIVED);
-        friendMapper.updateFriendRequest(userId, targetId, FRIENDED);
-    }
-
-    public void rejectFriendRequest(String userId, String targetId) {
-        FriendStatus friendStatus = getFriendStatus(userId, targetId);
-        isStatusValid(friendStatus, RECEIVED);
-        friendMapper.deleteFriend(userId, targetId);
-    }
-
-    public void unfriendFriend(String userId, String targetId) {
-        FriendStatus friendStatus = getFriendStatus(userId, targetId);
-        isStatusValid(friendStatus, FRIENDED);
-        friendMapper.deleteFriend(userId, targetId);
     }
 }

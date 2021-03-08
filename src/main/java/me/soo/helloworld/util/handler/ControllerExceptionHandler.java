@@ -31,13 +31,10 @@ public class ControllerExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({
-            DuplicateRequestException.class,
-            UnauthorizedAccessException.class
-    })
-    public ResponseEntity<ExceptionResponse> loginFailedException(final RuntimeException ex) {
+    @ExceptionHandler(DuplicateRequestException.class)
+    public ResponseEntity<ExceptionResponse> loginFailedException(final DuplicateRequestException ex) {
         log.error(ex.getMessage(), ex);
-        ExceptionResponse response = new ExceptionResponse("로그인 관련 오류입니다.", ex.getMessage());
+        ExceptionResponse response = new ExceptionResponse("로그인에 실패하였습니다.", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
@@ -67,5 +64,12 @@ public class ControllerExceptionHandler {
         log.error(ex.getMessage(), ex);
         ExceptionResponse response = new ExceptionResponse("친구 관련 요청을 처리하는데 실패하였습니다.", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ExceptionResponse> unauthorizedAccessException(final UnauthorizedAccessException ex) {
+        log.error(ex.getMessage(), ex);
+        ExceptionResponse response = new ExceptionResponse("인증이 필요한 접근입니다.", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 }
