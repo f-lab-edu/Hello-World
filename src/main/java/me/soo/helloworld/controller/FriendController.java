@@ -19,25 +19,21 @@ public class FriendController {
         friendService.sendFriendRequest(userId, targetId);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/friend-requests/to/{targetId}")
     public void cancelFriendRequest(@CurrentUser String userId, @PathVariable String targetId) {
         friendService.cancelFriendRequest(userId, targetId);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/friend-requests/from/{targetId}/acceptance")
     public void acceptFriendRequest(@CurrentUser String userId, @PathVariable String targetId) {
         friendService.acceptFriendRequest(userId, targetId);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/friend-requests/from/{targetId}/rejection")
     public void rejectFriendRequest(@CurrentUser String userId, @PathVariable String targetId) {
         friendService.rejectFriendRequest(userId, targetId);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{targetId}")
     public void unfriendFriend(@CurrentUser String userId, @PathVariable String targetId) {
         friendService.unfriendFriend(userId, targetId);
