@@ -56,4 +56,12 @@ public class FriendController {
         List<FriendList> friends = friendService.getFriendList(userId, pageNumber);
         return ResponseEntity.ok(friends);
     }
+
+    @LoginRequired
+    @GetMapping("/friend-requests/from/other-users")
+    public ResponseEntity<List<FriendList>> getFriendRequestList(@CurrentUser String userId,
+                                                          @RequestParam(defaultValue = "1") Integer pageNumber) {
+        List<FriendList> friendRequests = friendService.getFriendRequestList(userId, pageNumber);
+        return ResponseEntity.ok(friendRequests);
+    }
 }
