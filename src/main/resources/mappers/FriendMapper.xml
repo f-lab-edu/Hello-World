@@ -29,4 +29,13 @@
                 OR (userId = #{targetId} AND friendId = #{userId})
     </update>
 
+    <select id="getFriendList" parameterType="me.soo.helloworld.model.friend.FriendListRequest"
+            resultType="me.soo.helloworld.model.friend.FriendList">
+
+        SELECT friendId, status FROM friends
+            WHERE userId = #{userId} AND status = #{status}
+        ORDER BY id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
 </mapper>

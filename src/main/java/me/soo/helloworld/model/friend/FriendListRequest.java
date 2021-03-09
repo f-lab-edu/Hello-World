@@ -1,0 +1,30 @@
+package me.soo.helloworld.model.friend;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import me.soo.helloworld.enumeration.FriendStatus;
+
+import static me.soo.helloworld.util.Pagination.MAX_PER_PAGE_FRIEND;
+
+@Builder
+@AllArgsConstructor
+public class FriendListRequest {
+
+    private final String userId;
+
+    private final int offset;
+
+    private final int limit;
+
+    private final FriendStatus status;
+
+    static public FriendListRequest create(String userId, int pageNumber, FriendStatus status) {
+
+        return FriendListRequest.builder()
+                                .userId(userId)
+                                .offset(MAX_PER_PAGE_FRIEND * (Math.max(pageNumber, 1) - 1)) // pageNumber 가 음수로 들어와도 기본값을 1로 설정
+                                .limit(MAX_PER_PAGE_FRIEND)
+                                .status(status)
+                                .build();
+    }
+}

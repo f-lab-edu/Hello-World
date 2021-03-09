@@ -5,8 +5,12 @@ import me.soo.helloworld.enumeration.FriendStatus;
 import me.soo.helloworld.exception.DuplicateFriendRequestException;
 import me.soo.helloworld.exception.InvalidFriendRequestException;
 import me.soo.helloworld.mapper.FriendMapper;
+import me.soo.helloworld.model.friend.FriendList;
+import me.soo.helloworld.model.friend.FriendListRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static me.soo.helloworld.enumeration.FriendStatus.*;
 
@@ -59,6 +63,11 @@ public class FriendService {
         FriendStatus friendStatus = getFriendStatus(userId, targetId);
         validateStatus(friendStatus, FRIENDED);
         friendMapper.deleteFriend(userId, targetId);
+    }
+
+    public List<FriendList> getFriendList(String userId, Integer pageNumber) {
+        FriendListRequest request = FriendListRequest.create(userId, pageNumber, FRIENDED);
+        return friendMapper.getFriendList(request);
     }
 
     private void validateStatus(FriendStatus status) {
