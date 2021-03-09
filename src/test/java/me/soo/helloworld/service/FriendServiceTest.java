@@ -139,7 +139,7 @@ public class FriendServiceTest {
         friendService.cancelFriendRequest(userId, targetId);
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
-        verify(friendMapper, times(1)).deleteFriendRequest(userId, targetId);
+        verify(friendMapper, times(1)).deleteFriend(userId, targetId);
     }
 
     @Test
@@ -152,7 +152,7 @@ public class FriendServiceTest {
         });
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
-        verify(friendMapper, never()).deleteFriendRequest(userId, targetId);
+        verify(friendMapper, never()).deleteFriend(userId, targetId);
     }
 
     @Test
@@ -165,7 +165,7 @@ public class FriendServiceTest {
         });
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
-        verify(friendMapper, never()).deleteFriendRequest(userId, targetId);
+        verify(friendMapper, never()).deleteFriend(userId, targetId);
     }
 
     @Test
@@ -178,7 +178,7 @@ public class FriendServiceTest {
         });
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
-        verify(friendMapper, never()).deleteFriendRequest(userId, targetId);
+        verify(friendMapper, never()).deleteFriend(userId, targetId);
     }
 
     @Test
@@ -191,7 +191,7 @@ public class FriendServiceTest {
         });
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
-        verify(friendMapper, never()).deleteFriendRequest(userId, targetId);
+        verify(friendMapper, never()).deleteFriend(userId, targetId);
     }
 
     @Test
@@ -265,7 +265,7 @@ public class FriendServiceTest {
         friendService.rejectFriendRequest(userId, targetId);
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
-        verify(friendMapper, times(1)).deleteFriendRequest(userId, targetId);
+        verify(friendMapper, times(1)).deleteFriend(userId, targetId);
     }
 
     @Test
@@ -278,7 +278,7 @@ public class FriendServiceTest {
         });
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
-        verify(friendMapper, never()).deleteFriendRequest(userId, targetId);
+        verify(friendMapper, never()).deleteFriend(userId, targetId);
     }
 
     @Test
@@ -291,7 +291,7 @@ public class FriendServiceTest {
         });
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
-        verify(friendMapper, never()).deleteFriendRequest(userId, targetId);
+        verify(friendMapper, never()).deleteFriend(userId, targetId);
     }
 
     @Test
@@ -304,7 +304,7 @@ public class FriendServiceTest {
         });
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
-        verify(friendMapper, never()).deleteFriendRequest(userId, targetId);
+        verify(friendMapper, never()).deleteFriend(userId, targetId);
     }
 
     @Test
@@ -317,6 +317,30 @@ public class FriendServiceTest {
         });
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
-        verify(friendMapper, never()).deleteFriendRequest(userId, targetId);
+        verify(friendMapper, never()).deleteFriend(userId, targetId);
+    }
+
+    @Test
+    @DisplayName("해당 사용자와의 친구 상태가 FRIENDED 인 경우에는 친구 삭제가 성공합니다.")
+    public void unfriendFriendSuccessWithFriendedStatusWithTheUser() {
+        when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(FRIENDED);
+
+        friendService.unfriendFriend(userId, targetId);
+
+        verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
+        verify(friendMapper, times(1)).deleteFriend(userId, targetId);
+    }
+
+    @Test
+    @DisplayName("해당 사용자와의 친구 상태가 FRIENDED 인 아닌 경우에는 친구 삭제가 실패하며 InvalidFriendRequestException 가 발생합니다.")
+    public void unfriendFriendFailWithNotFriendedStatusWithTheUser() {
+        when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(NOT_YET);
+
+        assertThrows(InvalidFriendRequestException.class, () -> {
+            friendService.unfriendFriend(userId, targetId);
+        });
+
+        verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
+        verify(friendMapper, never()).deleteFriend(userId, targetId);
     }
 }
