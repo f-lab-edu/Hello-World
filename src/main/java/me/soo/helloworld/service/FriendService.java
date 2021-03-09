@@ -8,6 +8,8 @@ import me.soo.helloworld.mapper.FriendMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import static me.soo.helloworld.enumeration.FriendStatus.*;
+
 @Service
 @RequiredArgsConstructor
 public class FriendService {
@@ -48,5 +50,15 @@ public class FriendService {
             case BLOCKED:
                 throw new InvalidFriendRequestException("차단한 사용자에게 친구 요청을 보낼 수 없습니다.");
         }
+    }
+
+    public void cancelFriendRequest(String userId, String targetId) {
+        FriendStatus friendStatus = getFriendStatus(userId, targetId);
+
+        if (!friendStatus.equals(REQUESTED)) {
+            throw new InvalidFriendRequestException("잘못된 접근입니다.");
+        }
+
+        friendMapper.deleteFriendRequest(userId, targetId);
     }
 }

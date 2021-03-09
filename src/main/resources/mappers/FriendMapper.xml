@@ -15,4 +15,11 @@
             FROM friends WHERE userId = #{userId} AND friendId = #{targetId}
     </select>
 
+    <delete id="deleteFriendRequest" parameterType="String">
+
+        DELETE FROM friends
+            WHERE (userId = #{userId} AND friendId = #{targetId})
+                OR (userId = #{targetId} AND friendId = #{userId})
+    </delete>
+
 </mapper>
