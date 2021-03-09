@@ -2,11 +2,11 @@ package me.soo.helloworld.service;
 
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.exception.InvalidUserInfoException;
+import me.soo.helloworld.mapper.UserMapper;
 import me.soo.helloworld.model.email.EmailBase;
 import me.soo.helloworld.model.email.FindPasswordEmail;
 import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.*;
-import me.soo.helloworld.repository.UserRepository;
 import me.soo.helloworld.util.encoder.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     private final FileService fileService;
 
@@ -27,50 +27,42 @@ public class UserService {
 
     public void userSignUp(User user) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
-        userRepository.insertUser(user.buildUserWithEncodedPassword(encodedPassword));
+        userMapper.insertUser(user.buildUserWithEncodedPassword(encodedPassword));
     }
 
     public boolean isUserIdExist(String userId) {
-        return userRepository.isUserIdDuplicate(userId);
+        return userMapper.isUserIdExist(userId);
     }
 
-    public User getUser(String requestId, String requestPassword) {
-        User user = userRepository.getUserById(requestId);
-
-        if (user == null) {
-            throw new InvalidUserInfoException("해당 사용자는 존재하지 않습니다. 아이디를 다시 확인해 주세요.");
-        }
-
-        isValidPassword(requestPassword, user.getPassword());
-
+    public User getUser(String userId, String password) {
+        User user = userMapper.getUserById(userId)
+                                .orElseThrow(() -> new InvalidUserInfoException("해당 사용자는 존재하지 않습니다. 아이디를 다시 확인해 주세요."));
+        isValidPassword(password, user.getPassword());
         return user;
     }
 
     public void userPasswordUpdate(String userid, UserPasswordRequest userPasswordRequest) {
         String encodedPassword = passwordEncoder.encode(userPasswordRequest.getNewPassword());
-        userRepository.updateUserPassword(userid, encodedPassword);
+        userMapper.updateUserPassword(userid, encodedPassword);
     }
 
     public void userInfoUpdate(String userId, UserUpdateRequest updateRequest) {
-        userRepository.updateUserInfo(userId, updateRequest);
+        userMapper.updateUserInfo(userId, updateRequest);
     }
 
     public void userProfileImageUpdate(String userId, MultipartFile profileImage) {
-
-        FileData oldProfileImage = userRepository.getUserProfileImageById(userId);
+        FileData oldProfileImage = userMapper.getUserProfileImageById(userId);
 
         if (oldProfileImage != null) {
             fileService.deleteFile(oldProfileImage);
         }
 
         FileData newProfileImage = fileService.uploadFile(profileImage, userId);
-        userRepository.updateUserProfileImage(userId, newProfileImage);
+        userMapper.updateUserProfileImage(userId, newProfileImage);
     }
 
     public void findUserPassword(UserFindPasswordRequest findPasswordRequest) {
-        User user = userRepository.getUserById(findPasswordRequest.getUserId());
-
-        if (user == null || !user.getEmail().equals(findPasswordRequest.getEmail())) {
+        if (!userMapper.isUserEmailExist(findPasswordRequest)) {
             throw new InvalidUserInfoException("해당 사용자가 존재하지 않거나 이메일이 일치하지 않습니다. 입력하신 정보를 다시 확인해 주세요.");
         }
 
@@ -78,7 +70,7 @@ public class UserService {
         EmailBase email = FindPasswordEmail.create(findPasswordRequest.getEmail(), temporaryPassword);
         emailService.sendEmail(email);
 
-        userRepository.updateUserPassword(findPasswordRequest.getUserId(), passwordEncoder.encode(temporaryPassword));
+        userMapper.updateUserPassword(findPasswordRequest.getUserId(), passwordEncoder.encode(temporaryPassword));
     }
 
     /*
@@ -86,11 +78,10 @@ public class UserService {
         계정 비활성화 정보를 'Y'로 바꾸는 식으로 하여 논리삭제를 구현하였습니다.
      */
     public void userDeleteAccount(String userId, String requestPassword) {
-        String userPassword = userRepository.getUserPasswordById(userId);
-
+        String userPassword = userMapper.getUserPasswordById(userId);
         isValidPassword(requestPassword, userPassword);
 
-        userRepository.deleteUser(userId);
+        userMapper.deleteUser(userId);
     }
 
     private void isValidPassword(String requestPassword, String userPassword) {

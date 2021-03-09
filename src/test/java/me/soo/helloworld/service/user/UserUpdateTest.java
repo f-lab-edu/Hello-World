@@ -2,11 +2,11 @@ package me.soo.helloworld.service.user;
 
 import me.soo.helloworld.exception.FileNotDeletedException;
 import me.soo.helloworld.exception.FileNotUploadedException;
+import me.soo.helloworld.mapper.UserMapper;
 import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserPasswordRequest;
 import me.soo.helloworld.model.user.UserUpdateRequest;
-import me.soo.helloworld.repository.UserRepository;
 import me.soo.helloworld.service.FileService;
 import me.soo.helloworld.service.LoginService;
 import me.soo.helloworld.service.UserService;
@@ -34,7 +34,7 @@ public class UserUpdateTest {
     UserService userService;
 
     @Mock
-    UserRepository userRepository;
+    UserMapper userMapper;
 
     @Mock
     PasswordEncoder passwordEncoder;
@@ -82,11 +82,11 @@ public class UserUpdateTest {
 
         String encodedPassword = passwordEncoder.encode(newPassword.getNewPassword());
 
-        doNothing().when(userRepository).updateUserPassword(testUser.getUserId(), encodedPassword);
+        doNothing().when(userMapper).updateUserPassword(testUser.getUserId(), encodedPassword);
 
         userService.userPasswordUpdate(testUser.getUserId(), newPassword);
 
-        verify(userRepository, times(1)).updateUserPassword(testUser.getUserId(), encodedPassword);
+        verify(userMapper, times(1)).updateUserPassword(testUser.getUserId(), encodedPassword);
     }
 
     @Test
@@ -100,11 +100,11 @@ public class UserUpdateTest {
                 .aboutMe("I have just been accepted to the Hogwart of Witchcraft and Wizardary")
                 .build();
 
-        doNothing().when(userRepository).updateUserInfo(testUser.getUserId(), updatedUser);
+        doNothing().when(userMapper).updateUserInfo(testUser.getUserId(), updatedUser);
 
         userService.userInfoUpdate(testUser.getUserId(), updatedUser);
 
-        verify(userRepository, times(1)).updateUserInfo(testUser.getUserId(), updatedUser);
+        verify(userMapper, times(1)).updateUserInfo(testUser.getUserId(), updatedUser);
     }
 
     @Test
@@ -122,12 +122,12 @@ public class UserUpdateTest {
         FileData newProfileImage = new FileData(newFileName, testUser.getProfileImagePath());
 
         when(fileService.uploadFile(testImageFile, testUser.getUserId())).thenReturn(newProfileImage);
-        doNothing().when(userRepository).updateUserProfileImage(testUser.getUserId(), newProfileImage);
+        doNothing().when(userMapper).updateUserProfileImage(testUser.getUserId(), newProfileImage);
 
         userService.userProfileImageUpdate(testUser.getUserId(), testImageFile);
 
         verify(fileService, times(1)).uploadFile(testImageFile, testUser.getUserId());
-        verify(userRepository, times(1)).updateUserProfileImage(testUser.getUserId(), newProfileImage);
+        verify(userMapper, times(1)).updateUserProfileImage(testUser.getUserId(), newProfileImage);
 
     }
 
@@ -143,7 +143,7 @@ public class UserUpdateTest {
                 "image/jpeg",
                 "Hello There".getBytes());
 
-        when(userRepository.getUserProfileImageById(testUser.getUserId())).thenReturn(oldProfileImage);
+        when(userMapper.getUserProfileImageById(testUser.getUserId())).thenReturn(oldProfileImage);
         doThrow(FileNotDeletedException.class).when(fileService).deleteFile(oldProfileImage);
 
         assertThrows(FileNotDeletedException.class, () -> {
@@ -167,7 +167,7 @@ public class UserUpdateTest {
 
         String newFileName = "HermioneGranger.jpg";
 
-        when(userRepository.getUserProfileImageById(testUser.getUserId())).thenReturn(oldProfileImage);
+        when(userMapper.getUserProfileImageById(testUser.getUserId())).thenReturn(oldProfileImage);
         doNothing().when(fileService).deleteFile(oldProfileImage);
 
         when(fileService.uploadFile(testImageFile, testUser.getUserId())).thenThrow(FileNotUploadedException.class);

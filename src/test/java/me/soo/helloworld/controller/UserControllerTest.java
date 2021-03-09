@@ -81,8 +81,8 @@ class UserControllerTest {
     public void duplicateIdCheckTestWithDuplicateID() throws Exception {
         testUserSignUp(testUser);
 
-        mockMvc.perform(get("/users/idcheck")
-                .param("userId", "gomsu1045"))
+        mockMvc.perform(get("/users/id-check")
+                .param("userId", testUser.getUserId()))
                 .andDo(print())
                 .andExpect(status().isConflict());
     }
@@ -90,8 +90,8 @@ class UserControllerTest {
     @Test
     @DisplayName("등록되어 있는 ID가 아닌 경우 Http Status Code 200(Ok)를 리턴합니다.")
     public void duplicateIdCheckTestWithNoDuplicateId() throws Exception {
-        mockMvc.perform(get("/users/idcheck")
-                .param("userId", "gomsu1045"))
+        mockMvc.perform(get("/users/id-check")
+                .param("userId", testUser.getUserId()))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
