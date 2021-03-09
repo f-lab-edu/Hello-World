@@ -49,6 +49,12 @@ public class FriendService {
         friendMapper.updateFriendRequest(userId, targetId, FRIENDED);
     }
 
+    public void rejectFriendRequest(String userId, String targetId) {
+        FriendStatus friendStatus = getFriendStatus(userId, targetId);
+        validateStatus(friendStatus, RECEIVED);
+        friendMapper.deleteFriendRequest(userId, targetId);
+    }
+
     private void validateStatus(FriendStatus status) {
         switch (status) {
             case NOT_YET:
