@@ -65,7 +65,7 @@ public class FriendService {
         friendMapper.deleteFriend(userId, targetId);
     }
 
-    public List<FriendList> getFriendList(String userId, Integer pageNumber) {
+    public List<FriendList> getFriendList(String userId, int pageNumber) {
         FriendListRequest request = FriendListRequest.create(userId, pageNumber, FRIENDED);
         return friendMapper.getFriendList(request);
     }
