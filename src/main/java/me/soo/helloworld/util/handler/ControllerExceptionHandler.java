@@ -62,7 +62,14 @@ public class ControllerExceptionHandler {
     })
     public ResponseEntity<ExceptionResponse> friendRequestException(final RuntimeException ex) {
         log.error(ex.getMessage(), ex);
-        ExceptionResponse response = new ExceptionResponse("친구 추가 요청을 보내는데 실패하였습니다.", ex.getMessage());
+        ExceptionResponse response = new ExceptionResponse("친구 관련 요청을 처리하는데 실패하였습니다.", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ExceptionResponse> unauthorizedAccessException(final UnauthorizedAccessException ex) {
+        log.error(ex.getMessage(), ex);
+        ExceptionResponse response = new ExceptionResponse("인증이 필요한 접근입니다.", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 }
