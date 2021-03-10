@@ -28,7 +28,7 @@ public class FriendService {
         }
 
         FriendStatus friendStatus = getFriendStatus(userId, targetId);
-        validateStatus(friendStatus);
+        validateStatusDetail(friendStatus);
 
         friendMapper.sendFriendRequest(userId, targetId);
     }
@@ -49,7 +49,7 @@ public class FriendService {
         friendMapper.updateFriendRequest(userId, targetId, FRIENDED);
     }
 
-    private void validateStatus(FriendStatus status) {
+    private void validateStatusDetail(FriendStatus status) {
         switch (status) {
             case NOT_YET:
                 break;
