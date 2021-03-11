@@ -55,4 +55,11 @@ public class FriendController {
                                                           @RequestParam(defaultValue = "1") Integer pageNumber) {
         return friendService.getFriendList(userId, pageNumber);
     }
+
+    @LoginRequired
+    @GetMapping("/friend-requests")
+    public List<FriendList> getFriendRequestList(@CurrentUser String userId,
+                                                          @RequestParam(defaultValue = "1") Integer pageNumber) {
+        return friendService.getFriendRequestList(userId, pageNumber);
+    }
 }
