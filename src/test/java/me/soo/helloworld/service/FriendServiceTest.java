@@ -1,8 +1,8 @@
 package me.soo.helloworld.service;
 
 import me.soo.helloworld.enumeration.FriendStatus;
-import me.soo.helloworld.exception.DuplicateFriendRequestException;
-import me.soo.helloworld.exception.InvalidFriendRequestException;
+import me.soo.helloworld.exception.DuplicateRequestException;
+import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.FriendMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ public class FriendServiceTest {
     @Test
     @DisplayName("자기 자신에게 친구 추가 요청을 보낼 경우 InvalidRequestException 이 발생하며 요청에 실패합니다.")
     public void sendFriendRequestToMyselfFail() {
-        assertThrows(InvalidFriendRequestException.class, () -> {
+        assertThrows(InvalidRequestException.class, () -> {
            friendService.sendFriendRequest(userId, userId);
         });
 
@@ -56,7 +56,7 @@ public class FriendServiceTest {
     public void sendFriendRequestToNonExistentUserFail() {
         when(userService.isUserIdExist(targetId)).thenReturn(false);
 
-        assertThrows(InvalidFriendRequestException.class, () -> {
+        assertThrows(InvalidRequestException.class, () -> {
             friendService.sendFriendRequest(userId, targetId);
         });
 
@@ -70,7 +70,7 @@ public class FriendServiceTest {
         when(userService.isUserIdExist(targetId)).thenReturn(true);
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(FriendStatus.BLOCKED);
 
-        assertThrows(InvalidFriendRequestException.class, () -> {
+        assertThrows(InvalidRequestException.class, () -> {
             friendService.sendFriendRequest(userId, targetId);
         });
 
@@ -84,7 +84,7 @@ public class FriendServiceTest {
         when(userService.isUserIdExist(targetId)).thenReturn(true);
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(FriendStatus.REQUESTED);
 
-        assertThrows(DuplicateFriendRequestException.class, () -> {
+        assertThrows(DuplicateRequestException.class, () -> {
             friendService.sendFriendRequest(userId, targetId);
         });
 
@@ -97,7 +97,7 @@ public class FriendServiceTest {
         when(userService.isUserIdExist(targetId)).thenReturn(true);
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(FriendStatus.RECEIVED);
 
-        assertThrows(DuplicateFriendRequestException.class, () -> {
+        assertThrows(DuplicateRequestException.class, () -> {
             friendService.sendFriendRequest(userId, targetId);
         });
 
@@ -111,7 +111,7 @@ public class FriendServiceTest {
         when(userService.isUserIdExist(targetId)).thenReturn(true);
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(FriendStatus.FRIENDED);
 
-        assertThrows(DuplicateFriendRequestException.class, () -> {
+        assertThrows(DuplicateRequestException.class, () -> {
             friendService.sendFriendRequest(userId, targetId);
         });
 
@@ -143,11 +143,11 @@ public class FriendServiceTest {
     }
 
     @Test
-    @DisplayName("사용자가 보낸 친구 요청의 상태가 BLOCKED 인 경우 보낸 InvalidFriendRequestException 이 발생하며 친구요청을 철회하는데 실패합니다.")
+    @DisplayName("사용자가 보낸 친구 요청의 상태가 BLOCKED 인 경우 보낸 InvalidRequestException 이 발생하며 친구요청을 철회하는데 실패합니다.")
     public void cancelFriendRequestFailWithFriendStatusBlocked() {
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(BLOCKED);
 
-        assertThrows(InvalidFriendRequestException.class, () -> {
+        assertThrows(InvalidRequestException.class, () -> {
             friendService.cancelFriendRequest(userId, targetId);
         });
 
@@ -156,11 +156,11 @@ public class FriendServiceTest {
     }
 
     @Test
-    @DisplayName("사용자가 보낸 친구 요청의 상태가 NOT_YET 인 경우 보낸 InvalidFriendRequestException 이 발생하며 친구요청을 철회하는데 실패합니다.")
+    @DisplayName("사용자가 보낸 친구 요청의 상태가 NOT_YET 인 경우 보낸 InvalidRequestException 이 발생하며 친구요청을 철회하는데 실패합니다.")
     public void cancelFriendRequestFailWithFriendStatusNotYet() {
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(NOT_YET);
 
-        assertThrows(InvalidFriendRequestException.class, () -> {
+        assertThrows(InvalidRequestException.class, () -> {
             friendService.cancelFriendRequest(userId, targetId);
         });
 
@@ -169,11 +169,11 @@ public class FriendServiceTest {
     }
 
     @Test
-    @DisplayName("사용자가 보낸 친구 요청의 상태가 RECEIVED 인 경우 보낸 InvalidFriendRequestException 이 발생하며 친구요청을 철회하는데 실패합니다.")
+    @DisplayName("사용자가 보낸 친구 요청의 상태가 RECEIVED 인 경우 보낸 InvalidRequestException 이 발생하며 친구요청을 철회하는데 실패합니다.")
     public void cancelFriendRequestFailWithFriendStatusReceived() {
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(RECEIVED);
 
-        assertThrows(InvalidFriendRequestException.class, () -> {
+        assertThrows(InvalidRequestException.class, () -> {
             friendService.cancelFriendRequest(userId, targetId);
         });
 
@@ -182,11 +182,11 @@ public class FriendServiceTest {
     }
 
     @Test
-    @DisplayName("사용자가 보낸 친구 요청의 상태가 FRIENDED 인 경우 보낸 InvalidFriendRequestException 이 발생하며 친구요청을 철회하는데 실패합니다.")
+    @DisplayName("사용자가 보낸 친구 요청의 상태가 FRIENDED 인 경우 보낸 InvalidRequestException 이 발생하며 친구요청을 철회하는데 실패합니다.")
     public void cancelFriendRequestFailWithFriendStatusFriended() {
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(FRIENDED);
 
-        assertThrows(InvalidFriendRequestException.class, () -> {
+        assertThrows(InvalidRequestException.class, () -> {
             friendService.cancelFriendRequest(userId, targetId);
         });
 
@@ -206,11 +206,11 @@ public class FriendServiceTest {
     }
 
     @Test
-    @DisplayName("사용자가 받은 친구 요청의 상태가 BLOCKED 인 경우 InvalidFriendRequestException 이 발생하며 친구요청을 수락하는데 실패합니다.")
+    @DisplayName("사용자가 받은 친구 요청의 상태가 BLOCKED 인 경우 InvalidRequestException 이 발생하며 친구요청을 수락하는데 실패합니다.")
     public void acceptFriendRequestFailIfFriendStatusBlocked() {
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(BLOCKED);
 
-        assertThrows(InvalidFriendRequestException.class, () -> {
+        assertThrows(InvalidRequestException.class, () -> {
             friendService.acceptFriendRequest(userId, targetId);
         });
 
@@ -219,11 +219,11 @@ public class FriendServiceTest {
     }
 
     @Test
-    @DisplayName("사용자가 받은 친구 요청의 상태가 NOT_YET 인 경우 InvalidFriendRequestException 이 발생하며 친구요청을 수락하는데 실패합니다.")
+    @DisplayName("사용자가 받은 친구 요청의 상태가 NOT_YET 인 경우 InvalidRequestException 이 발생하며 친구요청을 수락하는데 실패합니다.")
     public void acceptFriendRequestFailIfFriendStatusNotYet() {
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(NOT_YET);
 
-        assertThrows(InvalidFriendRequestException.class, () -> {
+        assertThrows(InvalidRequestException.class, () -> {
             friendService.acceptFriendRequest(userId, targetId);
         });
 
@@ -232,11 +232,11 @@ public class FriendServiceTest {
     }
 
     @Test
-    @DisplayName("사용자가 받은 친구 요청의 상태가 REQUESTED 인 경우 InvalidFriendRequestException 이 발생하며 친구요청을 수락하는데 실패합니다.")
+    @DisplayName("사용자가 받은 친구 요청의 상태가 REQUESTED 인 경우 InvalidRequestException 이 발생하며 친구요청을 수락하는데 실패합니다.")
     public void acceptFriendRequestFailIfFriendStatusRequested() {
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(REQUESTED);
 
-        assertThrows(InvalidFriendRequestException.class, () -> {
+        assertThrows(InvalidRequestException.class, () -> {
             friendService.acceptFriendRequest(userId, targetId);
         });
 
@@ -245,11 +245,11 @@ public class FriendServiceTest {
     }
 
     @Test
-    @DisplayName("사용자가 보낸 친구 요청의 상태가 이미 FRIENDED 인 경우 보낸 InvalidFriendRequestException 이 발생하며 친구요청을 철회하는데 실패합니다.")
+    @DisplayName("사용자가 보낸 친구 요청의 상태가 이미 FRIENDED 인 경우 보낸 InvalidRequestException 이 발생하며 친구요청을 철회하는데 실패합니다.")
     public void acceptFriendRequestFailIfFriendStatusAlreadyFriended() {
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(FRIENDED);
 
-        assertThrows(InvalidFriendRequestException.class, () -> {
+        assertThrows(InvalidRequestException.class, () -> {
             friendService.acceptFriendRequest(userId, targetId);
         });
 
@@ -269,11 +269,11 @@ public class FriendServiceTest {
     }
 
     @Test
-    @DisplayName("사용자가 받은 친구 요청의 상태가 BLOCKED 인 경우 InvalidFriendRequestException 이 발생하며 친구요청을 거절하는데 실패합니다.")
+    @DisplayName("사용자가 받은 친구 요청의 상태가 BLOCKED 인 경우 InvalidRequestException 이 발생하며 친구요청을 거절하는데 실패합니다.")
     public void rejectFriendRequestFailIfFriendStatusBlocked() {
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(BLOCKED);
 
-        assertThrows(InvalidFriendRequestException.class, () -> {
+        assertThrows(InvalidRequestException.class, () -> {
             friendService.rejectFriendRequest(userId, targetId);
         });
 
@@ -282,11 +282,11 @@ public class FriendServiceTest {
     }
 
     @Test
-    @DisplayName("사용자가 받은 친구 요청의 상태가 NOT_YET 인 경우 InvalidFriendRequestException 이 발생하며 친구요청을 거절하는데 실패합니다.")
+    @DisplayName("사용자가 받은 친구 요청의 상태가 NOT_YET 인 경우 InvalidRequestException 이 발생하며 친구요청을 거절하는데 실패합니다.")
     public void rejectFriendRequestFailIfFriendStatusNotYet() {
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(NOT_YET);
 
-        assertThrows(InvalidFriendRequestException.class, () -> {
+        assertThrows(InvalidRequestException.class, () -> {
             friendService.rejectFriendRequest(userId, targetId);
         });
 
@@ -295,11 +295,11 @@ public class FriendServiceTest {
     }
 
     @Test
-    @DisplayName("사용자가 받은 친구 요청의 상태가 REQUESTED 인 경우 InvalidFriendRequestException 이 발생하며 친구요청을 수락하는데 실패합니다.")
+    @DisplayName("사용자가 받은 친구 요청의 상태가 REQUESTED 인 경우 InvalidRequestException 이 발생하며 친구요청을 수락하는데 실패합니다.")
     public void rejectFriendRequestFailIfFriendStatusRequested() {
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(REQUESTED);
 
-        assertThrows(InvalidFriendRequestException.class, () -> {
+        assertThrows(InvalidRequestException.class, () -> {
             friendService.rejectFriendRequest(userId, targetId);
         });
 
@@ -308,11 +308,11 @@ public class FriendServiceTest {
     }
 
     @Test
-    @DisplayName("사용자가 보낸 친구 요청의 상태가 이미 FRIENDED 인 경우 보낸 InvalidFriendRequestException 이 발생하며 친구요청을 철회하는데 실패합니다.")
+    @DisplayName("사용자가 보낸 친구 요청의 상태가 이미 FRIENDED 인 경우 보낸 InvalidRequestException 이 발생하며 친구요청을 철회하는데 실패합니다.")
     public void rejectFriendRequestFailIfFriendStatusAlreadyFriended() {
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(FRIENDED);
 
-        assertThrows(InvalidFriendRequestException.class, () -> {
+        assertThrows(InvalidRequestException.class, () -> {
             friendService.rejectFriendRequest(userId, targetId);
         });
 
@@ -332,15 +332,87 @@ public class FriendServiceTest {
     }
 
     @Test
-    @DisplayName("해당 사용자와의 친구 상태가 FRIENDED 인 아닌 경우에는 친구 삭제가 실패하며 InvalidFriendRequestException 가 발생합니다.")
+    @DisplayName("해당 사용자와의 친구 상태가 FRIENDED 인 아닌 경우에는 친구 삭제가 실패하며 InvalidRequestException 가 발생합니다.")
     public void unfriendFriendFailWithNotFriendedStatusWithTheUser() {
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(NOT_YET);
 
-        assertThrows(InvalidFriendRequestException.class, () -> {
+        assertThrows(InvalidRequestException.class, () -> {
             friendService.unfriendFriend(userId, targetId);
         });
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).deleteFriend(userId, targetId);
+    }
+
+    @Test
+    @DisplayName("차단을 시도한 사용자가 자기 자신일 경우 사용자 차단에 실패하며 InvalidRequestException 이 발생합니다.")
+    public void blockUserFailIfBlockingMyself() {
+        assertThrows(InvalidRequestException.class, () -> {
+           friendService.blockUser(userId, userId);
+        });
+
+        verify(userService, never()).isUserIdExist(targetId);
+        verify(friendMapper, never()).getFriendStatus(userId, targetId);
+        verify(friendMapper, never()).deleteFriend(userId, targetId);
+        verify(friendMapper, never()).blockUser(userId, targetId, BLOCKED);
+    }
+
+    @Test
+    @DisplayName("차단을 시도한 사용자가 존재하지 않을 경우 사용자 차단에 실패하며 InvalidRequestException 이 발생합니다.")
+    public void blockUserFailIfBlockingSomeoneNotExist() {
+        when(userService.isUserIdExist(targetId)).thenReturn(false);
+
+        assertThrows(InvalidRequestException.class, () -> {
+            friendService.blockUser(userId, targetId);
+        });
+
+        verify(userService, times(1)).isUserIdExist(targetId);
+        verify(friendMapper, never()).getFriendStatus(userId, targetId);
+        verify(friendMapper, never()).deleteFriend(userId, targetId);
+        verify(friendMapper, never()).blockUser(userId, targetId, BLOCKED);
+    }
+
+    @Test
+    @DisplayName("이미 차단된 사용자에게 다시 한 번 차단요청을 보내는 경우 사용자 차단에 실패하며 DuplicateRequestException 이 발생합니다.")
+    public void blockUserFailIfBlockingSomeoneAlreadyBlocked() {
+        when(userService.isUserIdExist(targetId)).thenReturn(true);
+        when(friendService.getFriendStatus(userId, targetId)).thenReturn(BLOCKED);
+
+        assertThrows(DuplicateRequestException.class, () -> {
+            friendService.blockUser(userId, targetId);
+        });
+
+        verify(userService, times(1)).isUserIdExist(targetId);
+        verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
+        verify(friendMapper, never()).deleteFriend(userId, targetId);
+        verify(friendMapper, never()).blockUser(userId, targetId, BLOCKED);
+    }
+
+    @Test
+    @DisplayName("친구로 등록되어 있는 사용자를 차단할 경우 친구 목록에서 삭제된 후 차단에 성공합니다.")
+    public void blockUserSuccessWithFriendUser() {
+        when(userService.isUserIdExist(targetId)).thenReturn(true);
+        when(friendService.getFriendStatus(userId, targetId)).thenReturn(FRIENDED);
+
+        friendService.blockUser(userId, targetId);
+
+        verify(userService, times(1)).isUserIdExist(targetId);
+        verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
+        verify(friendMapper, times(1)).deleteFriend(userId, targetId);
+        verify(friendMapper, times(1)).blockUser(userId, targetId, BLOCKED);
+    }
+
+    @Test
+    @DisplayName("친구로 등록되어 있지 않은 사용자를 차단할 경우 차단에 성공합니다.")
+    public void blockUserSuccessWithNonFriendUser() {
+        when(userService.isUserIdExist(targetId)).thenReturn(true);
+        when(friendService.getFriendStatus(userId, targetId)).thenReturn(NOT_YET);
+
+        friendService.blockUser(userId, targetId);
+
+        verify(userService, times(1)).isUserIdExist(targetId);
+        verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
+        verify(friendMapper, never()).deleteFriend(userId, targetId);
+        verify(friendMapper, times(1)).blockUser(userId, targetId, BLOCKED);
     }
 }

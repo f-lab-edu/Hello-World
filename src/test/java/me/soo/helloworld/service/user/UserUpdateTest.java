@@ -1,7 +1,7 @@
 package me.soo.helloworld.service.user;
 
-import me.soo.helloworld.exception.FileNotDeletedException;
-import me.soo.helloworld.exception.FileNotUploadedException;
+import me.soo.helloworld.exception.file.FileNotDeletedException;
+import me.soo.helloworld.exception.file.FileNotUploadedException;
 import me.soo.helloworld.mapper.UserMapper;
 import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.User;

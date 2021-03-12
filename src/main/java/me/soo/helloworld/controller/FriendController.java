@@ -6,7 +6,6 @@ import me.soo.helloworld.annotation.LoginRequired;
 import me.soo.helloworld.model.friend.FriendList;
 import me.soo.helloworld.service.FriendService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,10 +50,9 @@ public class FriendController {
 
     @LoginRequired
     @GetMapping
-    public ResponseEntity<List<FriendList>> getFriendList(@CurrentUser String userId,
+    public List<FriendList> getFriendList(@CurrentUser String userId,
                                                           @RequestParam(defaultValue = "1") Integer pageNumber) {
-        List<FriendList> friends = friendService.getFriendList(userId, pageNumber);
-        return ResponseEntity.ok(friends);
+        return friendService.getFriendList(userId, pageNumber);
     }
 
     @LoginRequired
@@ -62,5 +60,11 @@ public class FriendController {
     public List<FriendList> getFriendRequestList(@CurrentUser String userId,
                                                           @RequestParam(defaultValue = "1") Integer pageNumber) {
         return friendService.getFriendRequestList(userId, pageNumber);
+    }
+
+    @LoginRequired
+    @PostMapping("/block/{targetId}")
+    public void blockUser(@CurrentUser String userId, @PathVariable String targetId) {
+        friendService.blockUser(userId, targetId);
     }
 }

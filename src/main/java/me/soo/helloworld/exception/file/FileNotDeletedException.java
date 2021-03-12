@@ -1,4 +1,4 @@
-package me.soo.helloworld.exception;
+package me.soo.helloworld.exception.file;
 
 public class FileNotDeletedException extends RuntimeException {
 

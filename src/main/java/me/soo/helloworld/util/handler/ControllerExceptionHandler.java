@@ -1,8 +1,12 @@
 package me.soo.helloworld.util.handler;
 
-import com.sun.jdi.request.DuplicateRequestException;
 import lombok.extern.slf4j.Slf4j;
 import me.soo.helloworld.exception.*;
+import me.soo.helloworld.exception.file.FileNotDeletedException;
+import me.soo.helloworld.exception.file.FileNotUploadedException;
+import me.soo.helloworld.exception.language.DuplicateLanguageException;
+import me.soo.helloworld.exception.language.InvalidLanguageLevelException;
+import me.soo.helloworld.exception.language.LanguageLimitExceededException;
 import me.soo.helloworld.model.exception.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +35,8 @@ public class ControllerExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(DuplicateRequestException.class)
-    public ResponseEntity<ExceptionResponse> loginFailedException(final DuplicateRequestException ex) {
+    @ExceptionHandler(com.sun.jdi.request.DuplicateRequestException.class)
+    public ResponseEntity<ExceptionResponse> loginFailedException(final com.sun.jdi.request.DuplicateRequestException ex) {
         log.error(ex.getMessage(), ex);
         ExceptionResponse response = new ExceptionResponse("로그인에 실패하였습니다.", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
@@ -57,8 +61,8 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler({
-            InvalidFriendRequestException.class,
-            DuplicateFriendRequestException.class
+            InvalidRequestException.class,
+            DuplicateRequestException.class
     })
     public ResponseEntity<ExceptionResponse> friendRequestException(final RuntimeException ex) {
         log.error(ex.getMessage(), ex);

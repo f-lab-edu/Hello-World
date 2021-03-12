@@ -1,4 +1,4 @@
-package me.soo.helloworld.exception;
+package me.soo.helloworld.exception.language;
 
 public class DuplicateLanguageException extends RuntimeException {
 

@@ -38,4 +38,10 @@
         LIMIT #{offset}, #{limit}
     </select>
 
+    <insert id="blockUser" parameterType="map">
+
+        INSERT INTO friends (userId, friendId, status)
+            VALUES (#{userId}, #{targetId}, #{status})
+    </insert>
+
 </mapper>

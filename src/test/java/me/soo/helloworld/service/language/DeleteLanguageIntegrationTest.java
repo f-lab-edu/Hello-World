@@ -3,7 +3,7 @@ package me.soo.helloworld.service.language;
 import lombok.extern.slf4j.Slf4j;
 import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
-import me.soo.helloworld.exception.LanguageLimitExceededException;
+import me.soo.helloworld.exception.language.LanguageLimitExceededException;
 import me.soo.helloworld.model.language.LanguageData;
 import me.soo.helloworld.service.LanguageService;
 import org.junit.jupiter.api.BeforeEach;
