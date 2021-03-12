@@ -9,6 +9,7 @@ import me.soo.helloworld.model.friend.FriendList;
 import me.soo.helloworld.model.friend.FriendListRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -60,11 +61,13 @@ public class FriendService {
         friendMapper.deleteFriend(userId, targetId);
     }
 
+    @Transactional(readOnly = true)
     public List<FriendList> getFriendList(String userId, int pageNumber) {
         FriendListRequest request = FriendListRequest.create(userId, pageNumber, FRIENDED);
         return friendMapper.getFriendList(request);
     }
 
+    @Transactional(readOnly = true)
     public List<FriendList> getFriendRequestList(String userId, int pageNumber) {
         FriendListRequest request = FriendListRequest.create(userId, pageNumber, RECEIVED);
         return friendMapper.getFriendList(request);
