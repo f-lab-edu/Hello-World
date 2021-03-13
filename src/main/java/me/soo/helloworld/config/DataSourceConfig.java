@@ -14,6 +14,8 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
+import static me.soo.helloworld.util.DataSourceTypes.*;
+
 @Configuration
 @EnableTransactionManagement
 public class DataSourceConfig {
@@ -51,8 +53,8 @@ public class DataSourceConfig {
                                         @Qualifier("slaveDataSource") DataSource slaveDatasource) {
         ReplicationRoutingDataSource routingDataSource = new ReplicationRoutingDataSource();
         Map<Object, Object> dataSourceMap = new HashMap<>();
-        dataSourceMap.put("master", masterDataSource);
-        dataSourceMap.put("slave", slaveDatasource);
+        dataSourceMap.put(MASTER_DB, masterDataSource);
+        dataSourceMap.put(SLAVE_DB, slaveDatasource);
         routingDataSource.setTargetDataSources(dataSourceMap);
         routingDataSource.setDefaultTargetDataSource(masterDataSource);
 
@@ -75,7 +77,7 @@ public class DataSourceConfig {
         위의 RoutingDataSource 가 제대로 동작할 수 있게 됩니다.
 
         또한, 트랜잭션 매니저 혹은 DB 프레임워크가 proxyDataSource 에만 의존하도록 추상화 해줌으로써 각각의 DataSource 에 대한 직접 의존관계가
-        사라져 변화에는 닫혀있고, 확장에는 열려 있는 OCP 구조로 DataSource 를 활용해 유지보수성도 높일 수 있습니다.
+        사라져 변화에는 닫혀있고, 확장에는 열려 있는 OCP 구조로 DataSource 를 만들어 유지보수성도 높일 수 있습니다.
      */
     @Bean(name = "proxyDataSource")
     public DataSource proxyDataSource(@Qualifier("routingDataSource") DataSource routingDataSource) {
