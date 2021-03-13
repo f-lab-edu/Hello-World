@@ -61,10 +61,4 @@ public class FriendController {
                                                           @RequestParam(defaultValue = "1") Integer pageNumber) {
         return friendService.getFriendRequestList(userId, pageNumber);
     }
-
-    @LoginRequired
-    @PostMapping("/block/{targetId}")
-    public void blockUser(@CurrentUser String userId, @PathVariable String targetId) {
-        friendService.blockUser(userId, targetId);
-    }
 }

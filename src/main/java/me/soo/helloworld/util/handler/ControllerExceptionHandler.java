@@ -35,13 +35,6 @@ public class ControllerExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(com.sun.jdi.request.DuplicateRequestException.class)
-    public ResponseEntity<ExceptionResponse> loginFailedException(final com.sun.jdi.request.DuplicateRequestException ex) {
-        log.error(ex.getMessage(), ex);
-        ExceptionResponse response = new ExceptionResponse("로그인에 실패하였습니다.", ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-    }
-
     @ExceptionHandler(MailNotSentException.class)
     public ResponseEntity<ExceptionResponse> sendMailFailedException(final MailException ex) {
         log.error(ex.getMessage(), ex);
@@ -60,13 +53,10 @@ public class ControllerExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({
-            InvalidRequestException.class,
-            DuplicateRequestException.class
-    })
-    public ResponseEntity<ExceptionResponse> friendRequestException(final RuntimeException ex) {
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<ExceptionResponse> InvalidRequestException(final InvalidRequestException ex) {
         log.error(ex.getMessage(), ex);
-        ExceptionResponse response = new ExceptionResponse("친구 관련 요청을 처리하는데 실패하였습니다.", ex.getMessage());
+        ExceptionResponse response = new ExceptionResponse("유효하지 않는 요청입니다.", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -75,5 +65,12 @@ public class ControllerExceptionHandler {
         log.error(ex.getMessage(), ex);
         ExceptionResponse response = new ExceptionResponse("인증이 필요한 접근입니다.", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(DuplicateRequestException.class)
+    public ResponseEntity<ExceptionResponse> DuplicateRequestException(final DuplicateRequestException ex) {
+        log.error(ex.getMessage(), ex);
+        ExceptionResponse response = new ExceptionResponse("중복된 요청입니다.", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

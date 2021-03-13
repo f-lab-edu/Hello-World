@@ -9,11 +9,10 @@ import org.apache.ibatis.type.MappedTypes;
 @RequiredArgsConstructor
 public enum FriendStatus implements EnumCategory {
 
-    NOT_YET(1),
-    REQUESTED(2),
-    RECEIVED(3),
-    FRIENDED(4),
-    BLOCKED(5);
+    NONE(1),
+    FRIEND_REQUESTED(2),
+    FRIEND_REQUEST_RECEIVED(3),
+    FRIEND(4);
 
     private final int category;
 
