@@ -73,6 +73,11 @@ public class FriendService {
         return friendMapper.getFriendList(request);
     }
 
+    public List<FriendList> getFriendRequestList(String userId, int pageNumber) {
+        FriendListRequest request = FriendListRequest.create(userId, pageNumber, pagination, RECEIVED);
+        return friendMapper.getFriendList(request);
+    }
+
     private void validateStatus(FriendStatus status) {
         switch (status) {
             case NOT_YET:
