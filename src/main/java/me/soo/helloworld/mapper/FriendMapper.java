@@ -22,8 +22,4 @@ public interface FriendMapper {
                                     @Param("status") FriendStatus status);
 
     public List<FriendList> getFriendList(FriendListRequest friendListRequest);
-
-    public void blockUser(@Param("userId") String userId,
-                   @Param("targetId") String targetId,
-                   @Param("status") FriendStatus status);
 }
