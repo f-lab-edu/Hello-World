@@ -8,6 +8,7 @@ import me.soo.helloworld.mapper.FriendMapper;
 import me.soo.helloworld.model.friend.FriendList;
 import me.soo.helloworld.model.friend.FriendListRequest;
 import me.soo.helloworld.util.TargetValidator;
+import me.soo.helloworld.util.Pagination;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public class FriendService {
     private final FriendMapper friendMapper;
 
     private final BlockUserService blockUserService;
+
+    private final Pagination pagination;
 
     public void sendFriendRequest(String userId, String targetId) {
         TargetValidator.targetNotSelf(userId, targetId);
@@ -67,12 +70,12 @@ public class FriendService {
     }
 
     public List<FriendList> getFriendList(String userId, int pageNumber) {
-        FriendListRequest request = FriendListRequest.create(userId, pageNumber, FRIEND);
+        FriendListRequest request = FriendListRequest.create(userId, pageNumber, pagination, FRIEND);
         return friendMapper.getFriendList(request);
     }
 
     public List<FriendList> getFriendRequestList(String userId, int pageNumber) {
-        FriendListRequest request = FriendListRequest.create(userId, pageNumber, FRIEND_REQUEST_RECEIVED);
+        FriendListRequest request = FriendListRequest.create(userId, pageNumber, pagination, FRIEND_REQUEST_RECEIVED);
         return friendMapper.getFriendList(request);
     }
 
