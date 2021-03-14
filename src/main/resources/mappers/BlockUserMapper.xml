@@ -4,9 +4,7 @@
 <mapper namespace="me.soo.helloworld.mapper.BlockUserMapper">
 
     <insert id="insertBlockUser" parameterType="String">
-
-        INSERT INTO block (userId, blockId)
-            VALUES (#{userId}, #{targetId})
+        INSERT INTO block (userId, blockId) VALUES (#{userId}, #{targetId})
     </insert>
 
     <select id="isUserBlocked" parameterType="String" resultType="boolean">
@@ -14,7 +12,13 @@
     </select>
 
     <delete id="deleteBlockUser" parameterType="String">
-
         DELETE FROM block WHERE userId = #{userId} AND blockId = #{targetId}
     </delete>
+
+    <select id="getBlockUserList" parameterType="me.soo.helloworld.model.blockuser.BlockUserListRequest" resultType="String">
+
+        SELECT blockId FROM block WHERE userId = #{userId}
+        ORDER BY id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
 </mapper>

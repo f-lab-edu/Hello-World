@@ -1,6 +1,9 @@
 package me.soo.helloworld.mapper;
 
+import me.soo.helloworld.model.blockuser.BlockUserListRequest;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 @Mapper
 public interface BlockUserMapper {
@@ -10,4 +13,6 @@ public interface BlockUserMapper {
     public boolean isUserBlocked(String userId, String targetId);
 
     public void deleteBlockUser(String userId, String targetId);
+
+    public List<String> getBlockUserList(BlockUserListRequest request);
 }
