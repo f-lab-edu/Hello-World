@@ -2,6 +2,7 @@ package me.soo.helloworld.service;
 
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.exception.DuplicateRequestException;
+import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.BlockUserMapper;
 import me.soo.helloworld.mapper.FriendMapper;
 import me.soo.helloworld.util.TargetValidator;
@@ -30,16 +31,24 @@ public class BlockUserService {
             case FRIEND_REQUESTED:
             case FRIEND_REQUEST_RECEIVED:
                 friendMapper.deleteFriend(userId, targetId);
-                blockUserMapper.blockUser(userId, targetId);
+                blockUserMapper.insertBlockUser(userId, targetId);
                 break;
             case NONE:
             default:
-                blockUserMapper.blockUser(userId, targetId);
+                blockUserMapper.insertBlockUser(userId, targetId);
                 break;
         }
     }
 
     public boolean isUserBlocked(String userId, String targetId) {
         return blockUserMapper.isUserBlocked(userId, targetId);
+    }
+
+    public void unblockUser(String userId, String targetId) {
+        if (!isUserBlocked(userId, targetId)) {
+            throw new InvalidRequestException("차단되어 있지 않은 사용자를 차단해제 할 수 없습니다. 다시 한 번 확인해주세요.");
+        }
+
+        blockUserMapper.deleteBlockUser(userId, targetId);
     }
 }
