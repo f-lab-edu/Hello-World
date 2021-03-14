@@ -1,5 +1,6 @@
 package me.soo.helloworld.config;
 
+import me.soo.helloworld.enumeration.AlarmTypes;
 import me.soo.helloworld.enumeration.FriendStatus;
 import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
@@ -28,7 +29,7 @@ public class MyBatisConfig {
         sessionFactory.setMapperLocations(resolver.getResources("/mappers/*.xml"));
 
         sessionFactory.setTypeHandlers(new LanguageLevel.TypeHandler(), new LanguageStatus.TypeHandler(),
-                                        new FriendStatus.TypeHandler());
+                                        new FriendStatus.TypeHandler(), new AlarmTypes.TypeHandler());
 
         return sessionFactory.getObject();
     }
