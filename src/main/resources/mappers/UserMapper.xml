@@ -53,7 +53,7 @@
         UPDATE users SET isDeactivated = 'Y' WHERE userId = #{userId}
     </update>
 
-    <select id="isEmailValid" parameterType="me.soo.helloworld.model.user.UserFindPasswordRequest" resultType="boolean">
+    <select id="isUserEmailExist" parameterType="me.soo.helloworld.model.user.UserFindPasswordRequest" resultType="boolean">
         SELECT EXISTS(SELECT email FROM users WHERE userId = #{userId} AND email = #{email} AND isDeactivated = 'N')
     </select>
 
