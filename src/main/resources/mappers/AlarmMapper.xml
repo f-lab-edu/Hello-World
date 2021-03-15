@@ -27,4 +27,8 @@
         UPDATE alarms SET hasRead = 'Y'
         WHERE id = #{alarmId} AND alarmTo = #{userId}
     </update>
+
+    <select id="getHasReadStatus" parameterType="map" resultType="String">
+        SELECT hasRead FROM alarms WHERE id = #{alarmId} AND alarmTo = #{userId}
+    </select>
 </mapper>

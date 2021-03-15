@@ -14,9 +14,11 @@ public interface AlarmMapper {
 
     public void insertAlarm(AlarmData alarm);
 
-    List<Alarm> getAlarmList(AlarmListRequest request);
+    public List<Alarm> getAlarmList(AlarmListRequest request);
 
-    Optional<Alarm> getAlarm(@Param("alarmId") int alarmId, @Param("userId") String userId);
+    public Alarm getAlarm(@Param("alarmId") int alarmId, @Param("userId") String userId);
+
+    public Optional<String> getHasReadStatus(@Param("alarmId") int alarmId, @Param("userId") String userId);
 
     public void updateToRead(@Param("alarmId") int alarmId, @Param("userId") String userId);
 }
