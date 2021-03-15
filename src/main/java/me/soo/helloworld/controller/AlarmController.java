@@ -25,7 +25,7 @@ public class AlarmController {
 
     @LoginRequired
     @GetMapping("/{alarm-id}")
-    public Alarm readAlarm(@CurrentUser String userId, @PathVariable("alarm-id") Integer alarmId) {
-        return alarmService.readAlarm(alarmId, userId);
+    public Alarm getAlarm(@CurrentUser String userId, @PathVariable("alarm-id") Integer alarmId) {
+        return alarmService.getAlarm(alarmId, userId);
     }
 }
