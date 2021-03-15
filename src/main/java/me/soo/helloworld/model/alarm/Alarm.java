@@ -14,11 +14,11 @@ public class Alarm {
 
     private final AlarmTypes type;
 
-    public static Alarm create(String userId, String targetId, AlarmTypes type) {
+    public static Alarm create(String to, String from, AlarmTypes type) {
 
         return Alarm.builder()
-                    .from(userId)
-                    .to(targetId)
+                    .to(to)
+                    .from(from)
                     .type(type)
                     .build();
     }
