@@ -5,8 +5,13 @@ import me.soo.helloworld.enumeration.FriendStatus;
 import me.soo.helloworld.exception.DuplicateFriendRequestException;
 import me.soo.helloworld.exception.InvalidFriendRequestException;
 import me.soo.helloworld.mapper.FriendMapper;
+import me.soo.helloworld.model.friend.FriendList;
+import me.soo.helloworld.model.friend.FriendListRequest;
+import me.soo.helloworld.util.Pagination;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static me.soo.helloworld.enumeration.FriendStatus.*;
 
@@ -17,6 +22,8 @@ public class FriendService {
     private final UserService userService;
 
     private final FriendMapper friendMapper;
+
+    private final Pagination pagination;
 
     public void sendFriendRequest(String userId, String targetId) {
         if (StringUtils.equals(userId, targetId)) {
@@ -59,6 +66,16 @@ public class FriendService {
         FriendStatus friendStatus = getFriendStatus(userId, targetId);
         validateStatus(friendStatus, FRIENDED);
         friendMapper.deleteFriend(userId, targetId);
+    }
+
+    public List<FriendList> getFriendList(String userId, int pageNumber) {
+        FriendListRequest request = FriendListRequest.create(userId, pageNumber, pagination, FRIENDED);
+        return friendMapper.getFriendList(request);
+    }
+
+    public List<FriendList> getFriendRequestList(String userId, int pageNumber) {
+        FriendListRequest request = FriendListRequest.create(userId, pageNumber, pagination, RECEIVED);
+        return friendMapper.getFriendList(request);
     }
 
     private void validateStatusDetail(FriendStatus status) {
