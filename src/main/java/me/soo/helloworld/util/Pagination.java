@@ -12,9 +12,13 @@ public class Pagination {
 
     private final int maxPageBlockUser;
 
+    private final int maxPageAlarm;
+
     public Pagination(@Value("${friend.max.page:30}") int maxPageFriend,
-                      @Value("${block_user.max.page:30}") int maxPageBlockUser) {
+                      @Value("${block_user.max.page:30}") int maxPageBlockUser,
+                      @Value("${alarm.max.page:30}") int maxPageAlarm) {
         this.maxPageFriend = maxPageFriend;
         this.maxPageBlockUser = maxPageBlockUser;
+        this.maxPageAlarm = maxPageAlarm;
     }
 }

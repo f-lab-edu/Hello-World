@@ -7,4 +7,4 @@ create table block
 );
 
 create index table_name_userId_blockId_index
-    on block (userId, blockId);
+    on block (userId);
