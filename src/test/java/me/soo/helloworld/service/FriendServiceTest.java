@@ -1,5 +1,6 @@
 package me.soo.helloworld.service;
 
+import me.soo.helloworld.enumeration.AlarmTypes;
 import me.soo.helloworld.exception.DuplicateRequestException;
 import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.FriendMapper;
@@ -57,6 +58,7 @@ public class FriendServiceTest {
         verify(blockUserService, never()).isUserBlocked(userId, targetId);
         verify(friendMapper, never()).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).sendFriendRequest(userId, targetId);
+        verify(alarmService, never()).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
     @Test
@@ -72,6 +74,7 @@ public class FriendServiceTest {
         verify(blockUserService, never()).isUserBlocked(userId, targetId);
         verify(friendMapper, never()).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).sendFriendRequest(userId, targetId);
+        verify(alarmService, never()).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
     @Test
@@ -88,6 +91,7 @@ public class FriendServiceTest {
         verify(blockUserService,times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, never()).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).sendFriendRequest(userId, targetId);
+        verify(alarmService, never()).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
     @Test
@@ -105,6 +109,7 @@ public class FriendServiceTest {
         verify(blockUserService,times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).sendFriendRequest(userId, targetId);
+        verify(alarmService, never()).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
     @Test
@@ -122,6 +127,7 @@ public class FriendServiceTest {
         verify(blockUserService,times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).sendFriendRequest(userId, targetId);
+        verify(alarmService, never()).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
     @Test
@@ -139,6 +145,7 @@ public class FriendServiceTest {
         verify(blockUserService,times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).sendFriendRequest(userId, targetId);
+        verify(alarmService, never()).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
     @Test
@@ -154,6 +161,7 @@ public class FriendServiceTest {
         verify(blockUserService,times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, times(1)).sendFriendRequest(userId, targetId);
+        verify(alarmService, times(1)).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
     @Test
@@ -165,6 +173,7 @@ public class FriendServiceTest {
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, times(1)).deleteFriend(userId, targetId);
+        verify(alarmService, times(1)).removeDispatchedAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
     @Test
@@ -178,6 +187,7 @@ public class FriendServiceTest {
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).deleteFriend(userId, targetId);
+        verify(alarmService, never()).removeDispatchedAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
     @Test
@@ -191,6 +201,7 @@ public class FriendServiceTest {
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).deleteFriend(userId, targetId);
+        verify(alarmService, never()).removeDispatchedAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
     @Test
@@ -204,6 +215,7 @@ public class FriendServiceTest {
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).deleteFriend(userId, targetId);
+        verify(alarmService, never()).removeDispatchedAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
     @Test
@@ -215,6 +227,7 @@ public class FriendServiceTest {
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, times(1)).updateFriendRequest(userId, targetId, FRIEND);
+        verify(alarmService, times(1)).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_ACCEPTED);
     }
 
     @Test
@@ -228,6 +241,7 @@ public class FriendServiceTest {
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).updateFriendRequest(userId, targetId, FRIEND);
+        verify(alarmService, never()).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_ACCEPTED);
     }
 
     @Test
@@ -241,10 +255,11 @@ public class FriendServiceTest {
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).updateFriendRequest(userId, targetId, FRIEND);
+        verify(alarmService, never()).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_ACCEPTED);
     }
 
     @Test
-    @DisplayName("사용자가 친구 요청을 보낸 대상과 이미 친구관계가 맺어진 경우 InvalidRequestException 이 발생하며 친구요청을 철회하는데 실패합니다.")
+    @DisplayName("사용자가 친구 요청을 보낸 대상과 이미 친구관계가 맺어진 경우 InvalidRequestException 이 발생하며 친구요청을 수락하는데 실패합니다.")
     public void acceptFriendRequestFailIfFriendStatusAlreadyFriended() {
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(FRIEND);
 
@@ -254,6 +269,7 @@ public class FriendServiceTest {
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).updateFriendRequest(userId, targetId, FRIEND);
+        verify(alarmService, never()).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_ACCEPTED);
     }
 
     @Test

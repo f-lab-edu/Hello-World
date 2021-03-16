@@ -70,4 +70,28 @@ public class AlarmServiceTest {
         verify(alarmMapper, times(1)).getAlarm(alarmId, to);
     }
 
+    @Test
+    @DisplayName("해당 알람이 존재하지 않는 경우, 알람을 삭제하는데 실패하며 NoSuchAlarmException 이 발생합니다.")
+    public void removeAlarmFailOnNoExistingAlarm() {
+        when(alarmMapper.isAlarmExist(alarmId, to)).thenReturn(false);
+
+        assertThrows(NoSuchAlarmException.class, () -> {
+            alarmService.removeAlarm(alarmId, to);
+        });
+
+        verify(alarmMapper, times(1)).isAlarmExist(alarmId, to);
+        verify(alarmMapper, never()).deleteAlarm(alarmId, to);
+    }
+
+    @Test
+    @DisplayName("해당 알람이 존재하는 경우, 알람을 삭제하는데 성공합니다.")
+    public void removeAlarmSuccessOnExistingAlarm() {
+        when(alarmMapper.isAlarmExist(alarmId, to)).thenReturn(true);
+
+        alarmService.removeAlarm(alarmId, to);
+
+        verify(alarmMapper, times(1)).isAlarmExist(alarmId, to);
+        verify(alarmMapper, times(1)).deleteAlarm(alarmId, to);
+    }
+
 }
