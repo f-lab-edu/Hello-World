@@ -9,6 +9,7 @@ import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.util.encoder.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
@@ -30,10 +31,12 @@ public class UserService {
         userMapper.insertUser(user.buildUserWithEncodedPassword(encodedPassword));
     }
 
+    @Transactional(readOnly = true)
     public boolean isUserIdExist(String userId) {
         return userMapper.isUserIdExist(userId);
     }
 
+    @Transactional(readOnly = true)
     public User getUser(String userId, String password) {
         User user = userMapper.getUserById(userId)
                                 .orElseThrow(() -> new InvalidUserInfoException("해당 사용자는 존재하지 않습니다. 아이디를 다시 확인해 주세요."));
