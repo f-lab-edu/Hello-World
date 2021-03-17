@@ -3,13 +3,15 @@
 
 <mapper namespace="me.soo.helloworld.mapper.BlockUserMapper">
 
-    <insert id="blockUser" parameterType="String">
-
-        INSERT INTO block (userId, blockId)
-            VALUES (#{userId}, #{targetId})
+    <insert id="insertBlockUser" parameterType="String">
+        INSERT INTO block (userId, blockId) VALUES (#{userId}, #{targetId})
     </insert>
 
     <select id="isUserBlocked" parameterType="String" resultType="boolean">
         SELECT EXISTS (SELECT blockId FROM block WHERE userId = #{userId} AND blockId = #{targetId})
     </select>
+
+    <delete id="deleteBlockUser" parameterType="String">
+        DELETE FROM block WHERE userId = #{userId} AND blockId = #{targetId}
+    </delete>
 </mapper>

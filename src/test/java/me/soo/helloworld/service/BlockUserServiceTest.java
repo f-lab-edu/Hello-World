@@ -43,7 +43,7 @@ public class BlockUserServiceTest {
 
         verify(userService, never()).isUserIdExist(targetId);
         verify(friendMapper, never()).deleteFriend(userId, targetId);
-        verify(blockUserMapper, never()).blockUser(userId, targetId);
+        verify(blockUserMapper, never()).insertBlockUser(userId, targetId);
     }
 
     @Test
@@ -57,7 +57,7 @@ public class BlockUserServiceTest {
 
         verify(userService, times(1)).isUserIdExist(targetId);
         verify(friendMapper, never()).deleteFriend(userId, targetId);
-        verify(blockUserMapper, never()).blockUser(userId, targetId);
+        verify(blockUserMapper, never()).insertBlockUser(userId, targetId);
     }
 
     @Test
@@ -73,7 +73,7 @@ public class BlockUserServiceTest {
         verify(userService, times(1)).isUserIdExist(targetId);
         verify(blockUserMapper, times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, never()).deleteFriend(userId, targetId);
-        verify(blockUserMapper, never()).blockUser(userId, targetId);
+        verify(blockUserMapper, never()).insertBlockUser(userId, targetId);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class BlockUserServiceTest {
         verify(userService, times(1)).isUserIdExist(targetId);
         verify(blockUserMapper, times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, times(1)).deleteFriend(userId, targetId);
-        verify(blockUserMapper, times(1)).blockUser(userId, targetId);
+        verify(blockUserMapper, times(1)).insertBlockUser(userId, targetId);
     }
 
     @Test
@@ -103,7 +103,7 @@ public class BlockUserServiceTest {
         verify(userService, times(1)).isUserIdExist(targetId);
         verify(blockUserMapper, times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, times(1)).deleteFriend(userId, targetId);
-        verify(blockUserMapper, times(1)).blockUser(userId, targetId);
+        verify(blockUserMapper, times(1)).insertBlockUser(userId, targetId);
     }
 
     @Test
@@ -118,7 +118,7 @@ public class BlockUserServiceTest {
         verify(userService, times(1)).isUserIdExist(targetId);
         verify(blockUserMapper, times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, times(1)).deleteFriend(userId, targetId);
-        verify(blockUserMapper, times(1)).blockUser(userId, targetId);
+        verify(blockUserMapper, times(1)).insertBlockUser(userId, targetId);
     }
 
     @Test
@@ -133,6 +133,30 @@ public class BlockUserServiceTest {
         verify(userService, times(1)).isUserIdExist(targetId);
         verify(blockUserMapper, times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, never()).deleteFriend(userId, targetId);
-        verify(blockUserMapper, times(1)).blockUser(userId, targetId);
+        verify(blockUserMapper, times(1)).insertBlockUser(userId, targetId);
+    }
+
+    @Test
+    @DisplayName("이미 차단되어 있지 않은 사용자의 경우 차단해제를 시도하면 InvalidRequestException 이 발생하며 차단 해제에 실패합니다.")
+    public void unBlockUserFailToNotBlockedTarget() {
+        when(blockUserMapper.isUserBlocked(userId, targetId)).thenReturn(false);
+
+        assertThrows(InvalidRequestException.class, () -> {
+            blockUserService.unblockUser(userId, targetId);
+        });
+
+        verify(blockUserMapper, times(1)).isUserBlocked(userId, targetId);
+        verify(blockUserMapper, never()).deleteBlockUser(userId, targetId);
+    }
+
+    @Test
+    @DisplayName("이미 차단되어 있는 사용자의 경우 차단 해제에 성공합니다.")
+    public void unBlockUserSuccessToBlockedTarget() {
+        when(blockUserMapper.isUserBlocked(userId, targetId)).thenReturn(true);
+
+        blockUserService.unblockUser(userId, targetId);
+
+        verify(blockUserMapper, times(1)).isUserBlocked(userId, targetId);
+        verify(blockUserMapper, times(1)).deleteBlockUser(userId, targetId);
     }
 }
