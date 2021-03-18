@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface FriendMapper {
@@ -22,4 +23,8 @@ public interface FriendMapper {
                                     @Param("status") FriendStatus status);
 
     public List<FriendList> getFriendList(FriendListRequest friendListRequest);
+
+    public Optional<Integer> getFriendshipDuration(@Param("userId") String userId,
+                                                   @Param("targetId") String targetId,
+                                                   @Param("status") FriendStatus status);
 }
