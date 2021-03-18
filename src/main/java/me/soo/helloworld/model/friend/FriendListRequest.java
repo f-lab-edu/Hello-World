@@ -27,7 +27,6 @@ public class FriendListRequest {
                                 .userId(userId)
                                 .offset(pagination.calculateOffset(pageLimit, pageNumber))
                                 .limit(pageLimit)
-                                .status(status)
                                 .build();
     }
 }

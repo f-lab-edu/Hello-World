@@ -9,6 +9,7 @@ import me.soo.helloworld.model.friend.FriendList;
 import me.soo.helloworld.model.friend.FriendListRequest;
 import me.soo.helloworld.util.TargetValidator;
 import me.soo.helloworld.util.Pagination;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

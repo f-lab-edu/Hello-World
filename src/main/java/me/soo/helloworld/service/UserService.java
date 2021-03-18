@@ -65,7 +65,7 @@ public class UserService {
     }
 
     public void findUserPassword(UserFindPasswordRequest findPasswordRequest) {
-        if (!userMapper.isEmailValid(findPasswordRequest)) {
+        if (!userMapper.isUserEmailExist(findPasswordRequest)) {
             throw new InvalidUserInfoException("해당 사용자가 존재하지 않거나 이메일이 일치하지 않습니다. 입력하신 정보를 다시 확인해 주세요.");
         }
 
