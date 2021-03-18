@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.annotation.CurrentUser;
 import me.soo.helloworld.annotation.LoginRequired;
 import me.soo.helloworld.service.BlockUserService;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,5 +17,11 @@ public class BlockUserController {
     @PostMapping("/{targetId}")
     public void blockUser(@CurrentUser String userId, @PathVariable String targetId) {
         blockUserService.blockUser(userId, targetId);
+    }
+
+    @LoginRequired
+    @DeleteMapping ("/{targetId}")
+    public void unBlockUser(@CurrentUser String userId, @PathVariable String targetId) {
+        blockUserService.unblockUser(userId, targetId);
     }
 }
