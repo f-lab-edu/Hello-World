@@ -12,8 +12,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
  * Argument Resolver
- * - Controller 메소드의 파라미터에 대해 임의의 값을 주입해주는 역할을 한다.
- * - 메소드의 파라미터 타입, annotation 등을 이용하여 argument resolver 에 대한 적용 여부를 결정할 수 있다.
+ * - Controller 메소드의 파라미터에 대해 임의의 값을 주입해주는 역할을 합니다.
+ * - 메소드의 파라미터 타입, annotation 등을 이용하여 argument resolver 에 대한 적용 여부를 결정할 수 있습니다.
  *
  * 적용 시점
  * - Client Request -> Dispatcher Servlet -> Request Handler 매핑 -> Handler Adapter 매핑
@@ -21,7 +21,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  *
  * - 코드 중복을 없애기 위해
  *   : 세션에서 현재 로그인 중인 사용자의 정보를 받아 사용하는 일은 지금당장은 회원 비밀번호 업데이트 한 곳이지만
- *   차후에 구현할 회원 정보 업데이트나 회원탈퇴에도 쓰일 것으로 예상
+ *   차후에 구현할 회원 정보 업데이트나 회원탈퇴에도 쓰일 것으로 예상했습니다.
  */
 @Component
 @RequiredArgsConstructor

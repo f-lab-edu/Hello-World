@@ -1,17 +1,17 @@
 package me.soo.helloworld.controller;
 
 import lombok.RequiredArgsConstructor;
-import me.soo.helloworld.annotation.CurrentUser;
 import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.service.LoginService;
 import me.soo.helloworld.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-
-import static me.soo.helloworld.util.http.HttpResponses.*;
+import static me.soo.helloworld.util.http.HttpResponses.HTTP_RESPONSE_CONFLICT;
+import static me.soo.helloworld.util.http.HttpResponses.HTTP_RESPONSE_OK;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,43 +22,33 @@ public class UserController {
 
     private final LoginService loginService;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/signup")
-    public ResponseEntity<Void> userSignUp(@Valid @RequestBody User user) {
-
+    public void userSignUp(@Valid @RequestBody User user) {
         userService.userSignUp(user);
-
-        return HTTP_RESPONSE_CREATED;
     }
 
-    @GetMapping("/idcheck")
+    @GetMapping("/id-check")
     public ResponseEntity<Void> isUserIdDuplicate(@RequestParam String userId) {
-
-        if (userService.isUserIdDuplicate(userId)) {
+        if (userService.isUserIdExist(userId)) {
             return HTTP_RESPONSE_CONFLICT;
         }
-
         return HTTP_RESPONSE_OK;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> userLogin(@Valid @RequestBody UserLoginRequest loginRequest) {
-
+    public void userLogin(@Valid @RequestBody UserLoginRequest loginRequest) {
         loginService.login(loginRequest);
-
-        return HTTP_RESPONSE_OK;
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @GetMapping("/logout")
-    public ResponseEntity<Void> userLogout() {
-
+    public void userLogout() {
         loginService.logout();
-
-        return HTTP_RESPONSE_NO_CONTENT;
     }
 
     @PostMapping("/password-finder")
     public void userFindPassword(@Valid @RequestBody UserFindPasswordRequest findPasswordRequest) {
-
         userService.findUserPassword(findPasswordRequest);
     }
 }

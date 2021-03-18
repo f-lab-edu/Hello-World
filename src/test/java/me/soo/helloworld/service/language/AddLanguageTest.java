@@ -2,9 +2,9 @@ package me.soo.helloworld.service.language;
 
 import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
-import me.soo.helloworld.exception.DuplicateLanguageException;
-import me.soo.helloworld.exception.InvalidLanguageLevelException;
-import me.soo.helloworld.exception.LanguageLimitExceededException;
+import me.soo.helloworld.exception.language.DuplicateLanguageException;
+import me.soo.helloworld.exception.language.InvalidLanguageLevelException;
+import me.soo.helloworld.exception.language.LanguageLimitExceededException;
 import me.soo.helloworld.mapper.LanguageMapper;
 import me.soo.helloworld.model.language.LanguageData;
 import me.soo.helloworld.service.LanguageService;

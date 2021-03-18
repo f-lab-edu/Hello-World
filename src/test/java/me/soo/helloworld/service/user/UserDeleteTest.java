@@ -1,8 +1,8 @@
 package me.soo.helloworld.service.user;
 
 import me.soo.helloworld.exception.InvalidUserInfoException;
+import me.soo.helloworld.mapper.UserMapper;
 import me.soo.helloworld.model.user.User;
-import me.soo.helloworld.repository.UserRepository;
 import me.soo.helloworld.service.UserService;
 import me.soo.helloworld.util.encoder.PasswordEncoder;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +30,7 @@ public class UserDeleteTest {
     PasswordEncoder passwordEncoder;
 
     @Mock
-    UserRepository userRepository;
+    UserMapper userMapper;
 
     @Mock
     MockHttpSession httpSession;
@@ -58,16 +58,16 @@ public class UserDeleteTest {
         String userId = testUser.getUserId();
         String password = testUser.getPassword();
 
-        when(userRepository.getUserPasswordById(userId)).thenReturn(testUser.getPassword());
+        when(userMapper.getUserPasswordById(userId)).thenReturn(testUser.getPassword());
         when(passwordEncoder.isMatch(password, testUser.getPassword())).thenReturn(true);
 
-        doNothing().when(userRepository).deleteUser(userId);
+        doNothing().when(userMapper).deleteUser(userId);
 
         userService.userDeleteAccount(userId, password);
 
-        verify(userRepository, times(1)).getUserPasswordById(userId);
+        verify(userMapper, times(1)).getUserPasswordById(userId);
         verify(passwordEncoder,times(1)).isMatch(password, testUser.getPassword());
-        verify(userRepository, times(1)).deleteUser(userId);
+        verify(userMapper, times(1)).deleteUser(userId);
     }
 
     @Test
@@ -76,14 +76,14 @@ public class UserDeleteTest {
         String userId = testUser.getUserId();
         String password = "I'm gonna take my horse to the old town road~";
 
-        when(userRepository.getUserPasswordById(userId)).thenReturn(testUser.getPassword());
+        when(userMapper.getUserPasswordById(userId)).thenReturn(testUser.getPassword());
         when(passwordEncoder.isMatch(password, testUser.getPassword())).thenReturn(false);
 
         assertThrows(InvalidUserInfoException.class, () -> {
             userService.userDeleteAccount(userId, password);
         });
 
-        verify(userRepository, times(1)).getUserPasswordById(userId);
+        verify(userMapper, times(1)).getUserPasswordById(userId);
         verify(passwordEncoder,times(1)).isMatch(password, testUser.getPassword());
     }
 
@@ -93,23 +93,23 @@ public class UserDeleteTest {
         String userId = testUser.getUserId();
         String password = testUser.getPassword();
 
-        when(userRepository.getUserPasswordById(userId)).thenReturn(testUser.getPassword());
+        when(userMapper.getUserPasswordById(userId)).thenReturn(testUser.getPassword());
         when(passwordEncoder.isMatch(password, testUser.getPassword())).thenReturn(true);
 
-        doNothing().when(userRepository).deleteUser(userId);
+        doNothing().when(userMapper).deleteUser(userId);
 
         userService.userDeleteAccount(userId, password);
 
-        when(userRepository.getUserPasswordById(userId)).thenReturn(testUser.getPassword());
+        when(userMapper.getUserPasswordById(userId)).thenReturn(testUser.getPassword());
         when(passwordEncoder.isMatch(password, testUser.getPassword())).thenReturn(true);
-        doThrow(NullPointerException.class).when(userRepository).deleteUser(userId);
+        doThrow(NullPointerException.class).when(userMapper).deleteUser(userId);
 
         assertThrows(NullPointerException.class, () -> {
             userService.userDeleteAccount(userId, password);
         });
 
-        verify(userRepository, times(2)).getUserPasswordById(userId);
+        verify(userMapper, times(2)).getUserPasswordById(userId);
         verify(passwordEncoder,times(2)).isMatch(password, testUser.getPassword());
-        verify(userRepository, times(2)).deleteUser(userId);
+        verify(userMapper, times(2)).deleteUser(userId);
     }
 }

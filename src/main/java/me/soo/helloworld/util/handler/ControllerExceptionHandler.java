@@ -1,8 +1,12 @@
 package me.soo.helloworld.util.handler;
 
-import com.sun.jdi.request.DuplicateRequestException;
 import lombok.extern.slf4j.Slf4j;
 import me.soo.helloworld.exception.*;
+import me.soo.helloworld.exception.file.FileNotDeletedException;
+import me.soo.helloworld.exception.file.FileNotUploadedException;
+import me.soo.helloworld.exception.language.DuplicateLanguageException;
+import me.soo.helloworld.exception.language.InvalidLanguageLevelException;
+import me.soo.helloworld.exception.language.LanguageLimitExceededException;
 import me.soo.helloworld.model.exception.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,13 +35,6 @@ public class ControllerExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(DuplicateRequestException.class)
-    public ResponseEntity<ExceptionResponse> loginFailedException(final DuplicateRequestException ex) {
-        log.error(ex.getMessage(), ex);
-        ExceptionResponse response = new ExceptionResponse("로그인에 실패하였습니다.", ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-    }
-
     @ExceptionHandler(MailNotSentException.class)
     public ResponseEntity<ExceptionResponse> sendMailFailedException(final MailException ex) {
         log.error(ex.getMessage(), ex);
@@ -52,8 +49,28 @@ public class ControllerExceptionHandler {
     })
     public ResponseEntity<ExceptionResponse> checkLanguageException(final RuntimeException ex) {
         log.error(ex.getMessage(), ex);
-        ExceptionResponse response = new ExceptionResponse("언어 정보 추가에 실패하였습니다.", ex.getMessage());
+        ExceptionResponse response = new ExceptionResponse("언어 정보 추가/변경/삭제에 실패하였습니다.", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<ExceptionResponse> InvalidRequestException(final InvalidRequestException ex) {
+        log.error(ex.getMessage(), ex);
+        ExceptionResponse response = new ExceptionResponse("유효하지 않는 요청입니다.", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ExceptionResponse> unauthorizedAccessException(final UnauthorizedAccessException ex) {
+        log.error(ex.getMessage(), ex);
+        ExceptionResponse response = new ExceptionResponse("인증이 필요한 접근입니다.", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(DuplicateRequestException.class)
+    public ResponseEntity<ExceptionResponse> DuplicateRequestException(final DuplicateRequestException ex) {
+        log.error(ex.getMessage(), ex);
+        ExceptionResponse response = new ExceptionResponse("중복된 요청입니다.", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 }

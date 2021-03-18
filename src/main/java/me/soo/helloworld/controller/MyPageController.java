@@ -2,17 +2,15 @@ package me.soo.helloworld.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.annotation.CurrentUser;
+import me.soo.helloworld.annotation.LoginRequired;
 import me.soo.helloworld.model.user.UserPasswordRequest;
 import me.soo.helloworld.model.user.UserUpdateRequest;
 import me.soo.helloworld.service.LoginService;
 import me.soo.helloworld.service.UserService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-
-import static me.soo.helloworld.util.http.HttpResponses.HTTP_RESPONSE_OK;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,39 +21,32 @@ public class MyPageController {
 
     private final LoginService loginService;
 
+    @LoginRequired
     @PutMapping("/password")
-    public ResponseEntity<Void> myPasswordUpdate(@CurrentUser String userId,
+    public void myPasswordUpdate(@CurrentUser String userId,
                                                    @RequestBody @Valid UserPasswordRequest userPasswordRequest) {
-
         userService.userPasswordUpdate(userId, userPasswordRequest);
-
-        return HTTP_RESPONSE_OK;
     }
 
+    @LoginRequired
     @PutMapping("/profile-image")
-    public ResponseEntity<Void> myProfileImageUpdate(@CurrentUser String userId,
+    public void myProfileImageUpdate(@CurrentUser String userId,
                                                        @RequestPart("profileImage") MultipartFile profileImage) {
-
         userService.userProfileImageUpdate(userId, profileImage);
-
-        return HTTP_RESPONSE_OK;
     }
 
+    @LoginRequired
     @PutMapping
-    public ResponseEntity<Void> myInfoUpdate(@CurrentUser String userId,
+    public void myInfoUpdate(@CurrentUser String userId,
                                                @Valid @RequestBody UserUpdateRequest updateRequest) {
         userService.userInfoUpdate(userId, updateRequest);
-
-        return HTTP_RESPONSE_OK;
     }
 
+    @LoginRequired
     @DeleteMapping("/account")
-    public ResponseEntity<Void> myAccountDelete(@CurrentUser String userId, @RequestParam String requestPassword) {
-
+    public void myAccountDelete(@CurrentUser String userId, @RequestParam String requestPassword) {
         userService.userDeleteAccount(userId, requestPassword);
         loginService.logout();
-
-        return HTTP_RESPONSE_OK;
     }
 }
 

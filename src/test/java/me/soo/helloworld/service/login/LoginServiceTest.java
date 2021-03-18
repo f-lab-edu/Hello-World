@@ -1,6 +1,6 @@
 package me.soo.helloworld.service.login;
 
-import com.sun.jdi.request.DuplicateRequestException;
+import me.soo.helloworld.exception.DuplicateRequestException;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.service.SessionLoginService;
