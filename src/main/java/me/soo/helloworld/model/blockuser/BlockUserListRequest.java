@@ -15,11 +15,12 @@ public class BlockUserListRequest {
     private final int limit;
 
     static public BlockUserListRequest create(String userId, int pageNumber, Pagination pagination) {
+        int pageLimit = pagination.getMaxPageBlockUser();
 
         return BlockUserListRequest.builder()
                                     .userId(userId)
-                                    .offset(pagination.getMaxPageBlockUser() * (Math.max(pageNumber, 1) - 1))
-                                    .limit(pagination.getMaxPageBlockUser())
+                                    .offset(pagination.calculateOffset(pageLimit, pageNumber))
+                                    .limit(pageLimit)
                                     .build();
     }
 }

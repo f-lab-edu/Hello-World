@@ -96,9 +96,6 @@ public class FriendService {
                 throw new DuplicateRequestException("이미 해당 사용자로부터 친구추가 요청을 받은 상태입니다. 받은 친구 요청을 다시 확인해주세요.");
             case FRIEND:
                 throw new DuplicateRequestException("이미 친구로 등록된 사용자에게 다시 친구 요청을 보낼 수 없습니다.");
-            case NONE:
-            default:
-                break;
         }
     }
 }

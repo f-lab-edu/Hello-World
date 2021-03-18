@@ -21,11 +21,12 @@ public class FriendListRequest {
         Math.max(pageNumber, 1): pageNumber 가 음수로 들어와도 기본값을 1로 설정해서 맨 첫 페이지가 보이도록 설정
      */
     static public FriendListRequest create(String userId, int pageNumber, Pagination pagination, FriendStatus status) {
+        int pageLimit = pagination.getMaxPageFriend();
 
         return FriendListRequest.builder()
                                 .userId(userId)
-                                .offset(pagination.getMaxPageFriend() * (Math.max(pageNumber, 1) - 1))
-                                .limit(pagination.getMaxPageFriend())
+                                .offset(pagination.calculateOffset(pageLimit, pageNumber))
+                                .limit(pageLimit)
                                 .status(status)
                                 .build();
     }
