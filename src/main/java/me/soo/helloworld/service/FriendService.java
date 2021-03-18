@@ -31,6 +31,7 @@ public class FriendService {
 
     private final AlarmService alarmService;
 
+    @Transactional
     public void sendFriendRequest(String userId, String targetId) {
         TargetValidator.targetNotSelf(userId, targetId);
         TargetValidator.targetExistence(userService.isUserIdExist(targetId));
@@ -56,6 +57,7 @@ public class FriendService {
         friendMapper.deleteFriend(userId, targetId);
     }
 
+    @Transactional
     public void acceptFriendRequest(String userId, String targetId) {
         FriendStatus status = getFriendStatus(userId, targetId);
         validateFriendStatus(status, FRIEND_REQUEST_RECEIVED);

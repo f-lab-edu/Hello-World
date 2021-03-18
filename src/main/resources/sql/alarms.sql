@@ -8,3 +8,6 @@ create table alarms
     hasRead   enum ('Y', 'N') default 'N'               not null,
     createdAt timestamp       default CURRENT_TIMESTAMP not null
 );
+
+create index alarms_alarmTo_alarmFrom_index
+    on alarms (alarmTo, alarmFrom);
