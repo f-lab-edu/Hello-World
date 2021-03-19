@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
-public class DeleteLanguageIntegrationTest {
+public class ITDeleteLanguage {
 
     private final String user = "Soo1045";
 
