@@ -1,4 +1,4 @@
-package me.soo.helloworld.service.language;
+package me.soo.helloworld.integrations;
 
 import lombok.extern.slf4j.Slf4j;
 import me.soo.helloworld.enumeration.LanguageLevel;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static me.soo.helloworld.service.language.TestLangId.*;
+import static me.soo.helloworld.integrations.IntegrationTestLangId.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
-public class ModifyLevelIntegrationTest {
+public class ITModifyLanguageLevel {
 
     private final String userId = "Soo1045";
 
