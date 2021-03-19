@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
-public class ModifyLevelTestIntegration {
+public class ModifyLevelIntegrationTest {
 
     private final String userId = "Soo1045";
 

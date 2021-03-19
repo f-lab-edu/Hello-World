@@ -7,5 +7,5 @@ create table friends
     status   tinyint     not null
 );
 
-create index friends_userId_index
-    on friends (userId);
+create index friends_userId_friendId_index
+    on friends (userId, friendId);
