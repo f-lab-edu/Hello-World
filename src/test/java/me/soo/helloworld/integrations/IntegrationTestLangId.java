@@ -1,6 +1,6 @@
-package me.soo.helloworld.service.language;
+package me.soo.helloworld.integrations;
 
-public class TestLangId {
+public class IntegrationTestLangId {
 
     final static int KOREAN = 1;
 

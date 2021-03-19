@@ -1,6 +1,6 @@
 package me.soo.helloworld.service;
 
-import me.soo.helloworld.enumeration.FriendStatus;
+import me.soo.helloworld.enumeration.AlarmTypes;
 import me.soo.helloworld.exception.DuplicateRequestException;
 import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.FriendMapper;
@@ -33,6 +33,9 @@ public class FriendServiceTest {
 
     @Mock
     UserService userService;
+
+    @Mock
+    AlarmService alarmService;
 
     /*
         친구 요청을 보낼 때 발생할 수 있는 예외들
@@ -152,6 +155,7 @@ public class FriendServiceTest {
         verify(blockUserService,times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, times(1)).sendFriendRequest(userId, targetId);
+        verify(alarmService, times(1)).addAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
     @Test
@@ -213,6 +217,7 @@ public class FriendServiceTest {
 
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, times(1)).updateFriendRequest(userId, targetId, FRIEND);
+        verify(alarmService, times(1)).addAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_ACCEPTED);
     }
 
     @Test
