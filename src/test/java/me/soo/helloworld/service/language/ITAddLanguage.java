@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
-public class AddLanguageTestIntegration {
+public class ITAddLanguage {
     private final String userId = "Soo1045";
 
     @Autowired
