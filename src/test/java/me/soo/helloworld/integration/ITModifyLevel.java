@@ -1,6 +1,5 @@
-package me.soo.helloworld.service.language;
+package me.soo.helloworld.integrations;
 
-import lombok.extern.slf4j.Slf4j;
 import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
 import me.soo.helloworld.exception.language.InvalidLanguageLevelException;
@@ -20,11 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static me.soo.helloworld.service.language.TestLangId.*;
+import static me.soo.helloworld.integrations.ITTestLangId.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@Slf4j
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional

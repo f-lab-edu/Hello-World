@@ -1,4 +1,4 @@
-package me.soo.helloworld.service.language;
+package me.soo.helloworld.integrations;
 
 import lombok.extern.slf4j.Slf4j;
 import me.soo.helloworld.enumeration.LanguageLevel;
@@ -19,8 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static me.soo.helloworld.service.language.TestLangId.*;
-import static me.soo.helloworld.service.language.TestLangId.CHINESE_CANTONESE;
+import static me.soo.helloworld.integrations.ITTestLangId.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j

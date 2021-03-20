@@ -1,4 +1,4 @@
-package me.soo.helloworld.controller;
+package me.soo.helloworld.integrations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.soo.helloworld.model.user.User;
