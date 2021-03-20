@@ -21,4 +21,8 @@ public class Pagination {
         this.maxPageBlockUser = maxPageBlockUser;
         this.maxPageAlarm = maxPageAlarm;
     }
+
+    public int calculateOffset(int pageLimit, int pageNumber) {
+        return pageLimit * (Math.max(pageNumber, 1) - 1);
+    }
 }
