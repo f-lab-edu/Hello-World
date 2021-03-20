@@ -1,6 +1,7 @@
 package me.soo.helloworld.service;
 
 import lombok.RequiredArgsConstructor;
+import me.soo.helloworld.enumeration.AlarmTypes;
 import me.soo.helloworld.enumeration.FriendStatus;
 import me.soo.helloworld.exception.DuplicateRequestException;
 import me.soo.helloworld.exception.InvalidRequestException;
@@ -29,6 +30,9 @@ public class FriendService {
 
     private final Pagination pagination;
 
+    private final AlarmService alarmService;
+
+    @Transactional
     public void sendFriendRequest(String userId, String targetId) {
         TargetValidator.targetNotSelf(userId, targetId);
         TargetValidator.targetExistence(userService.isUserIdExist(targetId));
@@ -41,6 +45,7 @@ public class FriendService {
         validateFriendStatusDetail(status);
 
         friendMapper.sendFriendRequest(userId, targetId);
+        alarmService.addAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
     public FriendStatus getFriendStatus(String userId, String targetId) {
@@ -53,10 +58,12 @@ public class FriendService {
         friendMapper.deleteFriend(userId, targetId);
     }
 
+    @Transactional
     public void acceptFriendRequest(String userId, String targetId) {
         FriendStatus status = getFriendStatus(userId, targetId);
         validateFriendStatus(status, FRIEND_REQUEST_RECEIVED);
         friendMapper.updateFriendRequest(userId, targetId, FRIEND);
+        alarmService.addAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_ACCEPTED);
     }
 
     public void rejectFriendRequest(String userId, String targetId) {

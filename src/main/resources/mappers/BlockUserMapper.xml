@@ -14,4 +14,11 @@
     <delete id="deleteBlockUser" parameterType="String">
         DELETE FROM block WHERE userId = #{userId} AND blockId = #{targetId}
     </delete>
+
+    <select id="getBlockUserList" parameterType="me.soo.helloworld.model.blockuser.BlockUserListRequest" resultType="String">
+
+        SELECT blockId FROM block WHERE userId = #{userId}
+        ORDER BY id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
 </mapper>

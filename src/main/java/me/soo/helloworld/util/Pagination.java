@@ -10,8 +10,12 @@ public class Pagination {
 
     private final int maxPageFriend;
 
-    public Pagination(@Value("${max.page.friend:30}") int maxPageFriend) {
+    private final int maxPageBlockUser;
+
+    public Pagination(@Value("${friend.max.page:30}") int maxPageFriend,
+                      @Value("${block_user.max.page:30}") int maxPageBlockUser) {
         this.maxPageFriend = maxPageFriend;
+        this.maxPageBlockUser = maxPageBlockUser;
     }
 
     public int calculateOffset(int pageLimit, int pageNumber) {

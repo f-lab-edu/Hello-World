@@ -5,8 +5,13 @@ import me.soo.helloworld.exception.DuplicateRequestException;
 import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.BlockUserMapper;
 import me.soo.helloworld.mapper.FriendMapper;
+import me.soo.helloworld.model.blockuser.BlockUserListRequest;
+import me.soo.helloworld.util.Pagination;
 import me.soo.helloworld.util.TargetValidator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +22,8 @@ public class BlockUserService {
     private final FriendMapper friendMapper;
 
     private final BlockUserMapper blockUserMapper;
+
+    private final Pagination pagination;
 
     public void blockUser(String userId, String targetId) {
         TargetValidator.targetNotSelf(userId, targetId);
@@ -50,5 +57,11 @@ public class BlockUserService {
         }
 
         blockUserMapper.deleteBlockUser(userId, targetId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getBlockUserList(String userId, int pageNumber) {
+        BlockUserListRequest request = BlockUserListRequest.create(userId, pageNumber, pagination);
+        return blockUserMapper.getBlockUserList(request);
     }
 }
