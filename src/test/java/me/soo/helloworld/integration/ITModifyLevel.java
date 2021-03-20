@@ -1,4 +1,4 @@
-package me.soo.helloworld.integrations;
+package me.soo.helloworld.integration;
 
 import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static me.soo.helloworld.integrations.ITTestLangId.*;
+import static me.soo.helloworld.integration.ITTestLangId.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

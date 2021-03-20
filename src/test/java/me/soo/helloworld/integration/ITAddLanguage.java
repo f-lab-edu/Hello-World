@@ -1,4 +1,4 @@
-package me.soo.helloworld.integrations;
+package me.soo.helloworld.integration;
 
 import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
@@ -6,7 +6,6 @@ import me.soo.helloworld.exception.language.DuplicateLanguageException;
 import me.soo.helloworld.mapper.LanguageMapper;
 import me.soo.helloworld.model.language.LanguageData;
 import me.soo.helloworld.service.LanguageService;
-import me.soo.helloworld.service.language.TestLangId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static me.soo.helloworld.integrations.ITTestLangId.*;
+import static me.soo.helloworld.integration.ITTestLangId.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest

@@ -1,4 +1,4 @@
-package me.soo.helloworld.integrations;
+package me.soo.helloworld.integration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

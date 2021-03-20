@@ -1,4 +1,4 @@
-package me.soo.helloworld.integrations;
+package me.soo.helloworld.integration;
 
 import lombok.extern.slf4j.Slf4j;
 import me.soo.helloworld.enumeration.LanguageLevel;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static me.soo.helloworld.integrations.ITTestLangId.*;
+import static me.soo.helloworld.integration.ITTestLangId.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
