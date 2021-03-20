@@ -3,7 +3,16 @@
 
 <mapper namespace="me.soo.helloworld.mapper.AlarmMapper">
 
-    <insert id="insertAlarm" parameterType="me.soo.helloworld.model.alarm.Alarm">
+    <insert id="insertAlarm" parameterType="me.soo.helloworld.model.alarm.AlarmData">
         INSERT INTO alarms (alarmTo, alarmFrom, type) VALUES (#{to}, #{from}, #{type})
     </insert>
+
+    <select id="getAlarmList" parameterType="me.soo.helloworld.model.alarm.AlarmListRequest"
+            resultType="me.soo.helloworld.model.alarm.Alarm">
+
+        SELECT id, alarmTo, alarmFrom, type, hasRead, createdAt FROM alarms
+        WHERE alarmTo = #{userId}
+        ORDER BY id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
 </mapper>

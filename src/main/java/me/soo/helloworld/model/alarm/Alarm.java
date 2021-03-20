@@ -1,19 +1,25 @@
 package me.soo.helloworld.model.alarm;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Value;
 import me.soo.helloworld.enumeration.AlarmTypes;
 
-@Getter
-@Builder
+import java.util.Date;
+
+@Value
 public class Alarm {
 
-    private final String to;
+    int id;
 
-    private final String from;
+    String to;
 
-    private final AlarmTypes type;
+    String from;
 
+    AlarmTypes type;
+
+    String hasRead;
+
+    Date createdAt;
+  
     public static Alarm create(String to, String from, AlarmTypes type) {
 
         return Alarm.builder()
