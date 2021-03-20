@@ -5,11 +5,11 @@ import lombok.Builder;
 @Builder
 public class Recommendation {
 
-    String from;
+    private final String from;
 
-    String to;
+    private final String to;
 
-    String content;
+    private final String content;
 
     public static Recommendation create(String userId, String targetId, String content) {
 
