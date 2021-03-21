@@ -21,4 +21,10 @@ public interface AlarmMapper {
     public Optional<String> getHasReadStatus(@Param("alarmId") int alarmId, @Param("userId") String userId);
 
     public void updateToRead(@Param("alarmId") int alarmId, @Param("userId") String userId);
+
+    public boolean isAlarmExist(@Param("alarmId") int alarmId, @Param("userId") String userId);
+
+    public void deleteAlarm(@Param("alarmId") int alarmId, @Param("userId") String userId);
+
+    public void deleteDispatchedAlarm(AlarmData alarm);
 }

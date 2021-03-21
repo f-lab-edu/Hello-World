@@ -45,17 +45,19 @@ public class FriendService {
         validateFriendStatusDetail(status);
 
         friendMapper.sendFriendRequest(userId, targetId);
-        alarmService.addAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
+        alarmService.dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
     public FriendStatus getFriendStatus(String userId, String targetId) {
         return friendMapper.getFriendStatus(userId, targetId);
     }
 
+    @Transactional
     public void cancelFriendRequest(String userId, String targetId) {
         FriendStatus status = getFriendStatus(userId, targetId);
         validateFriendStatus(status, FRIEND_REQUESTED);
         friendMapper.deleteFriend(userId, targetId);
+        alarmService.removeDispatchedAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
     @Transactional
@@ -63,7 +65,7 @@ public class FriendService {
         FriendStatus status = getFriendStatus(userId, targetId);
         validateFriendStatus(status, FRIEND_REQUEST_RECEIVED);
         friendMapper.updateFriendRequest(userId, targetId, FRIEND);
-        alarmService.addAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_ACCEPTED);
+        alarmService.dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_ACCEPTED);
     }
 
     public void rejectFriendRequest(String userId, String targetId) {

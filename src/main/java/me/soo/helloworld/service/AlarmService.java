@@ -21,7 +21,7 @@ public class AlarmService {
 
     private final Pagination pagination;
 
-    public void addAlarm(String to, String from, AlarmTypes type) {
+    public void dispatchAlarm(String to, String from, AlarmTypes type) {
         AlarmData alarm = AlarmData.create(to, from, type);
         alarmMapper.insertAlarm(alarm);
     }
@@ -44,5 +44,18 @@ public class AlarmService {
         if ("N".equals(hasRead)) {
             alarmMapper.updateToRead(alarmId, userId);
         }
+    }
+
+    public void removeAlarm(int alarmId, String userId) {
+        if (!alarmMapper.isAlarmExist(alarmId, userId)) {
+            throw new NoSuchAlarmException("존재하지 않는 알림을 삭제할 수 없습니다. 알림 정보를 다시 한 번 확인해주세요");
+        }
+
+        alarmMapper.deleteAlarm(alarmId, userId);
+    }
+
+    public void removeDispatchedAlarm(String to, String from, AlarmTypes type) {
+        AlarmData alarm = AlarmData.create(to, from, type);
+        alarmMapper.deleteDispatchedAlarm(alarm);
     }
 }

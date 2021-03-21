@@ -28,4 +28,10 @@ public class AlarmController {
     public Alarm getAlarm(@CurrentUser String userId, @PathVariable("alarm-id") Integer alarmId) {
         return alarmService.getAlarm(alarmId, userId);
     }
+
+    @LoginRequired
+    @DeleteMapping("/{alarm-id}")
+    public void removeAlarm(@CurrentUser String userId, @PathVariable("alarm-id") Integer alarmId) {
+        alarmService.removeAlarm(alarmId, userId);
+    }
 }

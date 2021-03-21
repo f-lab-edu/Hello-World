@@ -31,4 +31,18 @@
     <select id="getHasReadStatus" parameterType="map" resultType="String">
         SELECT hasRead FROM alarms WHERE id = #{alarmId} AND alarmTo = #{userId}
     </select>
+
+    <select id="isAlarmExist" parameterType="map" resultType="boolean">
+        SELECT EXISTS (SELECT id FROM alarms WHERE id = #{alarmId} AND alarmTo = #{userId})
+    </select>
+
+    <delete id="deleteAlarm" parameterType="map">
+        DELETE FROM alarms WHERE id = #{alarmId} AND alarmTo = #{userId}
+    </delete>
+
+    <delete id="deleteDispatchedAlarm" parameterType="me.soo.helloworld.model.alarm.AlarmData">
+
+        DELETE FROM alarms
+        WHERE alarmTo = #{to} AND alarmFrom = #{from} AND type = #{type}
+    </delete>
 </mapper>
