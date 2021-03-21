@@ -54,7 +54,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(InvalidRequestException.class)
-    public ResponseEntity<ExceptionResponse> InvalidRequestException(final InvalidRequestException ex) {
+    public ResponseEntity<ExceptionResponse> invalidRequestException(final InvalidRequestException ex) {
         log.error(ex.getMessage(), ex);
         ExceptionResponse response = new ExceptionResponse("유효하지 않는 요청입니다.", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -68,9 +68,16 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateRequestException.class)
-    public ResponseEntity<ExceptionResponse> DuplicateRequestException(final DuplicateRequestException ex) {
+    public ResponseEntity<ExceptionResponse> duplicateRequestException(final DuplicateRequestException ex) {
         log.error(ex.getMessage(), ex);
         ExceptionResponse response = new ExceptionResponse("중복된 요청입니다.", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoSuchAlarmException.class)
+    public ResponseEntity<ExceptionResponse> noSuchAlarmException (final NoSuchAlarmException ex) {
+        log.error(ex.getMessage(), ex);
+        ExceptionResponse response = new ExceptionResponse("존재하지 않는 리소스입니다.", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }

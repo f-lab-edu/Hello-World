@@ -15,4 +15,20 @@
         ORDER BY id DESC
         LIMIT #{offset}, #{limit}
     </select>
+
+    <select id="getAlarm" parameterType="map" resultType="me.soo.helloworld.model.alarm.Alarm">
+
+        SELECT id, alarmTo, alarmFrom, type, hasRead, createdAt FROM alarms
+        WHERE id = #{alarmId} AND alarmTo = #{userId}
+    </select>
+
+    <update id="updateToRead">
+
+        UPDATE alarms SET hasRead = 'Y'
+        WHERE id = #{alarmId} AND alarmTo = #{userId}
+    </update>
+
+    <select id="getHasReadStatus" parameterType="map" resultType="String">
+        SELECT hasRead FROM alarms WHERE id = #{alarmId} AND alarmTo = #{userId}
+    </select>
 </mapper>

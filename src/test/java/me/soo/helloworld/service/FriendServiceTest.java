@@ -1,6 +1,5 @@
 package me.soo.helloworld.service;
 
-import me.soo.helloworld.enumeration.FriendStatus;
 import me.soo.helloworld.exception.DuplicateRequestException;
 import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.FriendMapper;
@@ -33,6 +32,9 @@ public class FriendServiceTest {
 
     @Mock
     UserService userService;
+
+    @Mock
+    AlarmService alarmService;
 
     /*
         친구 요청을 보낼 때 발생할 수 있는 예외들
