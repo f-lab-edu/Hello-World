@@ -24,7 +24,7 @@
 
     <update id="updateFriendRequest" parameterType="map">
 
-        UPDATE friends SET status = #{status}
+        UPDATE friends SET status = #{status}, friendedAt = NOW()
             WHERE (userId = #{userId} AND friendId = #{targetId})
                 OR (userId = #{targetId} AND friendId = #{userId})
     </update>
@@ -36,5 +36,13 @@
             WHERE userId = #{userId} AND status = #{status}
         ORDER BY id DESC
         LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="getFriendshipDuration" parameterType="map" resultType="Integer">
+
+        SELECT TO_DAYS(NOW()) - TO_DAYS(friendedAt) FROM friends
+        WHERE userId = #{userId}
+            AND friendId = #{targetId}
+            AND `status` = #{status}
     </select>
 </mapper>

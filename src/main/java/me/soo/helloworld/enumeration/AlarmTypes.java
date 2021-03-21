@@ -10,7 +10,8 @@ import org.apache.ibatis.type.MappedTypes;
 public enum AlarmTypes implements EnumCategory {
 
     FRIEND_REQUEST_RECEIVED(1),
-    FRIEND_REQUEST_ACCEPTED(2);
+    FRIEND_REQUEST_ACCEPTED(2),
+    RECOMMENDATION_LEFT(3);
 
     private final int category;
 

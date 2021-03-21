@@ -92,6 +92,11 @@ public class FriendService {
         return friendMapper.getFriendList(request);
     }
 
+    public int getFriendshipDuration(String userId, String targetId) {
+        return friendMapper.getFriendshipDuration(userId, targetId, FRIEND)
+                            .orElseThrow(() -> new InvalidRequestException("친구가 아닌 대상에 대해서는 해당 요청을 처리하는 것이 불가능합니다."));
+    }
+
     private void validateFriendStatus(FriendStatus currentStatus, FriendStatus targetStatus) {
         if (!currentStatus.equals(targetStatus)) {
             throw new InvalidRequestException("잘못된 status 로 부터의 접근입니다. 해당 요청을 처리할 수 없습니다.");
