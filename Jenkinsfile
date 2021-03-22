@@ -26,14 +26,5 @@ pipeline {
                 }
             }
         }
-
-        stage('Integration Tests') {
-            steps {
-                script {
-                    sh 'mvn failsafe:integration-test'
-                    junit testResults: '**/target/failsafe-reports/*.xml', allowEmptyResults: true
-                }
-            }
-        }
     }
 }
