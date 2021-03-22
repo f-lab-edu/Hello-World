@@ -8,16 +8,13 @@ public class AlarmListRequest {
 
     private final String userId;
 
-    private final int offset;
+    private final Pagination pagination;
 
-    private final int limit;
-
-    public static AlarmListRequest create(String userId, int pageNumber, Pagination pagination) {
+    public static AlarmListRequest create(String userId, Pagination pagination) {
 
         return AlarmListRequest.builder()
                                 .userId(userId)
-                                .offset(pagination.getMaxPageAlarm() * (Math.max(pageNumber, 1) - 1))
-                                .limit(pagination.getMaxPageAlarm())
+                                .pagination(pagination)
                                 .build();
     }
 }

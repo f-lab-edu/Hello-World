@@ -32,10 +32,13 @@
     <select id="getFriendList" parameterType="me.soo.helloworld.model.friend.FriendListRequest"
             resultType="me.soo.helloworld.model.friend.FriendList">
 
-        SELECT friendId, status FROM friends
-            WHERE userId = #{userId} AND status = #{status}
+        SELECT id, friendId, status FROM friends
+        WHERE userId = #{userId} AND status = #{status}
+        <if test="pagination.cursor != null">
+            AND id <![CDATA[<]]> #{pagination.cursor}
+        </if>
         ORDER BY id DESC
-        LIMIT #{offset}, #{limit}
+        LIMIT #{pagination.pageSize}
     </select>
 
     <select id="getFriendshipDuration" parameterType="map" resultType="Integer">

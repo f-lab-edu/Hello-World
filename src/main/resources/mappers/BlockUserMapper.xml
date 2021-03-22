@@ -15,10 +15,15 @@
         DELETE FROM block WHERE userId = #{userId} AND blockId = #{targetId}
     </delete>
 
-    <select id="getBlockUserList" parameterType="me.soo.helloworld.model.blockuser.BlockUserListRequest" resultType="String">
+    <select id="getBlockUserList" parameterType="me.soo.helloworld.model.blockuser.BlockUserListRequest"
+            resultType="me.soo.helloworld.model.blockuser.BlockUserList">
 
-        SELECT blockId FROM block WHERE userId = #{userId}
+        SELECT id, blockId FROM block
+        WHERE userId = #{userId}
+        <if test="pagination.cursor != null">
+            AND id <![CDATA[<]]> #{pagination.cursor}
+        </if>
         ORDER BY id DESC
-        LIMIT #{offset}, #{limit}
+        LIMIT #{pagination.pageSize}
     </select>
 </mapper>
