@@ -10,4 +10,16 @@
     <insert id="insertRecommendation" parameterType="me.soo.helloworld.model.recommendation.Recommendation">
         INSERT INTO recommendations (recomTo, recomFrom, content) VALUES (#{to}, #{from}, #{content})
     </insert>
+
+    <select id="getHowLongSinceWrittenAt" parameterType="map" resultType="Integer">
+
+        SELECT TO_DAYS(NOW()) - TO_DAYS(writtenAt) FROM recommendations
+        WHERE id = #{id} AND recomFrom = #{from}
+    </select>
+
+    <update id="updateRecommendation" parameterType="map">
+
+        UPDATE recommendations SET content = #{modifiedContent}
+        WHERE id = #{id} AND recomFrom = #{from}
+    </update>
 </mapper>

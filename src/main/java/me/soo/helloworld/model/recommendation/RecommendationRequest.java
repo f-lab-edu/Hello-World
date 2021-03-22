@@ -4,8 +4,9 @@ import lombok.*;
 
 import javax.validation.constraints.Size;
 
+// 빈 객체만 만들어지는 불상사를 막기 위해 NoArgs 생성자의 AccessLevel 을 PRIVATE 로 설정
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class RecommendationRequest {
 
