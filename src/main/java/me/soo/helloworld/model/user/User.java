@@ -29,14 +29,14 @@ public class User {
     @NotNull(message = "생년월일을 입력해주세요.")
     private final Date birthday;
 
-    @NotBlank(message = "출신 나라를 입력해주세요.")
-    private final String originCountry;
+    @NotNull(message = "출신 나라를 입력해주세요.")
+    private final int originCountry;
 
-    @NotBlank(message = "현재 거주하고 있는 나라를 입력해주세요.")
-    private final String livingCountry;
+    @NotNull(message = "현재 거주하고 있는 나라를 입력해주세요.")
+    private final int livingCountry;
 
     @Nullable
-    private final String livingTown;
+    private final int livingTown;
 
     @Nullable
     private final String aboutMe;

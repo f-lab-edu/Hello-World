@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static me.soo.helloworld.integration.ITTestLangId.*;
+import static me.soo.helloworld.TestLanguages.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
@@ -100,7 +100,7 @@ public class ITDeleteLanguage {
         overLimitLang.add(JAPANESE);
         overLimitLang.add(BULGARIAN);
         overLimitLang.add(SWEDISH);
-        overLimitLang.add(OTHER);
+        overLimitLang.add(OTHERS);
     }
 
     @Test

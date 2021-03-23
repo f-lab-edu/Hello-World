@@ -8,6 +8,9 @@ import javax.validation.*;
 import java.sql.Date;
 import java.util.Set;
 
+import static me.soo.helloworld.TestCountries.SOUTH_KOREA;
+import static me.soo.helloworld.TestCountries.UNITED_KINGDOM;
+import static me.soo.helloworld.TestTowns.NEWCASTLE;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserSignUpValidationTest {
@@ -20,9 +23,9 @@ class UserSignUpValidationTest {
                 .email("test@test.com")
                 .gender("Male")
                 .birthday(Date.valueOf("1993-09-25"))
-                .originCountry("South Korea")
-                .livingCountry("United Kingdom")
-                .livingTown("NewCastle Upon Tyne")
+                .originCountry(SOUTH_KOREA)
+                .livingCountry(UNITED_KINGDOM)
+                .livingTown(NEWCASTLE)
                 .aboutMe("Hello, I'd love to make great friends here")
                 .build();
     }
@@ -34,9 +37,9 @@ class UserSignUpValidationTest {
                 .email("test@test.com")
                 .gender("Male")
                 .birthday(Date.valueOf("1993-09-25"))
-                .originCountry("South Korea")
-                .livingCountry("United Kingdom")
-                .livingTown("NewCastle Upon Tyne")
+                .originCountry(SOUTH_KOREA)
+                .livingCountry(UNITED_KINGDOM)
+                .livingTown(NEWCASTLE)
                 .aboutMe("Hello, I'd love to make great friends here")
                 .build();
     }
@@ -48,9 +51,9 @@ class UserSignUpValidationTest {
                 .email(email)
                 .gender("Male")
                 .birthday(Date.valueOf("1993-09-25"))
-                .originCountry("South Korea")
-                .livingCountry("United Kingdom")
-                .livingTown("NewCastle Upon Tyne")
+                .originCountry(SOUTH_KOREA)
+                .livingCountry(UNITED_KINGDOM)
+                .livingTown(NEWCASTLE)
                 .aboutMe("Hello, I'd love to make great friends here")
                 .build();
     }

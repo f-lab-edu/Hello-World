@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static me.soo.helloworld.integration.ITTestLangId.*;
+import static me.soo.helloworld.TestLanguages.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
