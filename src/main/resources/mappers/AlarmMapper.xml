@@ -12,8 +12,11 @@
 
         SELECT id, alarmTo, alarmFrom, type, hasRead, createdAt FROM alarms
         WHERE alarmTo = #{userId}
+        <if test="pagination.cursor != null">
+            AND id <![CDATA[<]]> #{pagination.cursor}
+        </if>
         ORDER BY id DESC
-        LIMIT #{offset}, #{limit}
+        LIMIT #{pagination.pageSize}
     </select>
 
     <select id="getAlarm" parameterType="map" resultType="me.soo.helloworld.model.alarm.Alarm">

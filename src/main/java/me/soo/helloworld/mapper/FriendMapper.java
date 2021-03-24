@@ -22,7 +22,7 @@ public interface FriendMapper {
                                     @Param("targetId") String targetId,
                                     @Param("status") FriendStatus status);
 
-    public List<FriendList> getFriendList(FriendListRequest friendListRequest);
+    public List<FriendList> getFriendList(FriendListRequest request);
 
     public Optional<Integer> getFriendshipDuration(@Param("userId") String userId,
                                                    @Param("targetId") String targetId,
