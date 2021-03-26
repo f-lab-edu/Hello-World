@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.soo.helloworld.mapper.ProfileMapper">
+    <resultMap id="userProfileMap" type="me.soo.helloworld.model.user.UserDataOnProfile">
+        <constructor>
+            <idArg column="userId" javaType="String"/>
+            <arg column="gender" javaType="String"/>
+            <arg column="age" javaType="_int"/>
+            <arg column="profileImageName" javaType="String"/>
+            <arg column="profileImagePath" javaType="String"/>
+            <arg column="aboutMe" javaType="String"/>
+            <arg column="originCountry" javaType="_int"/>
+            <arg column="livingCountry" javaType="_int"/>
+            <arg column="livingTown" javaType="_int"/>
+        </constructor>
+        <result property="userId" column="userId"/>
+        <result property="gender" column="gender"/>
+        <result property="age" column="age"/>
+        <result property="profileImageName" column="profileImageName"/>
+        <result property="profileImagePath" column="profileImagePath"/>
+        <result property="aboutMe" column="aboutMe"/>
+        <result property="originCountryId" column="originCountry"/>
+        <result property="livingCountryId" column="livingCountry"/>
+        <result property="livingTownId" column="livingTown"/>
+        <collection property="languages" ofType="me.soo.helloworld.model.language.LanguageDataForProfile" resultMap="languageDataMap"/>
+    </resultMap>
+
+    <resultMap type="me.soo.helloworld.model.language.LanguageDataForProfile" id="languageDataMap">
+        <constructor>
+            <idArg column="langId" javaType="_int"/>
+            <arg column="level" javaType="me.soo.helloworld.enumeration.LanguageLevel"/>
+            <arg column="status" javaType="me.soo.helloworld.enumeration.LanguageStatus"/>
+        </constructor>
+        <result property="id" column="langId"/>
+        <result property="level" column="level"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <select id="getUserProfileData" resultMap="userProfileMap">
+        SELECT
+            u.userId AS userId,
+            u.gender AS gender,
+            FORMAT(DATEDIFF(CURDATE(), u.birthDay) / 365.25, 0) AS age,
+            u.profileImageName AS profileImageName,
+            u.profileImagePath AS profileImagePath,
+            u.aboutMe AS aboutMe,
+            u.originCountry AS originCountry,
+            u.livingCountry AS livingCountry,
+            u.livingTown AS livingTown,
+            s.langId AS langId,
+            s.level AS level,
+            s.status AS status
+        FROM speak AS s
+            INNER JOIN users AS u ON s.userId = u.userId
+        WHERE u.userId = #{userId} AND u.isDeactivated = 'N';
+    </select>
+</mapper>

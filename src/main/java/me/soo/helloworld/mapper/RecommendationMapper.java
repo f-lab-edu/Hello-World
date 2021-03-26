@@ -1,9 +1,11 @@
 package me.soo.helloworld.mapper;
 
+import me.soo.helloworld.model.recommendation.RecommendationDataForProfile;
 import me.soo.helloworld.model.recommendation.Recommendation;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 @Mapper
@@ -17,4 +19,6 @@ public interface RecommendationMapper {
 
     public void updateRecommendation(@Param("id") int id, @Param("from") String from,
                                      @Param("modifiedContent") String modifiedContent);
+
+    public List<RecommendationDataForProfile> getRecommendationsByUserId(String userId);
 }

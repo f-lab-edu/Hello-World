@@ -4,6 +4,3 @@ create table languages
         primary key,
     name varchar(20) not null
 );
-
-create index languages_name_index
-    on languages (name);

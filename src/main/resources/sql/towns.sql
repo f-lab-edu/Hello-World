@@ -6,5 +6,5 @@ create table towns
     name      varchar(20) not null
 );
 
-create index towns_countryId_name_index
-    on towns (countryId, name);
+create index towns_countryId_index
+    on towns (countryId);
