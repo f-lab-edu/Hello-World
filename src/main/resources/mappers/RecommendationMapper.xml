@@ -23,9 +23,11 @@
         WHERE id = #{id} AND recomFrom = #{from}
     </update>
 
-    <select id="getRecommendationsByUserId" parameterType="String" resultType="me.soo.helloworld.model.recommendation.RecommendationDataForProfile">
+    <select id="getRecommendationsForProfile" parameterType="String" resultType="me.soo.helloworld.model.recommendation.RecommendationDataForProfile">
 
         SELECT recomFrom, content FROM recommendations
         WHERE recomTo = #{userId}
+        ORDER BY id DESC
+        LIMIT 10;
     </select>
 </mapper>

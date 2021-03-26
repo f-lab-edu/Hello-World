@@ -20,5 +20,5 @@ public interface RecommendationMapper {
     public void updateRecommendation(@Param("id") int id, @Param("from") String from,
                                      @Param("modifiedContent") String modifiedContent);
 
-    public List<RecommendationDataForProfile> getRecommendationsByUserId(String userId);
+    public List<RecommendationDataForProfile> getRecommendationsForProfile(String userId);
 }

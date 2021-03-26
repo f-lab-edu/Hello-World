@@ -43,8 +43,9 @@ public class RecommendationService {
         recommendationMapper.updateRecommendation(id, from, modifiedContent);
     }
 
-    public List<RecommendationDataForProfile> getRecommendationsByUserId(String userId) {
-        return recommendationMapper.getRecommendationsByUserId(userId);
+    @Transactional(readOnly = true)
+    public List<RecommendationDataForProfile> getRecommendationsForProfile(String userId) {
+        return recommendationMapper.getRecommendationsForProfile(userId);
     }
 
     public int howLongSinceWrittenAt(int id, String from) {
