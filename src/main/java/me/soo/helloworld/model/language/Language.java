@@ -8,9 +8,9 @@ import me.soo.helloworld.enumeration.LanguageStatus;
 @Builder
 public class Language {
 
-    String name;
+    private final String name;
 
-    LanguageLevel level;
+    private final LanguageLevel level;
 
-    LanguageStatus status;
+    private final LanguageStatus status;
 }
