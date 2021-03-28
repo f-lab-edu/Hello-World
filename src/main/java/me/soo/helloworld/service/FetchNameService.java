@@ -17,17 +17,17 @@ public class FetchNameService {
 
     private final FetchNameMapper fetchNameMapper;
 
-    @Cacheable(value = COUNTRIES_MAP, cacheManager = "caffeineCacheManager")
+    @Cacheable(value = COUNTRIES_MAP, cacheManager = CAFFEINE_CACHE_MANAGER)
     public Map<Integer, String> loadAllCountriesMap() {
         return convertIntoMap(fetchNameMapper.fetchAllCountryIdsAndNames());
     }
 
-    @Cacheable(value = TOWNS_MAP, cacheManager = "caffeineCacheManager")
+    @Cacheable(value = TOWNS_MAP, cacheManager = CAFFEINE_CACHE_MANAGER)
     public Map<Integer, String> loadAllTownsMap() {
         return convertIntoMap(fetchNameMapper.fetchAllTownIdsAndNames());
     }
 
-    @Cacheable(value = LANGUAGES_MAP, cacheManager = "caffeineCacheManager")
+    @Cacheable(value = LANGUAGES_MAP, cacheManager = CAFFEINE_CACHE_MANAGER)
     public Map<Integer, String> loadAllLanguagesMap() {
         return convertIntoMap(fetchNameMapper.fetchAllLanguageIdsAndNames());
     }

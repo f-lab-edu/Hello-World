@@ -1,8 +1,6 @@
 package me.soo.helloworld.model.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import me.soo.helloworld.model.language.Language;
 import me.soo.helloworld.model.recommendation.RecommendationDataForProfile;
 
@@ -10,30 +8,31 @@ import java.util.List;
 
 @Getter
 @Builder
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class UserProfile {
 
-    private final String userId;
+    private String userId;
 
-    private final String gender;
+    private String gender;
 
-    private final int age;
+    private int age;
 
-    private final String profileImageName;
+    private String profileImageName;
 
-    private final String profileImagePath;
+    private String profileImagePath;
 
-    private final String aboutMe;
+    private String aboutMe;
 
-    private final String originCountry;
+    private String originCountry;
 
-    private final String livingCountry;
+    private String livingCountry;
 
-    private final String livingTown;
+    private String livingTown;
 
-    private final List<Language> languages;
+    private List<Language> languages;
 
-    private final List<RecommendationDataForProfile> recommendations;
+    private List<RecommendationDataForProfile> recommendations;
 
     public static UserProfile create(UserDataOnProfile profileData, String originCountry, String livingCountry,
                                      String livingTown, List<Language> languages, List<RecommendationDataForProfile> recommendations) {

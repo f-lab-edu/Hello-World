@@ -6,11 +6,13 @@ import me.soo.helloworld.enumeration.LanguageStatus;
 
 @Getter
 @Builder
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class Language {
 
-    String name;
+    private String name;
 
-    LanguageLevel level;
+    private LanguageLevel level;
 
-    LanguageStatus status;
+    private LanguageStatus status;
 }

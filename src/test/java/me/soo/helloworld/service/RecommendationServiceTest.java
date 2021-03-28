@@ -31,8 +31,6 @@ public class RecommendationServiceTest {
 
     private final String friendId = "notMsugo1";
 
-    private final int recomId = 1;
-
     Validator validator;
 
     @InjectMocks
@@ -199,39 +197,39 @@ public class RecommendationServiceTest {
     @Test
     @DisplayName("요청으로 들어온 추천글 ID에 대한 추천글이 존재하지 않을 경우 InvalidRequestException 이 발생하며 추천글 수정에 실패합니다.")
     public void modifyRecommendationFailWithNotExistingRecommendationMatchingId() {
-        when(recommendationMapper.getHowLongSinceWrittenAt(recomId, userId)).thenReturn(Optional.empty());
+        when(recommendationMapper.getHowLongSinceWrittenAt(friendId, userId)).thenReturn(Optional.empty());
 
         assertThrows(InvalidRequestException.class, () -> {
-           recommendationService.modifyRecommendation(recomId, userId, modifiedRecommendationContent);
+           recommendationService.modifyRecommendation(friendId, userId, modifiedRecommendationContent);
         });
 
-        verify(recommendationMapper, times(1)).getHowLongSinceWrittenAt(recomId, userId);
-        verify(recommendationMapper, never()).updateRecommendation(recomId, userId, modifiedRecommendationContent);
+        verify(recommendationMapper, times(1)).getHowLongSinceWrittenAt(friendId, userId);
+        verify(recommendationMapper, never()).updateRecommendation(friendId, userId, modifiedRecommendationContent);
     }
 
     @Test
     @DisplayName("요청으로 들어온 추천글 ID에 대한 추천글이 존재하지만 수정가능한 기간을 초과한 경우 InvalidRequestException 이 발생하며 추천글 수정에 실패합니다.")
     public void modifyRecommendationFailWithAvailableModificationPeriodExceeded() {
         int justAboveBoundary = 3;
-        when(recommendationMapper.getHowLongSinceWrittenAt(recomId, userId)).thenReturn(Optional.of(justAboveBoundary));
+        when(recommendationMapper.getHowLongSinceWrittenAt(friendId, userId)).thenReturn(Optional.of(justAboveBoundary));
 
         assertThrows(InvalidRequestException.class, () -> {
-            recommendationService.modifyRecommendation(recomId, userId, modifiedRecommendationContent);
+            recommendationService.modifyRecommendation(friendId, userId, modifiedRecommendationContent);
         });
 
-        verify(recommendationMapper, times(1)).getHowLongSinceWrittenAt(recomId, userId);
-        verify(recommendationMapper, never()).updateRecommendation(recomId, userId, modifiedRecommendationContent);
+        verify(recommendationMapper, times(1)).getHowLongSinceWrittenAt(friendId, userId);
+        verify(recommendationMapper, never()).updateRecommendation(friendId, userId, modifiedRecommendationContent);
     }
 
     @Test
     @DisplayName("요청으로 들어온 추천글 ID에 대한 추천글이 존재하며 수정가능한 기간을 초과하지 않은 경우 추천글 수정에 성공합니다.")
     public void modifyRecommendationSuccessWithinAvailableModificationPeriod() {
-        when(recommendationMapper.getHowLongSinceWrittenAt(recomId, userId)).thenReturn(Optional.of(MAXIMUM_HOW_LONG_BOUNDARY));
+        when(recommendationMapper.getHowLongSinceWrittenAt(friendId, userId)).thenReturn(Optional.of(MAXIMUM_HOW_LONG_BOUNDARY));
 
-        recommendationService.modifyRecommendation(recomId, userId, modifiedRecommendationContent);
+        recommendationService.modifyRecommendation(friendId, userId, modifiedRecommendationContent);
 
-        verify(recommendationMapper, times(1)).getHowLongSinceWrittenAt(recomId, userId);
-        verify(recommendationMapper, times(1)).updateRecommendation(recomId, userId, modifiedRecommendationContent);
+        verify(recommendationMapper, times(1)).getHowLongSinceWrittenAt(friendId, userId);
+        verify(recommendationMapper, times(1)).updateRecommendation(friendId, userId, modifiedRecommendationContent);
     }
 
 }

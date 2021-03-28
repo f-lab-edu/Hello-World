@@ -8,10 +8,15 @@ import me.soo.helloworld.exception.language.InvalidLanguageLevelException;
 import me.soo.helloworld.exception.language.LanguageLimitExceededException;
 import me.soo.helloworld.mapper.LanguageMapper;
 import me.soo.helloworld.model.language.LanguageData;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static me.soo.helloworld.util.CacheNames.REDIS_CACHE_MANAGER;
+import static me.soo.helloworld.util.CacheNames.USER_PROFILE;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +42,8 @@ public class LanguageService {
             1) 추가할 언어의 status 는 NATIVE 인데, level 이 NATIVE 로 지정되어 있지 않은 경우
             2) 추가할 언어의 status 는 NATIVE 가 아닌데, level 이 NATIVE 로 지정되어 있는 경우
      */
+
+    @CacheEvict(key = "#userId", value = USER_PROFILE, cacheManager = REDIS_CACHE_MANAGER)
     public void addLanguages(String userId, List<LanguageData> newLanguages, LanguageStatus status) {
         int dbLangCounts = languageMapper.countLanguages(userId, status);
 
@@ -52,10 +59,12 @@ public class LanguageService {
         languageMapper.insertLanguages(userId, newLanguages, status);
     }
 
+    @Transactional(readOnly = true)
     public List<LanguageData> getLanguages(String userId) {
         return languageMapper.getLanguages(userId);
     }
 
+    @CacheEvict(key = "#userId", value = USER_PROFILE, cacheManager = REDIS_CACHE_MANAGER)
     public void modifyLanguageLevels(String userId, List<LanguageData> languageNewLevels, LanguageStatus status) {
         if (status.equals(LanguageStatus.NATIVE)) {
             throw new InvalidLanguageLevelException("언어 status 가 모국어(NATIVE)로 등록되어 있는 언어들은 레벨을 변경할 수 없습니다.");
@@ -65,6 +74,7 @@ public class LanguageService {
         languageMapper.updateLevels(userId, languageNewLevels, status);
     }
 
+    @CacheEvict(key = "#userId", value = USER_PROFILE, cacheManager = REDIS_CACHE_MANAGER)
     public void deleteLanguages(String userId, List<Integer> languages) {
         if (languages.size() > MAX_TOTAL_LANGUAGES) {
             throw new LanguageLimitExceededException("삭제하려는 언어의 개수는 등록 가능한 언어의 최대 개수를 넘을 수 없습니다.");

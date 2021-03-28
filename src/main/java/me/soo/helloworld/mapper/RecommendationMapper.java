@@ -15,9 +15,9 @@ public interface RecommendationMapper {
 
     public void insertRecommendation(Recommendation recommendation);
 
-    public Optional<Integer> getHowLongSinceWrittenAt(@Param("id") int id, @Param("from") String from);
+    public Optional<Integer> getHowLongSinceWrittenAt(@Param("to") String to, @Param("from") String from);
 
-    public void updateRecommendation(@Param("id") int id, @Param("from") String from,
+    public void updateRecommendation(@Param("to") String to, @Param("from") String from,
                                      @Param("modifiedContent") String modifiedContent);
 
     public List<RecommendationDataForProfile> getRecommendationsForProfile(String userId);
