@@ -3,6 +3,7 @@ package me.soo.helloworld.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -21,15 +22,16 @@ public class RedisSessionConfig {
     @Value("${spring.redis.port}")
     private int redisPort;
 
-    @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
+    @Primary
+    @Bean("redisSessionConnectionFactory")
+    public RedisConnectionFactory redisSessionConnectionFactory() {
         return new LettuceConnectionFactory(new RedisStandaloneConfiguration(redisHost, redisPort));
     }
 
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
+    @Bean("redisSessionTemplate")
+    public RedisTemplate<String, Object> redisSessionTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setConnectionFactory(redisSessionConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
 

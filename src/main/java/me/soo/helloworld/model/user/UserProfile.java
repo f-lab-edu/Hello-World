@@ -1,5 +1,6 @@
 package me.soo.helloworld.model.user;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import me.soo.helloworld.model.language.Language;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Getter
 @Builder
+@AllArgsConstructor
 public class UserProfile {
 
     private final String userId;

@@ -20,7 +20,7 @@ public class ProfileController {
 
     @LoginRequired
     @GetMapping("/{userId}")
-    public UserProfile getOneCountryName(@PathVariable String userId) {
+    public UserProfile getUserProfile(@PathVariable String userId) {
         return profileService.getUserProfile(userId);
     }
 }

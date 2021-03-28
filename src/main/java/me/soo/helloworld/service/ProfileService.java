@@ -8,6 +8,7 @@ import me.soo.helloworld.model.language.LanguageDataForProfile;
 import me.soo.helloworld.model.user.UserProfile;
 import me.soo.helloworld.model.user.UserDataOnProfile;
 import me.soo.helloworld.model.recommendation.RecommendationDataForProfile;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class ProfileService {
     private final RecommendationService recommendationService;
 
     @Transactional(readOnly = true)
+    @Cacheable(key = "#userId", value = "user_profile", cacheManager = "redisCacheManager")
     public UserProfile getUserProfile(String userId) {
         UserDataOnProfile profile = profileMapper.getUserProfileData(userId)
                 .orElseThrow(() -> new InvalidRequestException("존재하지 않거나 정보가 올바르게 등록되지 않은 사용자의 경우 프로필 조회가 불가능합니다."));
