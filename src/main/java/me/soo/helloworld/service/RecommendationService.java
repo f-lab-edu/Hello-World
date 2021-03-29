@@ -5,8 +5,10 @@ import me.soo.helloworld.enumeration.AlarmTypes;
 import me.soo.helloworld.exception.DuplicateRequestException;
 import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.RecommendationMapper;
-import me.soo.helloworld.model.recommendation.RecommendationDataForProfile;
+import me.soo.helloworld.model.recommendation.RecommendationForProfile;
 import me.soo.helloworld.model.recommendation.Recommendation;
+import me.soo.helloworld.model.recommendation.RecommendationList;
+import me.soo.helloworld.util.Pagination;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,8 +52,14 @@ public class RecommendationService {
     }
 
     @Transactional(readOnly = true)
-    public List<RecommendationDataForProfile> getRecommendationsForProfile(String userId) {
+    public List<RecommendationForProfile> getRecommendationsForProfile(String userId) {
         return recommendationMapper.getRecommendationsForProfile(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<RecommendationList> getRecommendationsListAboutTarget(String targetId, Pagination pagination) {
+        return recommendationMapper.getRecommendationsListAboutTarget(targetId, pagination)
+                .orElseThrow(() -> new InvalidRequestException("해당 사용자에 대한 전체 추천글을 조회는 존재하는 사용자에 대해서만 요청이 가능합니다."));
     }
 
     public int howLongSinceWrittenAt(String to, String from) {
@@ -76,5 +84,4 @@ public class RecommendationService {
             throw new DuplicateRequestException("이미 추천글 작성을 마치셨습니다. 각 개별 사용자에 대한 추천글 작성은 단 한번만 가능합니다.");
         }
     }
-
 }

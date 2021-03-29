@@ -2,7 +2,7 @@ package me.soo.helloworld.model.user;
 
 import lombok.*;
 import me.soo.helloworld.model.language.Language;
-import me.soo.helloworld.model.recommendation.RecommendationDataForProfile;
+import me.soo.helloworld.model.recommendation.RecommendationForProfile;
 
 import java.util.List;
 
@@ -32,10 +32,10 @@ public class UserProfile {
 
     private List<Language> languages;
 
-    private List<RecommendationDataForProfile> recommendations;
+    private List<RecommendationForProfile> recommendations;
 
     public static UserProfile create(UserDataOnProfile profileData, String originCountry, String livingCountry,
-                                     String livingTown, List<Language> languages, List<RecommendationDataForProfile> recommendations) {
+                                     String livingTown, List<Language> languages, List<RecommendationForProfile> recommendations) {
 
         return UserProfile.builder()
                         .userId(profileData.getUserId())
