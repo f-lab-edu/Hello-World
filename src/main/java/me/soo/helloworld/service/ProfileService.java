@@ -12,9 +12,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static me.soo.helloworld.util.CacheNames.REDIS_CACHE_MANAGER;
 import static me.soo.helloworld.util.CacheNames.USER_PROFILE;
@@ -51,15 +51,13 @@ public class ProfileService {
 
     private List<Language> matchLanguages(List<LanguageDataForProfile> languagesData) {
         Map<Integer, String> allLanguagesMap = fetchNameService.loadAllLanguagesMap();
-        List<Language> languages = new ArrayList<>();
 
-        languagesData.forEach(language ->
-                languages.add(Language.builder()
+        return languagesData.stream().map(language ->
+                Language.builder()
                         .name(allLanguagesMap.get(language.getId()))
                         .level(language.getLevel())
                         .status(language.getStatus())
-                        .build()));
-
-        return languages;
+                        .build())
+                .collect(Collectors.toList());
     }
 }
