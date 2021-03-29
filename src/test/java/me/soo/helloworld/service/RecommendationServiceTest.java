@@ -16,11 +16,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.validation.*;
 
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static me.soo.helloworld.service.RecommendationService.*;
 
 @ExtendWith(MockitoExtension.class)
 public class RecommendationServiceTest {
@@ -29,7 +31,7 @@ public class RecommendationServiceTest {
 
     private final String friendId = "notMsugo1";
 
-    private final int boundaryDuration = 16;
+    private final int recomId = 1;
 
     Validator validator;
 
@@ -47,6 +49,8 @@ public class RecommendationServiceTest {
 
     String recommendationContent;
 
+    String modifiedRecommendationContent;
+
     @BeforeEach
     public void writeRecommendationContent() {
         recommendationContent = "He is such an amazing partner, who has your back at all times. He's a good command of his mother tongue." +
@@ -59,13 +63,18 @@ public class RecommendationServiceTest {
         validator = factory.getValidator();
     }
 
+    @BeforeEach
+    public void writeModifiedRecommendationContent() {
+        modifiedRecommendationContent = "I am just modified from the previous content!";
+    }
+
     /*
-        테스트 for 리뷰 등록 (leaveReview)
+        테스트 for 추천글 등록 (leaveRecommendation)
 
         1. 친구여부 검사
-        2. 리뷰등록 조건 만족 여부 검사
-        3. 이미 남겨진 리뷰가 있는지 검사
-        4. 모든 조건 통과 후에 리뷰 등록 가능
+        2. 추천글 등록 조건 만족 여부 검사
+        3. 이미 남겨진 추천글이 있는지 검사
+        4. 모든 조건 통과 후에 추천글 등록 가능
      */
     @Test
     @DisplayName("추천 글 요청이 지정된 사이즈(2자 이상 ~ 255자 이하)를 지키지 않는 빈칸과 함께 들어온 경우 validation 위반이 발생합니다.")
@@ -153,7 +162,7 @@ public class RecommendationServiceTest {
     @Test
     @DisplayName("추천글을 남기기 위한 친구 기간 기준을 만족했더라도 이미 남겨진 추천글이 있으면 추천글을 남기는데 실패하며 DuplicateRequestException 이 발생합니다.")
     public void leaveRecommendationFailToFriendToWhomReviewHasAlreadyBeenLeft() {
-        when(friendService.getFriendshipDuration(userId, friendId)).thenReturn(boundaryDuration);
+        when(friendService.getFriendshipDuration(userId, friendId)).thenReturn(MINIMUM_DURATION_BOUNDARY);
         when(recommendationMapper.isRecommendationExist(userId, friendId)).thenReturn(true);
 
         assertThrows(DuplicateRequestException.class, () -> {
@@ -169,7 +178,7 @@ public class RecommendationServiceTest {
     @Test
     @DisplayName("추천글을 남기기 위한 기준 - 16일 이상 친구로서 기존에 남긴 추천글이 없을 것 - 을 모두 만족하는 경우 추천글을 남기는데 성공하며 대상에게는 추천글 등록 알림을 보냅니다.")
     public void leaveRecommendationSuccessWithAllConditionsAreMet() {
-        when(friendService.getFriendshipDuration(userId, friendId)).thenReturn(boundaryDuration);
+        when(friendService.getFriendshipDuration(userId, friendId)).thenReturn(MINIMUM_DURATION_BOUNDARY);
         when(recommendationMapper.isRecommendationExist(userId, friendId)).thenReturn(false);
 
         recommendationService.leaveRecommendation(userId, friendId, recommendationContent);
@@ -179,4 +188,50 @@ public class RecommendationServiceTest {
         verify(recommendationMapper, times(1)).insertRecommendation(refEq(Recommendation.create(userId, friendId, recommendationContent)));
         verify(alarmService, times(1)).dispatchAlarm(friendId, userId, AlarmTypes.RECOMMENDATION_LEFT);
     }
+
+    /*
+        테스트 등록 for 추천글 수정(modifyReview)
+        1. 요청이 들어온 추천글 id에 대한 추천글이 실제로 존재하는가
+        2. 해당 추천글이 수정 가능한 날짜 안에 있는가
+        3. 모든 조건이 만족할 경우 추천글 수정 가능
+     */
+
+    @Test
+    @DisplayName("요청으로 들어온 추천글 ID에 대한 추천글이 존재하지 않을 경우 InvalidRequestException 이 발생하며 추천글 수정에 실패합니다.")
+    public void modifyRecommendationFailWithNotExistingRecommendationMatchingId() {
+        when(recommendationMapper.getHowLongSinceWrittenAt(recomId, userId)).thenReturn(Optional.empty());
+
+        assertThrows(InvalidRequestException.class, () -> {
+           recommendationService.modifyRecommendation(recomId, userId, modifiedRecommendationContent);
+        });
+
+        verify(recommendationMapper, times(1)).getHowLongSinceWrittenAt(recomId, userId);
+        verify(recommendationMapper, never()).updateRecommendation(recomId, userId, modifiedRecommendationContent);
+    }
+
+    @Test
+    @DisplayName("요청으로 들어온 추천글 ID에 대한 추천글이 존재하지만 수정가능한 기간을 초과한 경우 InvalidRequestException 이 발생하며 추천글 수정에 실패합니다.")
+    public void modifyRecommendationFailWithAvailableModificationPeriodExceeded() {
+        int justAboveBoundary = 3;
+        when(recommendationMapper.getHowLongSinceWrittenAt(recomId, userId)).thenReturn(Optional.of(justAboveBoundary));
+
+        assertThrows(InvalidRequestException.class, () -> {
+            recommendationService.modifyRecommendation(recomId, userId, modifiedRecommendationContent);
+        });
+
+        verify(recommendationMapper, times(1)).getHowLongSinceWrittenAt(recomId, userId);
+        verify(recommendationMapper, never()).updateRecommendation(recomId, userId, modifiedRecommendationContent);
+    }
+
+    @Test
+    @DisplayName("요청으로 들어온 추천글 ID에 대한 추천글이 존재하며 수정가능한 기간을 초과하지 않은 경우 추천글 수정에 성공합니다.")
+    public void modifyRecommendationSuccessWithinAvailableModificationPeriod() {
+        when(recommendationMapper.getHowLongSinceWrittenAt(recomId, userId)).thenReturn(Optional.of(MAXIMUM_HOW_LONG_BOUNDARY));
+
+        recommendationService.modifyRecommendation(recomId, userId, modifiedRecommendationContent);
+
+        verify(recommendationMapper, times(1)).getHowLongSinceWrittenAt(recomId, userId);
+        verify(recommendationMapper, times(1)).updateRecommendation(recomId, userId, modifiedRecommendationContent);
+    }
+
 }

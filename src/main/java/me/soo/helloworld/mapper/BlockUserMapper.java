@@ -1,5 +1,6 @@
 package me.soo.helloworld.mapper;
 
+import me.soo.helloworld.model.blockuser.BlockUserList;
 import me.soo.helloworld.model.blockuser.BlockUserListRequest;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -14,5 +15,5 @@ public interface BlockUserMapper {
 
     public void deleteBlockUser(String userId, String targetId);
 
-    public List<String> getBlockUserList(BlockUserListRequest request);
+    public List<BlockUserList> getBlockUserList(BlockUserListRequest request);
 }

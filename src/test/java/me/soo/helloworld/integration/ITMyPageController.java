@@ -1,4 +1,4 @@
-package me.soo.helloworld.controller;
+package me.soo.helloworld.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.soo.helloworld.model.user.User;
@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class MyPageControllerTest {
+public class ITMyPageController {
 
     User currentUser;
 

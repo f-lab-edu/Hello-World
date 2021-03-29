@@ -1,4 +1,4 @@
-package me.soo.helloworld.controller;
+package me.soo.helloworld.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.soo.helloworld.model.user.User;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 // 테스트용 Transaction 적용: 수동으로 DB에 있는 내용 삭제할 필요없이 각각 독립적인 테스트를 만들기 위해 @Transactional 추가함으로써 롤백기능 부여
 @Transactional
-class UserControllerTest {
+class ITUserController {
 
     User testUser;
 

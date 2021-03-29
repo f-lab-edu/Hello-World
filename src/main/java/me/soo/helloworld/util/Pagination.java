@@ -1,25 +1,22 @@
 package me.soo.helloworld.util;
 
+import lombok.Builder;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 @Getter
-@Component
+@Builder
 public class Pagination {
 
-    private final int maxPageFriend;
+    private final Integer cursor;
 
-    private final int maxPageBlockUser;
+    private final int pageSize;
 
-    private final int maxPageAlarm;
+    public static Pagination create(Integer cursor, int size) {
 
-    public Pagination(@Value("${friend.max.page:30}") int maxPageFriend,
-                      @Value("${block_user.max.page:30}") int maxPageBlockUser,
-                      @Value("${alarm.max.page:30}") int maxPageAlarm) {
-        this.maxPageFriend = maxPageFriend;
-        this.maxPageBlockUser = maxPageBlockUser;
-        this.maxPageAlarm = maxPageAlarm;
+        return Pagination.builder()
+                                .cursor(cursor)
+                                .pageSize(size)
+                                .build();
     }
 
     public int calculateOffset(int pageLimit, int pageNumber) {

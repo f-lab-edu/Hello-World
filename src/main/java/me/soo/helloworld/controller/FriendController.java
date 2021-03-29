@@ -5,6 +5,8 @@ import me.soo.helloworld.annotation.CurrentUser;
 import me.soo.helloworld.annotation.LoginRequired;
 import me.soo.helloworld.model.friend.FriendList;
 import me.soo.helloworld.service.FriendService;
+import me.soo.helloworld.util.Pagination;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,9 @@ import java.util.List;
 public class FriendController {
 
     private final FriendService friendService;
+
+    @Value("${max.page.size:30}")
+    private int pageSize;
 
     @LoginRequired
     @ResponseStatus(HttpStatus.CREATED)
@@ -51,14 +56,14 @@ public class FriendController {
     @LoginRequired
     @GetMapping
     public List<FriendList> getFriendList(@CurrentUser String userId,
-                                                          @RequestParam(defaultValue = "1") Integer pageNumber) {
-        return friendService.getFriendList(userId, pageNumber);
+                                          @RequestParam(required = false) Integer cursor) {
+        return friendService.getFriendList(userId, Pagination.create(cursor, pageSize));
     }
 
     @LoginRequired
     @GetMapping("/friend-requests")
     public List<FriendList> getFriendRequestList(@CurrentUser String userId,
-                                                          @RequestParam(defaultValue = "1") Integer pageNumber) {
-        return friendService.getFriendRequestList(userId, pageNumber);
+                                                 @RequestParam(required = false) Integer cursor) {
+        return friendService.getFriendRequestList(userId, Pagination.create(cursor, pageSize));
     }
 }

@@ -1,4 +1,4 @@
-package me.soo.helloworld.service.language;
+package me.soo.helloworld.integration;
 
 import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
@@ -18,11 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static me.soo.helloworld.integration.ITTestLangId.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
-public class AddLanguageTestIntegration {
+public class ITAddLanguage {
     private final String userId = "Soo1045";
 
     @Autowired
@@ -40,16 +41,16 @@ public class AddLanguageTestIntegration {
     @BeforeEach
     public void setUp() {
         newLearningLang = new ArrayList<>();
-        newLearningLang.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.BEGINNER));
-        newLearningLang.add(new LanguageData(TestLangId.KOREAN, LanguageLevel.UPPER_INTERMEDIATE));
+        newLearningLang.add(new LanguageData(ENGLISH, LanguageLevel.BEGINNER));
+        newLearningLang.add(new LanguageData(KOREAN, LanguageLevel.UPPER_INTERMEDIATE));
 
         newCanSpeakLang = new ArrayList<>();
-        newCanSpeakLang.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.ADVANCED));
-        newCanSpeakLang.add(new LanguageData(TestLangId.FRENCH, LanguageLevel.ADVANCED));
+        newCanSpeakLang.add(new LanguageData(ENGLISH, LanguageLevel.ADVANCED));
+        newCanSpeakLang.add(new LanguageData(FRENCH, LanguageLevel.ADVANCED));
 
         newNativeLang = new ArrayList<>();
-        newNativeLang.add(new LanguageData(TestLangId.ENGLISH, LanguageLevel.NATIVE));
-        newNativeLang.add(new LanguageData(TestLangId.SPANISH, LanguageLevel.NATIVE));
+        newNativeLang.add(new LanguageData(ENGLISH, LanguageLevel.NATIVE));
+        newNativeLang.add(new LanguageData(SPANISH, LanguageLevel.NATIVE));
     }
     /*
         하나의 언어는 추가하려는 status 를 다르게 지정해도 중복으로 추가할 수 없습니다.

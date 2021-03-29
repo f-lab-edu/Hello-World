@@ -19,15 +19,13 @@ public class AlarmService {
 
     private final AlarmMapper alarmMapper;
 
-    private final Pagination pagination;
-
     public void dispatchAlarm(String to, String from, AlarmTypes type) {
         AlarmData alarm = AlarmData.create(to, from, type);
         alarmMapper.insertAlarm(alarm);
     }
 
-    public List<Alarm> getAlarmList(String userId, int pageNumber) {
-        AlarmListRequest request = AlarmListRequest.create(userId, pageNumber, pagination);
+    public List<Alarm> getAlarmList(String userId, Pagination pagination) {
+        AlarmListRequest request = AlarmListRequest.create(userId, pagination);
         return alarmMapper.getAlarmList(request);
     }
 

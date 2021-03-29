@@ -8,9 +8,8 @@ import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.FriendMapper;
 import me.soo.helloworld.model.friend.FriendList;
 import me.soo.helloworld.model.friend.FriendListRequest;
-import me.soo.helloworld.util.TargetValidator;
 import me.soo.helloworld.util.Pagination;
-
+import me.soo.helloworld.util.TargetValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +26,6 @@ public class FriendService {
     private final FriendMapper friendMapper;
 
     private final BlockUserService blockUserService;
-
-    private final Pagination pagination;
 
     private final AlarmService alarmService;
 
@@ -81,14 +78,14 @@ public class FriendService {
     }
 
     @Transactional(readOnly = true)
-    public List<FriendList> getFriendList(String userId, int pageNumber) {
-        FriendListRequest request = FriendListRequest.create(userId, pageNumber, pagination, FRIEND);
+    public List<FriendList> getFriendList(String userId, Pagination pagination) {
+        FriendListRequest request = FriendListRequest.create(userId, pagination, FRIEND);
         return friendMapper.getFriendList(request);
     }
 
     @Transactional(readOnly = true)
-    public List<FriendList> getFriendRequestList(String userId, int pageNumber) {
-        FriendListRequest request = FriendListRequest.create(userId, pageNumber, pagination, FRIEND_REQUEST_RECEIVED);
+    public List<FriendList> getFriendRequestList(String userId, Pagination pagination) {
+        FriendListRequest request = FriendListRequest.create(userId, pagination, FRIEND_REQUEST_RECEIVED);
         return friendMapper.getFriendList(request);
     }
 
@@ -111,6 +108,7 @@ public class FriendService {
                 throw new DuplicateRequestException("이미 해당 사용자로부터 친구추가 요청을 받은 상태입니다. 받은 친구 요청을 다시 확인해주세요.");
             case FRIEND:
                 throw new DuplicateRequestException("이미 친구로 등록된 사용자에게 다시 친구 요청을 보낼 수 없습니다.");
+            case NONE:
         }
     }
 }
