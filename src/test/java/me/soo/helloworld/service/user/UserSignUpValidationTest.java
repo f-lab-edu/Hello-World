@@ -11,6 +11,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserSignUpValidationTest {
+
     private Validator validator;
 
     private User getUserWithVariousName(String name) {

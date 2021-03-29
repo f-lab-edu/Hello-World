@@ -19,4 +19,13 @@ public class Alarm {
     String hasRead;
 
     Date createdAt;
+  
+    public static Alarm create(String to, String from, AlarmTypes type) {
+
+        return Alarm.builder()
+                    .to(to)
+                    .from(from)
+                    .type(type)
+                    .build();
+    }
 }
