@@ -7,5 +7,6 @@ import java.util.Optional;
 
 @Mapper
 public interface ProfileMapper {
+
     public Optional<UserDataOnProfile> getUserProfileData(String userId);
 }

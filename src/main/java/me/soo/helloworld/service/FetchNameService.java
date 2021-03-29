@@ -5,9 +5,9 @@ import me.soo.helloworld.mapper.FetchNameMapper;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static me.soo.helloworld.util.CacheNames.*;
 
@@ -33,9 +33,11 @@ public class FetchNameService {
     }
 
     private Map<Integer, String> convertIntoMap(List<Map<String, Object>> idsAndNames) {
-        Map<Integer, String> convertedMap = new HashMap<>();
-        idsAndNames.forEach(idAndName -> convertedMap.put((Integer) idAndName.get(ID), (String) idAndName.get(NAME)));
 
-        return convertedMap;
+        return idsAndNames.stream().collect(
+                Collectors.toMap(
+                    id -> (Integer) id.get(ID),
+                    name -> (String) name.get(NAME)
+                ));
     }
 }
