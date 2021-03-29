@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.soo.helloworld.mapper.FetchNameMapper">
+    <select id="fetchAllCountryIdsAndNames" resultType="java.util.HashMap">
+        SELECT id, name FROM countries
+    </select>
+
+    <select id="fetchAllTownIdsAndNames" resultType="java.util.HashMap">
+        SELECT id, name FROM towns
+    </select>
+
+    <select id="fetchAllLanguageIdsAndNames" resultType="java.util.HashMap">
+        SELECT id, name FROM languages
+    </select>
+</mapper>

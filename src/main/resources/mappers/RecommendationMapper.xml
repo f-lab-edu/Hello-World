@@ -22,4 +22,12 @@
         UPDATE recommendations SET content = #{modifiedContent}
         WHERE id = #{id} AND recomFrom = #{from}
     </update>
+
+    <select id="getRecommendationsForProfile" parameterType="String" resultType="me.soo.helloworld.model.recommendation.RecommendationDataForProfile">
+
+        SELECT recomFrom, content FROM recommendations
+        WHERE recomTo = #{userId}
+        ORDER BY id DESC
+        LIMIT 10;
+    </select>
 </mapper>

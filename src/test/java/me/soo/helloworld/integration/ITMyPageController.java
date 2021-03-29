@@ -25,6 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 
+import static me.soo.helloworld.TestCountries.SOUTH_KOREA;
+import static me.soo.helloworld.TestCountries.UNITED_KINGDOM;
+import static me.soo.helloworld.TestTowns.NEWCASTLE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -54,9 +57,9 @@ public class ITMyPageController {
                 .email("test@test.com")
                 .gender("M")
                 .birthday(Date.valueOf("1993-09-25"))
-                .originCountry("South Korea")
-                .livingCountry("United Kingdom")
-                .livingTown("Newcastle Upon Tyne")
+                .originCountry(SOUTH_KOREA)
+                .livingCountry(UNITED_KINGDOM)
+                .livingTown(NEWCASTLE)
                 .aboutMe("Hello, I'd love to make great friends here")
                 .profileImageName("328fd95f-e25d-46f3-ab1d-cf0fefbde7ab.jpg")
                 .profileImagePath("D:\\Project\\Hello-World\\gomsu1045")

@@ -19,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 
+import static me.soo.helloworld.TestCountries.SOUTH_KOREA;
+import static me.soo.helloworld.TestCountries.UNITED_KINGDOM;
+import static me.soo.helloworld.TestTowns.NEWCASTLE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -49,9 +52,9 @@ class ITUserController {
                 .email("test@test.com")
                 .gender("M")
                 .birthday(Date.valueOf("1993-09-25"))
-                .originCountry("South Korea")
-                .livingCountry("United Kingdom")
-                .livingTown("Newcastle Upon Tyne")
+                .originCountry(SOUTH_KOREA)
+                .livingCountry(UNITED_KINGDOM)
+                .livingTown(NEWCASTLE)
                 .aboutMe("Hello, I'd love to make great friends here")
                 .build();
 

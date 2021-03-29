@@ -5,9 +5,12 @@ import me.soo.helloworld.enumeration.AlarmTypes;
 import me.soo.helloworld.exception.DuplicateRequestException;
 import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.RecommendationMapper;
+import me.soo.helloworld.model.recommendation.RecommendationDataForProfile;
 import me.soo.helloworld.model.recommendation.Recommendation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +41,11 @@ public class RecommendationService {
         int howLong = howLongSinceWrittenAt(id, from);
         validateModificationAvailability(howLong);
         recommendationMapper.updateRecommendation(id, from, modifiedContent);
+    }
+
+    @Transactional(readOnly = true)
+    public List<RecommendationDataForProfile> getRecommendationsForProfile(String userId) {
+        return recommendationMapper.getRecommendationsForProfile(userId);
     }
 
     public int howLongSinceWrittenAt(int id, String from) {

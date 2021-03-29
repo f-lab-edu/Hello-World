@@ -22,6 +22,9 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import java.sql.Date;
 
+import static me.soo.helloworld.TestCountries.SOUTH_KOREA;
+import static me.soo.helloworld.TestCountries.UNITED_KINGDOM;
+import static me.soo.helloworld.TestTowns.NEWCASTLE;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -58,9 +61,9 @@ public class UserUpdateTest {
                 .email("test@test.com")
                 .gender("Male")
                 .birthday(Date.valueOf("1993-09-25"))
-                .originCountry("South Korea")
-                .livingCountry("United Kingdom")
-                .livingTown("Newcastle Upon Tyne")
+                .originCountry(SOUTH_KOREA)
+                .livingCountry(UNITED_KINGDOM)
+                .livingTown(NEWCASTLE)
                 .aboutMe("Hello, I'd love to make great friends here")
                 .profileImageName(fileName)
                 .profileImagePath(filePath)

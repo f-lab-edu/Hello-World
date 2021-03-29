@@ -20,6 +20,9 @@ import javax.servlet.http.HttpSession;
 
 import java.sql.Date;
 
+import static me.soo.helloworld.TestCountries.SOUTH_KOREA;
+import static me.soo.helloworld.TestCountries.UNITED_KINGDOM;
+import static me.soo.helloworld.TestTowns.NEWCASTLE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -45,9 +48,9 @@ public class LoginServiceTest {
                 .email("test@test.com")
                 .gender("Male")
                 .birthday(Date.valueOf("1993-09-25"))
-                .originCountry("South Korea")
-                .livingCountry("United Kingdom")
-                .livingTown("Newcastle Upon Tyne")
+                .originCountry(SOUTH_KOREA)
+                .livingCountry(UNITED_KINGDOM)
+                .livingTown(NEWCASTLE)
                 .aboutMe("Hello, I'd love to make great friends here")
                 .build();
 
