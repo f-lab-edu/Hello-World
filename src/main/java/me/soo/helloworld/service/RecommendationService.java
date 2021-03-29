@@ -7,10 +7,14 @@ import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.RecommendationMapper;
 import me.soo.helloworld.model.recommendation.RecommendationDataForProfile;
 import me.soo.helloworld.model.recommendation.Recommendation;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static me.soo.helloworld.util.CacheNames.REDIS_CACHE_MANAGER;
+import static me.soo.helloworld.util.CacheNames.USER_PROFILE;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +31,7 @@ public class RecommendationService {
     private final AlarmService alarmService;
 
     @Transactional
+    @CacheEvict(key = "#to", value = USER_PROFILE, cacheManager = REDIS_CACHE_MANAGER)
     public void leaveRecommendation(String from, String to, String content) {
         int friendshipDuration = friendService.getFriendshipDuration(from, to);
 
@@ -37,10 +42,11 @@ public class RecommendationService {
         alarmService.dispatchAlarm(to, from, AlarmTypes.RECOMMENDATION_LEFT);
     }
 
-    public void modifyRecommendation(int id, String from, String modifiedContent) {
-        int howLong = howLongSinceWrittenAt(id, from);
+    @CacheEvict(key = "#to", value = USER_PROFILE, cacheManager = REDIS_CACHE_MANAGER)
+    public void modifyRecommendation(String to, String from, String modifiedContent) {
+        int howLong = howLongSinceWrittenAt(to, from);
         validateModificationAvailability(howLong);
-        recommendationMapper.updateRecommendation(id, from, modifiedContent);
+        recommendationMapper.updateRecommendation(to, from, modifiedContent);
     }
 
     @Transactional(readOnly = true)
@@ -48,8 +54,8 @@ public class RecommendationService {
         return recommendationMapper.getRecommendationsForProfile(userId);
     }
 
-    public int howLongSinceWrittenAt(int id, String from) {
-        return recommendationMapper.getHowLongSinceWrittenAt(id, from)
+    public int howLongSinceWrittenAt(String to, String from) {
+        return recommendationMapper.getHowLongSinceWrittenAt(to, from)
                                     .orElseThrow(() -> new InvalidRequestException("해당 추천글이 존재하지 않습니다. 존재하지 않는 추천글은 수정할 수 없습니다."));
     }
 

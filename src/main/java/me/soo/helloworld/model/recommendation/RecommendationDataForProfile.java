@@ -1,13 +1,13 @@
 package me.soo.helloworld.model.recommendation;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class RecommendationDataForProfile {
 
-    private final String from;
+    private String from;
 
-    private final String content;
+    private String content;
 }

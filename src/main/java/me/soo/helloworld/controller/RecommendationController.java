@@ -27,10 +27,10 @@ public class RecommendationController {
     }
 
     @LoginRequired
-    @PutMapping("/{recom-id}")
-    public void modifyReview(@PathVariable("recom-id") Integer id,
+    @PutMapping("/to/{targetId}")
+    public void modifyReview(@PathVariable("targetId") String targetId,
                              @CurrentUser String userId,
                              @Valid @RequestBody RecommendationRequest modificationRequest) {
-        recommendationService.modifyRecommendation(id, userId, modificationRequest.getContent());
+        recommendationService.modifyRecommendation(targetId, userId, modificationRequest.getContent());
     }
 }

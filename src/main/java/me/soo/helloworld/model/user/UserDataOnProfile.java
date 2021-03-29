@@ -6,6 +6,7 @@ import me.soo.helloworld.model.language.LanguageDataForProfile;
 import java.util.List;
 
 @Getter
+@Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class UserDataOnProfile {

@@ -8,11 +8,15 @@ import me.soo.helloworld.model.email.FindPasswordEmail;
 import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.util.encoder.PasswordEncoder;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
+
+import static me.soo.helloworld.util.CacheNames.REDIS_CACHE_MANAGER;
+import static me.soo.helloworld.util.CacheNames.USER_PROFILE;
 
 @Service
 @RequiredArgsConstructor
@@ -49,10 +53,12 @@ public class UserService {
         userMapper.updateUserPassword(userid, encodedPassword);
     }
 
+    @CacheEvict(key = "#userId", value = USER_PROFILE, cacheManager = REDIS_CACHE_MANAGER)
     public void userInfoUpdate(String userId, UserUpdateRequest updateRequest) {
         userMapper.updateUserInfo(userId, updateRequest);
     }
 
+    @CacheEvict(key = "#userId", value = USER_PROFILE, cacheManager = REDIS_CACHE_MANAGER)
     public void userProfileImageUpdate(String userId, MultipartFile profileImage) {
         FileData oldProfileImage = userMapper.getUserProfileImageById(userId);
 

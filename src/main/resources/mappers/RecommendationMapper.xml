@@ -14,18 +14,18 @@
     <select id="getHowLongSinceWrittenAt" parameterType="map" resultType="Integer">
 
         SELECT TO_DAYS(NOW()) - TO_DAYS(writtenAt) FROM recommendations
-        WHERE id = #{id} AND recomFrom = #{from}
+        WHERE recomTo = #{to} AND recomFrom = #{from}
     </select>
 
     <update id="updateRecommendation" parameterType="map">
 
         UPDATE recommendations SET content = #{modifiedContent}
-        WHERE id = #{id} AND recomFrom = #{from}
+        WHERE recomTo = #{to} AND recomFrom = #{from}
     </update>
 
     <select id="getRecommendationsForProfile" parameterType="String" resultType="me.soo.helloworld.model.recommendation.RecommendationDataForProfile">
 
-        SELECT recomFrom, content FROM recommendations
+        SELECT recomFrom AS 'from', content FROM recommendations
         WHERE recomTo = #{userId}
         ORDER BY id DESC
         LIMIT 10;
