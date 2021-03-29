@@ -8,12 +8,15 @@ import me.soo.helloworld.model.language.LanguageDataForProfile;
 import me.soo.helloworld.model.user.UserProfile;
 import me.soo.helloworld.model.user.UserDataOnProfile;
 import me.soo.helloworld.model.recommendation.RecommendationForProfile;
+import me.soo.helloworld.model.user.UserProfileList;
+import me.soo.helloworld.util.Pagination;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static me.soo.helloworld.util.CacheNames.REDIS_CACHE_MANAGER;
@@ -39,6 +42,11 @@ public class ProfileService {
 
         return UserProfile.create(profile, matchCountry(profile.getOriginCountryId()), matchCountry(profile.getLivingCountryId()),
                 matchTown(profile.getLivingTownId()), matchLanguages(profile.getLanguages()), recommendations);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserProfileList> getUserProfilesList(Pagination pagination) {
+        return profileMapper.getUserProfilesList(pagination);
     }
 
     private String matchCountry(Integer id) {

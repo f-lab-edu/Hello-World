@@ -55,4 +55,39 @@
             INNER JOIN users AS u ON s.userId = u.userId
         WHERE u.userId = #{userId} AND u.isDeactivated = 'N';
     </select>
+
+    <resultMap id="userProfilesListMap" type="me.soo.helloworld.model.user.UserProfileList">
+        <constructor>
+            <idArg column="id" javaType="_int"/>
+            <arg column="userId" javaType="String"/>
+            <arg column="aboutMe" javaType="String"/>
+            <arg column="profileImageName" javaType="String"/>
+            <arg column="profileImagePath" javaType="String"/>
+        </constructor>
+        <result property="id" column="id"/>
+        <result property="userId" column="userId"/>
+        <result property="aboutMe" column="aboutMe"/>
+        <result property="profileImageName" column="profileImageName"/>
+        <result property="profileImagePath" column="profileImagePath"/>
+        <association property="recommendationNums" column="userId"
+                     javaType="_int" select="getTotalRecommendationsNums"/>
+    </resultMap>
+
+    <select id="getUserProfilesList" parameterType="me.soo.helloworld.util.Pagination"
+            resultMap="userProfilesListMap">
+        SELECT id, userId, aboutMe,
+               profileImageName, profileImagePath
+        FROM users
+        WHERE
+        <if test="cursor != null">
+            id <![CDATA[<]]> #{cursor} AND
+        </if>
+            isDeactivated = 'N'
+        ORDER BY id DESC
+        LIMIT #{pageSize}
+    </select>
+    
+    <select id="getTotalRecommendationsNums" parameterType="String" resultType="int">
+        SELECT COUNT(recomTo) FROM recommendations WHERE recomTo = #{userId}
+    </select>
 </mapper>
