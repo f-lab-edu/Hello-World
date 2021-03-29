@@ -58,8 +58,7 @@ public class RecommendationService {
 
     @Transactional(readOnly = true)
     public List<RecommendationList> getRecommendationsListAboutTarget(String targetId, Pagination pagination) {
-        return recommendationMapper.getRecommendationsListAboutTarget(targetId, pagination)
-                .orElseThrow(() -> new InvalidRequestException("해당 사용자에 대한 전체 추천글을 조회는 존재하는 사용자에 대해서만 요청이 가능합니다."));
+        return recommendationMapper.getRecommendationsListAboutTarget(targetId, pagination);
     }
 
     public int howLongSinceWrittenAt(String to, String from) {
