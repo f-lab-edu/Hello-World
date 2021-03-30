@@ -32,7 +32,7 @@ public class FriendService {
     @Transactional
     public void sendFriendRequest(String userId, String targetId) {
         TargetValidator.targetNotSelf(userId, targetId);
-        TargetValidator.targetExistence(userService.isUserIdExist(targetId));
+        TargetValidator.targetExistence(userService.isUserActivated(targetId));
 
         if (blockUserService.isUserBlocked(userId, targetId)) {
             throw new InvalidRequestException("차단되어 있는 사용자에게 친구 요청을 보낼 수 없습니다.");

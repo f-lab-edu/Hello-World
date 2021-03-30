@@ -7,8 +7,9 @@ import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.RecommendationMapper;
 import me.soo.helloworld.model.recommendation.RecommendationForProfile;
 import me.soo.helloworld.model.recommendation.Recommendation;
-import me.soo.helloworld.model.recommendation.RecommendationList;
+import me.soo.helloworld.model.recommendation.Recommendations;
 import me.soo.helloworld.util.Pagination;
+import me.soo.helloworld.util.TargetValidator;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,8 @@ public class RecommendationService {
     private final RecommendationMapper recommendationMapper;
 
     private final AlarmService alarmService;
+
+    private final UserService userService;
 
     @Transactional
     @CacheEvict(key = "#to", value = USER_PROFILE, cacheManager = REDIS_CACHE_MANAGER)
@@ -57,8 +60,9 @@ public class RecommendationService {
     }
 
     @Transactional(readOnly = true)
-    public List<RecommendationList> getRecommendationsListAboutTarget(String targetId, Pagination pagination) {
-        return recommendationMapper.getRecommendationsListAboutTarget(targetId, pagination);
+    public List<Recommendations> getRecommendationsAboutTarget(String targetId, Pagination pagination) {
+        TargetValidator.targetExistence(userService.isUserActivated(targetId));
+        return recommendationMapper.getRecommendationsAboutTarget(targetId, pagination);
     }
 
     public int howLongSinceWrittenAt(String to, String from) {
