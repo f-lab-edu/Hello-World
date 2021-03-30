@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.soo.helloworld.annotation.LoginRequired;
 import me.soo.helloworld.model.user.UserProfile;
-import me.soo.helloworld.model.user.UserProfileList;
+import me.soo.helloworld.model.user.UserProfiles;
 import me.soo.helloworld.service.ProfileService;
 import me.soo.helloworld.util.Pagination;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +31,7 @@ public class ProfileController {
 
     @LoginRequired
     @GetMapping
-    public List<UserProfileList> getUserProfilesList(@RequestParam(required = false) Integer cursor) {
-        return profileService.getUserProfilesList(Pagination.create(cursor, pageSize));
+    public List<UserProfiles> getUserProfiles(@RequestParam(required = false) Integer cursor) {
+        return profileService.getUserProfiles(Pagination.create(cursor, pageSize));
     }
 }

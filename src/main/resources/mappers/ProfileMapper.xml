@@ -56,7 +56,7 @@
         WHERE u.userId = #{userId} AND u.isDeactivated = 'N';
     </select>
 
-    <resultMap id="userProfilesListMap" type="me.soo.helloworld.model.user.UserProfileList">
+    <resultMap id="getUserProfilesMap" type="me.soo.helloworld.model.user.UserProfiles">
         <constructor>
             <idArg column="id" javaType="_int"/>
             <arg column="userId" javaType="String"/>
@@ -73,8 +73,8 @@
                      javaType="_int" select="getTotalRecommendationsNums"/>
     </resultMap>
 
-    <select id="getUserProfilesList" parameterType="me.soo.helloworld.util.Pagination"
-            resultMap="userProfilesListMap">
+    <select id="getUserProfiles" parameterType="me.soo.helloworld.util.Pagination"
+            resultMap="getUserProfilesMap">
         SELECT id, userId, aboutMe,
                profileImageName, profileImagePath
         FROM users

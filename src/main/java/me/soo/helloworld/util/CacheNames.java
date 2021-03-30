@@ -16,6 +16,10 @@ public class CacheNames {
 
     public static final String USER_PROFILE = "userProfile";
 
+    public static final String MAIN_PAGE_KEY = "'mainPage'";
+
+    public static final String MAIN_PAGE_VALUE = "mainPage";
+
     public static final String REDIS_CACHE_MANAGER = "redisCacheManager";
 
     public static final String CAFFEINE_CACHE_MANAGER = "caffeineCacheManager";

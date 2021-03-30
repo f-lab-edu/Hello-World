@@ -19,8 +19,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-import static me.soo.helloworld.util.CacheNames.SPRING_CACHE;
-import static me.soo.helloworld.util.CacheNames.USER_PROFILE;
+import static me.soo.helloworld.util.CacheNames.*;
 
 @Configuration
 public class RedisCacheConfig {
@@ -50,7 +49,8 @@ public class RedisCacheConfig {
                         .fromSerializer(new GenericJackson2JsonRedisSerializer()));
 
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
-        cacheConfigurations.put(USER_PROFILE, defaultConfig.entryTtl(Duration.ofMinutes(5L)));
+        cacheConfigurations.put(USER_PROFILE, defaultConfig.entryTtl(Duration.ofMinutes(15L)));
+        cacheConfigurations.put(MAIN_PAGE_VALUE, defaultConfig.entryTtl(Duration.ofMinutes(5L)));
 
         return RedisCacheManager.builder(redisCacheConnectionFactory)
                 .withInitialCacheConfigurations(cacheConfigurations)
