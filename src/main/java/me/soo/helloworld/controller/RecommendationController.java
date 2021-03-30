@@ -3,7 +3,7 @@ package me.soo.helloworld.controller;
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.annotation.CurrentUser;
 import me.soo.helloworld.annotation.LoginRequired;
-import me.soo.helloworld.model.recommendation.RecommendationList;
+import me.soo.helloworld.model.recommendation.Recommendations;
 import me.soo.helloworld.model.recommendation.RecommendationRequest;
 import me.soo.helloworld.service.RecommendationService;
 import me.soo.helloworld.util.Pagination;
@@ -42,9 +42,9 @@ public class RecommendationController {
     }
 
     @LoginRequired
-    @GetMapping("/{targetId}")
-    public List<RecommendationList> getRecommendationsListAboutTarget(@PathVariable("targetId") String targetId,
-                                                                      @RequestParam(required = false) Integer cursor) {
-        return recommendationService.getRecommendationsListAboutTarget(targetId, Pagination.create(cursor, pageSize));
+    @GetMapping("/about/{targetId}")
+    public List<Recommendations> getRecommendationsAboutTarget(@PathVariable("targetId") String targetId,
+                                                               @RequestParam(required = false) Integer cursor) {
+        return recommendationService.getRecommendationsAboutTarget(targetId, Pagination.create(cursor, pageSize));
     }
 }

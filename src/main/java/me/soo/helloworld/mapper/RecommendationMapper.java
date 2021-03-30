@@ -2,7 +2,7 @@ package me.soo.helloworld.mapper;
 
 import me.soo.helloworld.model.recommendation.RecommendationForProfile;
 import me.soo.helloworld.model.recommendation.Recommendation;
-import me.soo.helloworld.model.recommendation.RecommendationList;
+import me.soo.helloworld.model.recommendation.Recommendations;
 import me.soo.helloworld.util.Pagination;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -24,6 +24,6 @@ public interface RecommendationMapper {
 
     public List<RecommendationForProfile> getRecommendationsForProfile(String userId);
 
-    public List<RecommendationList> getRecommendationsListAboutTarget(@Param("targetId") String targetId,
-                                                                      @Param("pagination") Pagination pagination);
+    public List<Recommendations> getRecommendationsAboutTarget(@Param("targetId") String targetId,
+                                                               @Param("pagination") Pagination pagination);
 }

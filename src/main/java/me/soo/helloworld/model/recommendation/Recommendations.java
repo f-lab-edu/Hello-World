@@ -6,7 +6,7 @@ import lombok.Value;
 import java.sql.Timestamp;
 
 @Value
-public class RecommendationList {
+public class Recommendations {
 
     int id;
 

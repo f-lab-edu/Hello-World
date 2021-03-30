@@ -93,6 +93,11 @@ public class UserService {
         userMapper.deleteUser(userId);
     }
 
+    @Transactional(readOnly = true)
+    public boolean isUserActivated(String userId) {
+        return userMapper.isUserActivated(userId);
+    }
+
     private void isValidPassword(String requestPassword, String userPassword) {
         if (!passwordEncoder.isMatch(requestPassword, userPassword)) {
             throw new InvalidUserInfoException("입력하신 비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.");

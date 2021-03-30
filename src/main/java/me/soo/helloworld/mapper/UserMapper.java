@@ -31,4 +31,6 @@ public interface UserMapper {
     public void deleteUser(String userId);
 
     public boolean isEmailValid(UserFindPasswordRequest findPasswordRequest);
+
+    public boolean isUserActivated(String userId);
 }

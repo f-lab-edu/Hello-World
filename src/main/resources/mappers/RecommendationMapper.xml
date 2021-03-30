@@ -32,8 +32,8 @@
         LIMIT 5;
     </select>
 
-    <select id="getRecommendationsListAboutTarget" parameterType="map"
-            resultType="me.soo.helloworld.model.recommendation.RecommendationList">
+    <select id="getRecommendationsAboutTarget" parameterType="map"
+            resultType="me.soo.helloworld.model.recommendation.Recommendations">
 
         SELECT id, recomFrom AS 'from', content, writtenAt FROM recommendations
         WHERE recomTo = #{targetId}
