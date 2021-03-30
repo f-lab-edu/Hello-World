@@ -24,6 +24,6 @@ public interface RecommendationMapper {
 
     public List<RecommendationForProfile> getRecommendationsForProfile(String userId);
 
-    public Optional<List<RecommendationList>> getRecommendationsListAboutTarget(@Param("targetId") String targetId,
+    public List<RecommendationList> getRecommendationsListAboutTarget(@Param("targetId") String targetId,
                                                                       @Param("pagination") Pagination pagination);
 }
