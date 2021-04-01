@@ -14,6 +14,5 @@ public class Recommendations {
 
     String content;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy-MM-dd")
     LocalDate writtenAt;
 }
