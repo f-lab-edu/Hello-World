@@ -14,9 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static me.soo.helloworld.TestCountries.SOUTH_KOREA;
@@ -30,6 +28,8 @@ import static org.mockito.Mockito.*;
 public class ProfileServiceTest {
 
     private final String userId = "Soo";
+
+    private final String targetId = "Soo30";
 
     @InjectMocks
     ProfileService profileService;
@@ -84,38 +84,37 @@ public class ProfileServiceTest {
     @Test
     @DisplayName("존재하지 않거나 혹은 필수 정보가 등록되어 있지 않은 사용자의 프로필을 조회하는 경우 프로필 조회에 실패하며 InvalidRequestException 이 발생합니다.")
     public void getUserProfileFailOnNotExistingOrInvalidInfoUser() {
-        String notProperUser = "I'm inappropriate";
-        when(profileMapper.getUserProfileData(notProperUser)).thenReturn(Optional.empty());
+        when(profileMapper.getUserProfileData(targetId, userId)).thenReturn(Optional.empty());
 
         assertThrows(InvalidRequestException.class, () -> {
-           profileService.getUserProfile(notProperUser);
+           profileService.getUserProfile(targetId, userId);
         });
 
-        verify(profileMapper, times(1)).getUserProfileData(notProperUser);
-        verify(recommendationService, never()).getRecommendationsForProfile(notProperUser);
+        verify(profileMapper, times(1)).getUserProfileData(targetId, userId);
+        verify(recommendationService, never()).getRecommendationsForProfile(targetId);
     }
 
     @Test
     @DisplayName("필수 정보를 모두 입력한 사용자의 경우, 추천 글이 존재하지 않아서 빈 리스트가 리턴되더라도 프로필 정보를 리턴하는데 성공합니다.")
     public void getUserProfileSuccessOnUserWithProperProfileDataWithoutAnyCachedMaps() {
-        when(profileMapper.getUserProfileData(userId)).thenReturn(Optional.of(profileData));
-        when(recommendationService.getRecommendationsForProfile(userId)).thenReturn(Collections.emptyList());
+        when(profileMapper.getUserProfileData(targetId, userId)).thenReturn(Optional.of(profileData));
+        when(recommendationService.getRecommendationsForProfile(targetId)).thenReturn(Collections.emptyList());
 
-        profileService.getUserProfile(userId);
+        profileService.getUserProfile(targetId, userId);
 
-        verify(profileMapper, times(1)).getUserProfileData(userId);
-        verify(recommendationService, times(1)).getRecommendationsForProfile(userId);
+        verify(profileMapper, times(1)).getUserProfileData(targetId, userId);
+        verify(recommendationService, times(1)).getRecommendationsForProfile(targetId);
     }
 
     @Test
     @DisplayName("필수 정보를 모두 입력한 사용자의 경우, 추천 글이 존재 하면 해당 리스트를 포함해 프로필 정보를 리턴하는데 성공합니다.")
     public void getUserProfileSuccessOnUserWithProperProfileDataWithOnlyCachedCountriesMap() {
-        when(profileMapper.getUserProfileData(userId)).thenReturn(Optional.of(profileData));
-        when(recommendationService.getRecommendationsForProfile(userId)).thenReturn(recommendations);
+        when(profileMapper.getUserProfileData(targetId, userId)).thenReturn(Optional.of(profileData));
+        when(recommendationService.getRecommendationsForProfile(targetId)).thenReturn(recommendations);
 
-        profileService.getUserProfile(userId);
+        profileService.getUserProfile(targetId, userId);
 
-        verify(profileMapper, times(1)).getUserProfileData(userId);
-        verify(recommendationService, times(1)).getRecommendationsForProfile(userId);
+        verify(profileMapper, times(1)).getUserProfileData(targetId, userId);
+        verify(recommendationService, times(1)).getRecommendationsForProfile(targetId);
     }
 }

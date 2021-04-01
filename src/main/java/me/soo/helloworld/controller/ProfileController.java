@@ -2,6 +2,7 @@ package me.soo.helloworld.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.soo.helloworld.annotation.CurrentUser;
 import me.soo.helloworld.annotation.LoginRequired;
 import me.soo.helloworld.model.user.UserProfile;
 import me.soo.helloworld.model.user.UserProfiles;
@@ -24,14 +25,16 @@ public class ProfileController {
     private int pageSize;
 
     @LoginRequired
-    @GetMapping("/{userId}")
-    public UserProfile getUserProfile(@PathVariable String userId) {
-        return profileService.getUserProfile(userId);
+    @GetMapping("/{targetId}")
+    public UserProfile getUserProfile(@PathVariable String targetId,
+                                      @CurrentUser String userId) {
+        return profileService.getUserProfile(targetId, userId);
     }
 
     @LoginRequired
     @GetMapping
-    public List<UserProfiles> getUserProfiles(@RequestParam(required = false) Integer cursor) {
-        return profileService.getUserProfiles(Pagination.create(cursor, pageSize));
+    public List<UserProfiles> getUserProfiles(@CurrentUser String userId,
+                                              @RequestParam(required = false) Integer cursor) {
+        return profileService.getUserProfiles(userId, Pagination.create(cursor, pageSize));
     }
 }

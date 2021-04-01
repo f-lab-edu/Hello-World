@@ -4,22 +4,22 @@
 <mapper namespace="me.soo.helloworld.mapper.BlockUserMapper">
 
     <insert id="insertBlockUser" parameterType="String">
-        INSERT INTO block (userId, blockId) VALUES (#{userId}, #{targetId})
+        INSERT INTO block (blockId, blockedBy) VALUES (#{targetId}, #{userId})
     </insert>
 
     <select id="isUserBlocked" parameterType="String" resultType="boolean">
-        SELECT EXISTS (SELECT blockId FROM block WHERE userId = #{userId} AND blockId = #{targetId})
+        SELECT EXISTS (SELECT blockId FROM block WHERE blockId = #{targetId} AND blockedBy = #{userId})
     </select>
 
     <delete id="deleteBlockUser" parameterType="String">
-        DELETE FROM block WHERE userId = #{userId} AND blockId = #{targetId}
+        DELETE FROM block WHERE blockId = #{targetId} AND blockedBy = #{userId}
     </delete>
 
     <select id="getBlockUserList" parameterType="me.soo.helloworld.model.blockuser.BlockUserListRequest"
             resultType="me.soo.helloworld.model.blockuser.BlockUserList">
 
         SELECT id, blockId FROM block
-        WHERE userId = #{userId}
+        WHERE blockedBy = #{userId}
         <if test="pagination.cursor != null">
             AND id <![CDATA[<]]> #{pagination.cursor}
         </if>
