@@ -51,6 +51,7 @@ public class RedisCacheConfig {
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
         cacheConfigurations.put(USER_PROFILE, defaultConfig.entryTtl(Duration.ofMinutes(15L)));
         cacheConfigurations.put(MAIN_PAGE_VALUE, defaultConfig.entryTtl(Duration.ofMinutes(5L)));
+        cacheConfigurations.put(USER_PROFILES, defaultConfig.entryTtl(Duration.ofSeconds(15L)));
 
         return RedisCacheManager.builder(redisCacheConnectionFactory)
                 .withInitialCacheConfigurations(cacheConfigurations)

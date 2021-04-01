@@ -11,6 +11,7 @@ import me.soo.helloworld.model.recommendation.RecommendationForProfile;
 import me.soo.helloworld.model.user.UserProfiles;
 import me.soo.helloworld.util.Pagination;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +44,10 @@ public class ProfileService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(key = MAIN_PAGE_KEY, value = MAIN_PAGE_VALUE, condition = "#pagination.cursor == null", cacheManager = REDIS_CACHE_MANAGER)
+    @Caching(cacheable = {
+            @Cacheable(key = MAIN_PAGE_KEY, value = MAIN_PAGE_VALUE, condition = "#pagination.cursor == null", cacheManager = REDIS_CACHE_MANAGER),
+            @Cacheable(key = "#pagination.cursor", value = USER_PROFILES, condition = "#pagination.cursor != null", cacheManager = REDIS_CACHE_MANAGER)
+    })
     public List<UserProfiles> getUserProfiles(String userId, Pagination pagination) {
         return profileMapper.getUserProfiles(userId, pagination);
     }

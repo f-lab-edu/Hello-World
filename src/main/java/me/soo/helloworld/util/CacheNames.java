@@ -16,6 +16,8 @@ public class CacheNames {
 
     public static final String USER_PROFILE = "userProfile";
 
+    public static final String USER_PROFILES = "userProfiles";
+
     public static final String MAIN_PAGE_KEY = "'mainPage'";
 
     public static final String MAIN_PAGE_VALUE = "mainPage";
