@@ -18,8 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.validation.*;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -93,7 +92,7 @@ public class RecommendationServiceTest {
     @BeforeEach
     public void returnProperRecommendations() {
         String content = "Hello World";
-        Timestamp writtenAt = Timestamp.valueOf(LocalDateTime.now());
+        LocalDate writtenAt = LocalDate.now();
         String user1 = "user1";
         String user2 = "user2";
         String user3 = "user3";

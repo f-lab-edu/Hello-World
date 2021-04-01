@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -53,8 +54,8 @@ public class ProfileServiceTest {
         String content = "He is absolutely awesome to be friends with for language exchange.";
 
         recommendations = new ArrayList<>();
-        recommendations.add(new RecommendationForProfile(firstFriend, content, Timestamp.valueOf(LocalDateTime.now())));
-        recommendations.add(new RecommendationForProfile(secondFriend, content, Timestamp.valueOf(LocalDateTime.now())));
+        recommendations.add(new RecommendationForProfile(firstFriend, content, LocalDate.now()));
+        recommendations.add(new RecommendationForProfile(secondFriend, content, LocalDate.now()));
     }
 
     @BeforeEach

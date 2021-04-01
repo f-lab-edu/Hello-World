@@ -3,7 +3,7 @@ package me.soo.helloworld.model.recommendation;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -15,5 +15,5 @@ public class RecommendationForProfile {
     private String content;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy-MM-dd")
-    private Timestamp writtenAt;
+    private LocalDate writtenAt;
 }
