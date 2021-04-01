@@ -60,9 +60,9 @@ public class RecommendationService {
     }
 
     @Transactional(readOnly = true)
-    public List<Recommendations> getRecommendationsAboutTarget(String targetId, Pagination pagination) {
+    public List<Recommendations> getRecommendationsAboutTarget(String targetId, Pagination pagination, String userId) {
         TargetValidator.targetExistence(userService.isUserActivated(targetId));
-        return recommendationMapper.getRecommendationsAboutTarget(targetId, pagination);
+        return recommendationMapper.getRecommendationsAboutTarget(targetId, pagination, userId);
     }
 
     public int howLongSinceWrittenAt(String to, String from) {

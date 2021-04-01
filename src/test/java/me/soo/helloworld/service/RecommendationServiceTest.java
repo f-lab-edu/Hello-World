@@ -276,37 +276,49 @@ public class RecommendationServiceTest {
     @Test
     @DisplayName("존재하지 않는 사용자에 대해 추천글 보기 요청이 들어오면 InvalidRequestException 이 발생하며 요청 처리에 실패합니다.")
     public void getRecommendationsAboutTargetFailOnNotExistingUser() {
-        when(userService.isUserActivated(userId)).thenReturn(false);
+        when(userService.isUserActivated(friendId)).thenReturn(false);
 
         assertThrows(InvalidRequestException.class, () -> {
-            recommendationService.getRecommendationsAboutTarget(userId, pagination);
+            recommendationService.getRecommendationsAboutTarget(friendId, pagination, userId);
         });
 
-        verify(userService, times(1)).isUserActivated(userId);
-        verify(recommendationMapper, never()).getRecommendationsAboutTarget(userId, pagination);
+        verify(userService, times(1)).isUserActivated(friendId);
+        verify(recommendationMapper, never()).getRecommendationsAboutTarget(friendId, pagination, userId);
     }
 
     @Test
     @DisplayName("조회하려는 사용자가 존재하면 요청 처리에 성공하지만 등록된 추천글이 없는 경우에는 빈 리스트를 리턴합니다.")
     public void getRecommendationsAboutTargetSuccessWithEmptyList() {
-        when(userService.isUserActivated(userId)).thenReturn(true);
-        when(recommendationMapper.getRecommendationsAboutTarget(userId, pagination)).thenReturn(emptyRecommendations);
+        when(userService.isUserActivated(friendId)).thenReturn(true);
+        when(recommendationMapper.getRecommendationsAboutTarget(friendId, pagination, userId)).thenReturn(emptyRecommendations);
 
-        recommendationService.getRecommendationsAboutTarget(userId, pagination);
+        recommendationService.getRecommendationsAboutTarget(friendId, pagination, userId);
 
-        verify(userService, times(1)).isUserActivated(userId);
-        verify(recommendationMapper, times(1)).getRecommendationsAboutTarget(userId, pagination);
+        verify(userService, times(1)).isUserActivated(friendId);
+        verify(recommendationMapper, times(1)).getRecommendationsAboutTarget(friendId, pagination, userId);
+    }
+
+    @Test
+    @DisplayName("조회하려는 사용자가 존재하지만 해당 사용자의 차단 목록에 등록된 경우 빈 리스트를 리턴합니다.")
+    public void getRecommendationsAboutTargetBlockingCurrentUserSuccessButWithEmptyList() {
+        when(userService.isUserActivated(friendId)).thenReturn(true);
+        when(recommendationMapper.getRecommendationsAboutTarget(friendId, pagination, userId)).thenReturn(emptyRecommendations);
+
+        recommendationService.getRecommendationsAboutTarget(friendId, pagination, userId);
+
+        verify(userService, times(1)).isUserActivated(friendId);
+        verify(recommendationMapper, times(1)).getRecommendationsAboutTarget(friendId, pagination, userId);
     }
 
     @Test
     @DisplayName("조회하려는 사용자가 존재하면 요청 처리에 성공하며 정해진 pagination 값에 따라 등록된 추천글 들을 리턴합니다.")
     public void getRecommendationsAboutTargetSuccessWithRecommendations() {
-        when(userService.isUserActivated(userId)).thenReturn(true);
-        when(recommendationMapper.getRecommendationsAboutTarget(userId, pagination)).thenReturn(properRecommendations);
+        when(userService.isUserActivated(friendId)).thenReturn(true);
+        when(recommendationMapper.getRecommendationsAboutTarget(friendId, pagination, userId)).thenReturn(properRecommendations);
 
-        recommendationService.getRecommendationsAboutTarget(userId, pagination);
+        recommendationService.getRecommendationsAboutTarget(friendId, pagination, userId);
 
-        verify(userService, times(1)).isUserActivated(userId);
-        verify(recommendationMapper, times(1)).getRecommendationsAboutTarget(userId, pagination);
+        verify(userService, times(1)).isUserActivated(friendId);
+        verify(recommendationMapper, times(1)).getRecommendationsAboutTarget(friendId, pagination, userId);
     }
 }
