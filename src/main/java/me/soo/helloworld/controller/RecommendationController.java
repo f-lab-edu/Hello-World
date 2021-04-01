@@ -44,7 +44,8 @@ public class RecommendationController {
     @LoginRequired
     @GetMapping("/about/{targetId}")
     public List<Recommendations> getRecommendationsAboutTarget(@PathVariable("targetId") String targetId,
-                                                               @RequestParam(required = false) Integer cursor) {
-        return recommendationService.getRecommendationsAboutTarget(targetId, Pagination.create(cursor, pageSize));
+                                                               @RequestParam(required = false) Integer cursor,
+                                                               @CurrentUser String userId) {
+        return recommendationService.getRecommendationsAboutTarget(targetId, Pagination.create(cursor, pageSize), userId);
     }
 }

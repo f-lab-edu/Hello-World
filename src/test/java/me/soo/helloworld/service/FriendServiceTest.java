@@ -54,7 +54,7 @@ public class FriendServiceTest {
            friendService.sendFriendRequest(userId, userId);
         });
 
-        verify(userService, never()).isUserIdExist(targetId);
+        verify(userService, never()).isUserActivated(targetId);
         verify(blockUserService, never()).isUserBlocked(userId, targetId);
         verify(friendMapper, never()).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).sendFriendRequest(userId, targetId);
@@ -64,13 +64,13 @@ public class FriendServiceTest {
     @Test
     @DisplayName("존재하지 않는 사용자에게 친구 추가 요청을 보낼 경우 InvalidRequestException 이 발생하며 요청에 실패합니다.")
     public void sendFriendRequestToNonExistentUserFail() {
-        when(userService.isUserIdExist(targetId)).thenReturn(false);
+        when(userService.isUserActivated(targetId)).thenReturn(false);
 
         assertThrows(InvalidRequestException.class, () -> {
             friendService.sendFriendRequest(userId, targetId);
         });
 
-        verify(userService, times(1)).isUserIdExist(targetId);
+        verify(userService, times(1)).isUserActivated(targetId);
         verify(blockUserService, never()).isUserBlocked(userId, targetId);
         verify(friendMapper, never()).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).sendFriendRequest(userId, targetId);
@@ -80,14 +80,14 @@ public class FriendServiceTest {
     @Test
     @DisplayName("차단한 사용자에게 친구 추가 요청을 보낼 경우 InvalidRequestException 이 발생하며 요청에 실패합니다.")
     public void sendFriendRequestToBlockedUserFail() {
-        when(userService.isUserIdExist(targetId)).thenReturn(true);
+        when(userService.isUserActivated(targetId)).thenReturn(true);
         when(blockUserService.isUserBlocked(userId, targetId)).thenReturn(true);
 
         assertThrows(InvalidRequestException.class, () -> {
             friendService.sendFriendRequest(userId, targetId);
         });
 
-        verify(userService, times(1)).isUserIdExist(targetId);
+        verify(userService, times(1)).isUserActivated(targetId);
         verify(blockUserService,times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, never()).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).sendFriendRequest(userId, targetId);
@@ -97,7 +97,7 @@ public class FriendServiceTest {
     @Test
     @DisplayName("이미 친구 추가 요청을 보낸 사용자에게 다시 친구 추가 요청을 보낼 경우 DuplicateRequestException 이 발생하며 요청에 실패합니다.")
     public void sendFriendRequestWithDuplicateFriendRequestFail() {
-        when(userService.isUserIdExist(targetId)).thenReturn(true);
+        when(userService.isUserActivated(targetId)).thenReturn(true);
         when(blockUserService.isUserBlocked(userId, targetId)).thenReturn(false);
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(FRIEND_REQUESTED);
 
@@ -105,7 +105,7 @@ public class FriendServiceTest {
             friendService.sendFriendRequest(userId, targetId);
         });
 
-        verify(userService, times(1)).isUserIdExist(targetId);
+        verify(userService, times(1)).isUserActivated(targetId);
         verify(blockUserService,times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).sendFriendRequest(userId, targetId);
@@ -115,7 +115,7 @@ public class FriendServiceTest {
     @Test
     @DisplayName("한 사용자로부터 받은 친구 추가 요청을 수락하지 않은 상태에서 해당 사용자에게 다시 친구 추가 요청을 보내면 DuplicateRequestException 이 발생하며 요청에 실패합니다.")
     public void sendFriendRequestToWhomAlreadySentMeRequestFail() {
-        when(userService.isUserIdExist(targetId)).thenReturn(true);
+        when(userService.isUserActivated(targetId)).thenReturn(true);
         when(blockUserService.isUserBlocked(userId, targetId)).thenReturn(false);
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(FRIEND_REQUEST_RECEIVED);
 
@@ -123,7 +123,7 @@ public class FriendServiceTest {
             friendService.sendFriendRequest(userId, targetId);
         });
 
-        verify(userService, times(1)).isUserIdExist(targetId);
+        verify(userService, times(1)).isUserActivated(targetId);
         verify(blockUserService,times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).sendFriendRequest(userId, targetId);
@@ -133,7 +133,7 @@ public class FriendServiceTest {
     @Test
     @DisplayName("이미 친구 추가 되어 있는 사용자에게 다시 친구 추가 요청을 보내면 DuplicateRequestException 이 발생하며 요청에 실패합니다.")
     public void sendFriendRequestToAlreadyFriendUserFail() {
-        when(userService.isUserIdExist(targetId)).thenReturn(true);
+        when(userService.isUserActivated(targetId)).thenReturn(true);
         when(blockUserService.isUserBlocked(userId, targetId)).thenReturn(false);
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(FRIEND);
 
@@ -141,7 +141,7 @@ public class FriendServiceTest {
             friendService.sendFriendRequest(userId, targetId);
         });
 
-        verify(userService, times(1)).isUserIdExist(targetId);
+        verify(userService, times(1)).isUserActivated(targetId);
         verify(blockUserService,times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, never()).sendFriendRequest(userId, targetId);
@@ -151,13 +151,13 @@ public class FriendServiceTest {
     @Test
     @DisplayName("다른 사용자에게 중복된 친구 요청을 보내거나 잘못된 사용자에게 친구요청을 보내는 경우가 아니면 친구 요청을 보내는데 성공합니다.")
     public void sendFriendRequestToValidUserSuccess() {
-        when(userService.isUserIdExist(targetId)).thenReturn(true);
+        when(userService.isUserActivated(targetId)).thenReturn(true);
         when(blockUserService.isUserBlocked(userId, targetId)).thenReturn(false);
         when(friendMapper.getFriendStatus(userId, targetId)).thenReturn(NONE);
 
         friendService.sendFriendRequest(userId, targetId);
 
-        verify(userService, times(1)).isUserIdExist(targetId);
+        verify(userService, times(1)).isUserActivated(targetId);
         verify(blockUserService,times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
         verify(friendMapper, times(1)).sendFriendRequest(userId, targetId);

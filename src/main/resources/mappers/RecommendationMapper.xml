@@ -40,6 +40,7 @@
         <if test="pagination.cursor != null">
             AND id <![CDATA[<]]> #{pagination.cursor}
         </if>
+            AND NOT EXISTS (SELECT blockId FROM block WHERE blockId = #{userId} AND blockedBy = #{targetId})
         ORDER BY id DESC
         LIMIT #{pagination.pageSize}
     </select>
