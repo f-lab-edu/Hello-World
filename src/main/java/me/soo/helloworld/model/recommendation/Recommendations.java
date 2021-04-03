@@ -1,6 +1,5 @@
 package me.soo.helloworld.model.recommendation;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Value;
 
 import java.time.LocalDate;

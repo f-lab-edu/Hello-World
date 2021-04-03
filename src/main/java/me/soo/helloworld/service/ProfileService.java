@@ -1,8 +1,13 @@
 package me.soo.helloworld.service;
 
 import lombok.RequiredArgsConstructor;
+import me.soo.helloworld.enumeration.LanguageLevel;
+import me.soo.helloworld.enumeration.LanguageStatus;
 import me.soo.helloworld.exception.InvalidRequestException;
+import me.soo.helloworld.exception.language.InvalidLanguageLevelException;
 import me.soo.helloworld.mapper.ProfileMapper;
+import me.soo.helloworld.model.condition.SearchConditions;
+import me.soo.helloworld.model.condition.SearchConditionsRequest;
 import me.soo.helloworld.model.language.Language;
 import me.soo.helloworld.model.language.LanguageDataForProfile;
 import me.soo.helloworld.model.user.UserProfile;
@@ -10,6 +15,7 @@ import me.soo.helloworld.model.user.UserDataOnProfile;
 import me.soo.helloworld.model.recommendation.RecommendationForProfile;
 import me.soo.helloworld.model.user.UserProfiles;
 import me.soo.helloworld.util.Pagination;
+import me.soo.helloworld.util.validator.LanguageLevelValidator;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
@@ -50,6 +56,15 @@ public class ProfileService {
     })
     public List<UserProfiles> getUserProfiles(String userId, Pagination pagination) {
         return profileMapper.getUserProfiles(userId, pagination);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserProfiles> searchUserProfiles(SearchConditionsRequest conditionsRequest, String userId, Pagination pagination) {
+        List<LanguageLevel> learningLangLevels = conditionsRequest.getLearningLanguageLevel();
+        LanguageLevelValidator.validateLevel(learningLangLevels, LanguageStatus.LEARNING);
+
+        SearchConditions conditions = SearchConditions.create(conditionsRequest, userId, pagination);
+        return profileMapper.searchUserProfiles(conditions);
     }
 
     private String matchCountry(Integer id) {

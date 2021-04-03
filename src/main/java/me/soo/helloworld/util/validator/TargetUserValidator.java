@@ -1,9 +1,9 @@
-package me.soo.helloworld.util;
+package me.soo.helloworld.util.validator;
 
 import me.soo.helloworld.exception.InvalidRequestException;
 import org.apache.commons.lang3.StringUtils;
 
-public class TargetValidator {
+public class TargetUserValidator {
 
     public static void targetNotSelf(String userId, String targetId) {
         if (StringUtils.equals(userId, targetId)) {
