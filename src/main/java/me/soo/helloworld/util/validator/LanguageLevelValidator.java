@@ -1,11 +1,14 @@
 package me.soo.helloworld.util.validator;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
 import me.soo.helloworld.exception.language.InvalidLanguageLevelException;
 
 import java.util.List;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LanguageLevelValidator {
 
     /*

@@ -1,4 +1,4 @@
-package me.soo.helloworld.service;
+package me.soo.helloworld.service.profile;
 
 import lombok.extern.slf4j.Slf4j;
 import me.soo.helloworld.enumeration.LanguageLevel;
@@ -8,6 +8,9 @@ import me.soo.helloworld.mapper.ProfileMapper;
 import me.soo.helloworld.model.language.LanguageDataForProfile;
 import me.soo.helloworld.model.recommendation.RecommendationForProfile;
 import me.soo.helloworld.model.user.UserDataOnProfile;
+import me.soo.helloworld.service.FetchNameService;
+import me.soo.helloworld.service.ProfileService;
+import me.soo.helloworld.service.RecommendationService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

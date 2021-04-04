@@ -1,5 +1,6 @@
 package me.soo.helloworld.model.condition;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.annotation.AgeRange;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @Getter
+@Builder
 @AgeRange
 @RequiredArgsConstructor
 public class SearchConditionsRequest {
@@ -35,12 +37,12 @@ public class SearchConditionsRequest {
     @Nullable
     private final Integer livingTown;
 
-    @NotNull(message = "검색 시 상대방의 구사언어 정보는 필수로 입력하셔야 합니다.")
+    @NotNull(message = "사용자 검색 시 상대방의 구사언어 정보는 필수로 입력하셔야 합니다.")
     private final Integer speakLanguage;
 
-    @NotNull(message = "검색 시 상대방이 학습하고 있는 언어 정보는 필수로 입력하셔야 합니다.")
+    @NotNull(message = "사용자 검색 시 상대방이 학습하고 있는 언어 정보는 필수로 입력하셔야 합니다.")
     private final Integer learningLanguage;
 
-    @NotNull(message = "검색 시 상대방이 학습하고 있는 언어에 대한 언어 레벨정보는 필수로 입력하셔야 합니다.")
+    @NotNull(message = "사용자 검색 시 상대방이 학습하고 있는 언어에 대한 레벨정보는 필수로 입력하셔야 합니다.")
     private final List<LanguageLevel> learningLanguageLevel;
 }

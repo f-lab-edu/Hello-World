@@ -26,7 +26,7 @@ public class AgeRangeValidator implements ConstraintValidator<AgeRange, SearchCo
         } else {
             return MIN_AGE_RANGE <= condition.getMinAge()
                     && condition.getMinAge() <= condition.getMaxAge()
-                    && condition.getMaxAge()< MAX_AGE_RANGE;
+                    && condition.getMaxAge() <= MAX_AGE_RANGE;
         }
     }
 }

@@ -1,8 +1,11 @@
 package me.soo.helloworld.util.validator;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import me.soo.helloworld.exception.InvalidRequestException;
 import org.apache.commons.lang3.StringUtils;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TargetUserValidator {
 
     public static void targetNotSelf(String userId, String targetId) {
