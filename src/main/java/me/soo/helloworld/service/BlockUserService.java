@@ -46,6 +46,7 @@ public class BlockUserService {
         }
     }
 
+    @Transactional(readOnly = true)
     public boolean isUserBlocked(String userId, String targetId) {
         return blockUserMapper.isUserBlocked(userId, targetId);
     }
