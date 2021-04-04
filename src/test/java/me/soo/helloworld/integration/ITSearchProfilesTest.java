@@ -1,4 +1,4 @@
-package me.soo.helloworld.service.profile;
+package me.soo.helloworld.integration;
 
 import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
