@@ -3,7 +3,7 @@ package me.soo.helloworld.model.alarm;
 import lombok.Value;
 import me.soo.helloworld.enumeration.AlarmTypes;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Value
 public class Alarm {
@@ -18,5 +18,5 @@ public class Alarm {
 
     String hasRead;
 
-    Date createdAt;
+    LocalDate createdAt;
 }
