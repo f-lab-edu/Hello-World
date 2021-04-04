@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static me.soo.helloworld.util.CacheNames.*;
@@ -60,7 +61,7 @@ public class ProfileService {
 
     @Transactional(readOnly = true)
     public List<UserProfiles> searchUserProfiles(SearchConditionsRequest conditionsRequest, String userId, Pagination pagination) {
-        List<LanguageLevel> learningLangLevels = conditionsRequest.getLearningLanguageLevel();
+        Set<LanguageLevel> learningLangLevels = conditionsRequest.getLearningLanguageLevel();
         LanguageLevelValidator.validateLevel(learningLangLevels, LanguageStatus.LEARNING);
 
         SearchConditions conditions = SearchConditions.create(conditionsRequest, userId, pagination);

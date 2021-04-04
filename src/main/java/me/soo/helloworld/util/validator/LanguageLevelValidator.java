@@ -6,6 +6,7 @@ import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
 import me.soo.helloworld.exception.language.InvalidLanguageLevelException;
 
+import java.util.Collection;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -25,7 +26,7 @@ public class LanguageLevelValidator {
         - 따라서 학습 중인 언어에 대한 언어 레벨 검색 시 레벨 조건에 Native 가 들어갈 수 없습니다.
         - 이외에는 모든 레벨을 자유롭게 선택 가능합니다.
  */
-    public static void validateLevel(List<LanguageLevel> levels, LanguageStatus status) {
+    public static void validateLevel(Collection<LanguageLevel> levels, LanguageStatus status) {
         boolean isLevelValid;
 
         switch (status) {

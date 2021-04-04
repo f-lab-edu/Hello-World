@@ -12,7 +12,8 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 import static me.soo.helloworld.TestLanguages.ENGLISH;
@@ -41,7 +42,7 @@ public class SearchProfilesValidatorTest {
 
     Validator validator;
 
-    List<LanguageLevel> levels;
+    Set<LanguageLevel> levels;
 
     /*
         1. validator 필수 입력조건 테스트
@@ -116,7 +117,7 @@ public class SearchProfilesValidatorTest {
 
     @BeforeEach
     public void insertLanguageLevels() {
-        levels = new ArrayList<>();
+        levels = new HashSet<>();
         levels.add(LanguageLevel.BEGINNER);
         levels.add(LanguageLevel.ELEMENTARY);
         levels.add(LanguageLevel.INTERMEDIATE);

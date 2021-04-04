@@ -10,6 +10,7 @@ import org.springframework.lang.Nullable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Builder
@@ -44,5 +45,5 @@ public class SearchConditionsRequest {
     private final Integer learningLanguage;
 
     @NotNull(message = "사용자 검색 시 상대방이 학습하고 있는 언어에 대한 레벨정보는 필수로 입력하셔야 합니다.")
-    private final List<LanguageLevel> learningLanguageLevel;
+    private final Set<LanguageLevel> learningLanguageLevel;
 }

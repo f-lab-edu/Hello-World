@@ -22,15 +22,17 @@ public class TestCountries {
 
     public final static int MEXICO = 10;
 
-    public final static int SOUTH_KOREA = 11;
+    public final static int MOROCCO = 11;
 
-    public final static int SPAIN = 12;
+    public final static int SOUTH_KOREA = 12;
 
-    public final static int SWEDEN = 13;
+    public final static int SPAIN = 13;
 
-    public final static int UNITED_KINGDOM = 14;
+    public final static int SWEDEN = 14;
 
-    public final static int UNITED_STATES = 15;
+    public final static int UNITED_KINGDOM = 15;
 
-    public final static int OTHERS = 16;
+    public final static int UNITED_STATES = 16;
+
+    public final static int OTHERS = 17;
 }

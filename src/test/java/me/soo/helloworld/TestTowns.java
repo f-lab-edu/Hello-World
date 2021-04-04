@@ -14,11 +14,13 @@ public class TestTowns {
 
     public final static int YORK = 6;
 
-    public final static int SEOUL = 7;
+    public final static int UK_OTHERS = 7;
 
-    public final static int BUSAN = 8;
+    public final static int SEOUL = 8;
 
-    public final static int GWANGJU = 9;
+    public final static int BUSAN = 9;
 
-    public final static int OTHERS = 10;
+    public final static int GWANGJU = 10;
+
+
 }

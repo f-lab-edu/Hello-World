@@ -23,7 +23,8 @@ public class User {
     @NotBlank
     private final String email;
 
-    @NotBlank(message = "성별을 입력해주세요.")
+    @NotBlank(message = "성별을 입력해주세요. 'M'(Male), 'F'(Female), 'O'(Other) 중 하나만 입력이 가능합니다.")
+    @Pattern(regexp = "^[MFO]$")
     private final String gender;
 
     @NotNull(message = "생년월일을 입력해주세요.")
