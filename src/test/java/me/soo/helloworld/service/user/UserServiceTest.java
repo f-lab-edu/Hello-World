@@ -131,7 +131,7 @@ class UserServiceTest {
     @DisplayName("올바른 아이디와 이메일로 비밀번호 찾기를 요청한 경우 임시 비밀번호가 이메일로 전송되고, DB 정보에도 업데이트 됩니다.")
     public void findUserPasswordSuccess() {
         UserFindPasswordRequest findPasswordRequest = new UserFindPasswordRequest(testUser.getUserId(), testUser.getEmail());
-        when(userMapper.isEmailValid(findPasswordRequest)).thenReturn(true);
+        when(userMapper.isUserEmailExist(findPasswordRequest)).thenReturn(true);
 
         String temporaryPassword = UUID.randomUUID().toString();
         EmailBase email = FindPasswordEmail.create(findPasswordRequest.getEmail(), temporaryPassword);
@@ -148,25 +148,25 @@ class UserServiceTest {
     @DisplayName("비밀번호 찾기를 위해 요청받은 사용자 ID가 존재하지 않는 경우 InvalidUserInfoException 이 발생합니다.")
     public void findUserPasswordFailWithWrongID() {
         UserFindPasswordRequest findPasswordRequest = new UserFindPasswordRequest("HahaWrongId", testUser.getEmail());
-        when(userMapper.isEmailValid(findPasswordRequest)).thenReturn(false);
+        when(userMapper.isUserEmailExist(findPasswordRequest)).thenReturn(false);
 
         assertThrows(InvalidUserInfoException.class, () -> {
             userService.findUserPassword(findPasswordRequest);
         });
 
-        verify(userMapper, times(1)).isEmailValid(findPasswordRequest);
+        verify(userMapper, times(1)).isUserEmailExist(findPasswordRequest);
     }
 
     @Test
     @DisplayName("비밀번호 찾기를 위해 요청받은 사용자의 이메일이 DB에 있는 정보와 일치하지 않는 경우 InvalidUserInfoException 이 발생합니다.")
     public void findUserPasswordFailWithWrongEmail() {
         UserFindPasswordRequest findPasswordRequest = new UserFindPasswordRequest(testUser.getUserId(), "some@wrong.email");
-        when(userMapper.isEmailValid(findPasswordRequest)).thenReturn(false);
+        when(userMapper.isUserEmailExist(findPasswordRequest)).thenReturn(false);
 
         assertThrows(InvalidUserInfoException.class, () -> {
             userService.findUserPassword(findPasswordRequest);
         });
 
-        verify(userMapper, times(1)).isEmailValid(findPasswordRequest);
+        verify(userMapper, times(1)).isUserEmailExist(findPasswordRequest);
     }
 }

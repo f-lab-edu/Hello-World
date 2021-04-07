@@ -14,6 +14,7 @@ import static me.soo.helloworld.TestTowns.NEWCASTLE;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserSignUpValidationTest {
+
     private Validator validator;
 
     private User getUserWithVariousName(String name) {

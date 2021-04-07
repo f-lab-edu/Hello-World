@@ -39,7 +39,7 @@ public class AlarmService {
         String hasRead = alarmMapper.getHasReadStatus(alarmId, userId)
                 .orElseThrow(() -> new NoSuchAlarmException("존재하지 않는 알람에 대한 정보는 읽어올 수 없습니다."));
 
-        if (hasRead.equals("N")) {
+        if ("N".equals(hasRead)) {
             alarmMapper.updateToRead(alarmId, userId);
         }
     }
