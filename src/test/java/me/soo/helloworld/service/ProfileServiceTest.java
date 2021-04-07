@@ -6,13 +6,17 @@ import me.soo.helloworld.enumeration.LanguageStatus;
 import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.ProfileMapper;
 import me.soo.helloworld.model.language.LanguageDataForProfile;
-import me.soo.helloworld.model.recommendation.RecommendationDataForProfile;
+import me.soo.helloworld.model.recommendation.RecommendationForProfile;
 import me.soo.helloworld.model.user.UserDataOnProfile;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static me.soo.helloworld.TestCountries.SOUTH_KOREA;
@@ -41,7 +45,7 @@ public class ProfileServiceTest {
 
     UserDataOnProfile profileData;
 
-    List<RecommendationDataForProfile> recommendations;
+    List<RecommendationForProfile> recommendations;
 
     @BeforeEach
     public void createRecommendations() {
@@ -50,8 +54,8 @@ public class ProfileServiceTest {
         String content = "He is absolutely awesome to be friends with for language exchange.";
 
         recommendations = new ArrayList<>();
-        recommendations.add(new RecommendationDataForProfile(firstFriend, content));
-        recommendations.add(new RecommendationDataForProfile(secondFriend, content));
+        recommendations.add(new RecommendationForProfile(firstFriend, content, LocalDate.now()));
+        recommendations.add(new RecommendationForProfile(secondFriend, content, LocalDate.now()));
     }
 
     @BeforeEach

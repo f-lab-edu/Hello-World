@@ -23,11 +23,25 @@
         WHERE recomTo = #{to} AND recomFrom = #{from}
     </update>
 
-    <select id="getRecommendationsForProfile" parameterType="String" resultType="me.soo.helloworld.model.recommendation.RecommendationDataForProfile">
+    <select id="getRecommendationsForProfile" parameterType="String"
+            resultType="me.soo.helloworld.model.recommendation.RecommendationForProfile">
 
-        SELECT recomFrom AS 'from', content FROM recommendations
+        SELECT recomFrom AS 'from', content, writtenAt FROM recommendations
         WHERE recomTo = #{userId}
         ORDER BY id DESC
-        LIMIT 10;
+        LIMIT 5;
+    </select>
+
+    <select id="getRecommendationsAboutTarget" parameterType="map"
+            resultType="me.soo.helloworld.model.recommendation.Recommendations">
+
+        SELECT id, recomFrom AS 'from', content, writtenAt FROM recommendations
+        WHERE recomTo = #{targetId}
+        <if test="pagination.cursor != null">
+            AND id <![CDATA[<]]> #{pagination.cursor}
+        </if>
+            AND NOT EXISTS (SELECT blockId FROM block WHERE blockId = #{userId} AND blockedBy = #{targetId})
+        ORDER BY id DESC
+        LIMIT #{pagination.pageSize}
     </select>
 </mapper>

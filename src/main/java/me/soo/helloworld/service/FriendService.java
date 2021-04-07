@@ -32,7 +32,7 @@ public class FriendService {
     @Transactional
     public void sendFriendRequest(String userId, String targetId) {
         TargetValidator.targetNotSelf(userId, targetId);
-        TargetValidator.targetExistence(userService.isUserIdExist(targetId));
+        TargetValidator.targetExistence(userService.isUserActivated(targetId));
 
         if (blockUserService.isUserBlocked(userId, targetId)) {
             throw new InvalidRequestException("차단되어 있는 사용자에게 친구 요청을 보낼 수 없습니다.");
@@ -91,7 +91,7 @@ public class FriendService {
 
     public int getFriendshipDuration(String userId, String targetId) {
         return friendMapper.getFriendshipDuration(userId, targetId, FRIEND)
-                            .orElseThrow(() -> new InvalidRequestException("친구가 아닌 대상에 대해서는 해당 요청을 처리하는 것이 불가능합니다."));
+                            .orElseThrow(() -> new InvalidRequestException("자기 자신이나 친구가 아닌 대상에 대해서는 해당 요청을 처리하는 것이 불가능합니다."));
     }
 
     private void validateFriendStatus(FriendStatus currentStatus, FriendStatus targetStatus) {

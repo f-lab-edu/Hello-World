@@ -57,4 +57,8 @@
         SELECT EXISTS(SELECT email FROM users WHERE userId = #{userId} AND email = #{email} AND isDeactivated = 'N')
     </select>
 
+    <select id="isUserActivated" parameterType="String" resultType="boolean">
+        SELECT EXISTS (SELECT userId FROM users WHERE userId = #{userId} AND isDeactivated = 'N')
+    </select>
+
 </mapper>

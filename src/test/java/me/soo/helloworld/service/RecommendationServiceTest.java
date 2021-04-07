@@ -6,6 +6,8 @@ import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.RecommendationMapper;
 import me.soo.helloworld.model.recommendation.Recommendation;
 import me.soo.helloworld.model.recommendation.RecommendationRequest;
+import me.soo.helloworld.model.recommendation.Recommendations;
+import me.soo.helloworld.util.Pagination;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,8 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.validation.*;
 
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,9 +47,18 @@ public class RecommendationServiceTest {
     @Mock
     AlarmService alarmService;
 
+    @Mock
+    UserService userService;
+
     String recommendationContent;
 
     String modifiedRecommendationContent;
+
+    Pagination pagination;
+
+    List<Recommendations> emptyRecommendations;
+
+    List<Recommendations> properRecommendations;
 
     @BeforeEach
     public void writeRecommendationContent() {
@@ -66,6 +77,36 @@ public class RecommendationServiceTest {
         modifiedRecommendationContent = "I am just modified from the previous content!";
     }
 
+    @BeforeEach
+    public void createPagination() {
+        int cursor = 6;
+        int pageSize = 5;
+        pagination = Pagination.create(cursor, pageSize);
+    }
+
+    @BeforeEach
+    public void returnEmptyRecommendations() {
+        emptyRecommendations = Collections.emptyList();
+    }
+
+    @BeforeEach
+    public void returnProperRecommendations() {
+        String content = "Hello World";
+        LocalDate writtenAt = LocalDate.now();
+        String user1 = "user1";
+        String user2 = "user2";
+        String user3 = "user3";
+        String user4 = "user4";
+        String user5 = "user5";
+
+        properRecommendations = new ArrayList<>();
+        properRecommendations.add(new Recommendations(1, user1, content, writtenAt));
+        properRecommendations.add(new Recommendations(1, user2, content, writtenAt));
+        properRecommendations.add(new Recommendations(1, user3, content, writtenAt));
+        properRecommendations.add(new Recommendations(1, user4, content, writtenAt));
+        properRecommendations.add(new Recommendations(1, user5, content, writtenAt));
+    }
+    
     /*
         테스트 for 추천글 등록 (leaveRecommendation)
 
@@ -232,4 +273,52 @@ public class RecommendationServiceTest {
         verify(recommendationMapper, times(1)).updateRecommendation(friendId, userId, modifiedRecommendationContent);
     }
 
+    @Test
+    @DisplayName("존재하지 않는 사용자에 대해 추천글 보기 요청이 들어오면 InvalidRequestException 이 발생하며 요청 처리에 실패합니다.")
+    public void getRecommendationsAboutTargetFailOnNotExistingUser() {
+        when(userService.isUserActivated(friendId)).thenReturn(false);
+
+        assertThrows(InvalidRequestException.class, () -> {
+            recommendationService.getRecommendationsAboutTarget(friendId, pagination, userId);
+        });
+
+        verify(userService, times(1)).isUserActivated(friendId);
+        verify(recommendationMapper, never()).getRecommendationsAboutTarget(friendId, pagination, userId);
+    }
+
+    @Test
+    @DisplayName("조회하려는 사용자가 존재하면 요청 처리에 성공하지만 등록된 추천글이 없는 경우에는 빈 리스트를 리턴합니다.")
+    public void getRecommendationsAboutTargetSuccessWithEmptyList() {
+        when(userService.isUserActivated(friendId)).thenReturn(true);
+        when(recommendationMapper.getRecommendationsAboutTarget(friendId, pagination, userId)).thenReturn(emptyRecommendations);
+
+        recommendationService.getRecommendationsAboutTarget(friendId, pagination, userId);
+
+        verify(userService, times(1)).isUserActivated(friendId);
+        verify(recommendationMapper, times(1)).getRecommendationsAboutTarget(friendId, pagination, userId);
+    }
+
+    @Test
+    @DisplayName("조회하려는 사용자가 존재하지만 해당 사용자의 차단 목록에 등록된 경우 빈 리스트를 리턴합니다.")
+    public void getRecommendationsAboutTargetBlockingCurrentUserSuccessButWithEmptyList() {
+        when(userService.isUserActivated(friendId)).thenReturn(true);
+        when(recommendationMapper.getRecommendationsAboutTarget(friendId, pagination, userId)).thenReturn(emptyRecommendations);
+
+        recommendationService.getRecommendationsAboutTarget(friendId, pagination, userId);
+
+        verify(userService, times(1)).isUserActivated(friendId);
+        verify(recommendationMapper, times(1)).getRecommendationsAboutTarget(friendId, pagination, userId);
+    }
+
+    @Test
+    @DisplayName("조회하려는 사용자가 존재하면 요청 처리에 성공하며 정해진 pagination 값에 따라 등록된 추천글 들을 리턴합니다.")
+    public void getRecommendationsAboutTargetSuccessWithRecommendations() {
+        when(userService.isUserActivated(friendId)).thenReturn(true);
+        when(recommendationMapper.getRecommendationsAboutTarget(friendId, pagination, userId)).thenReturn(properRecommendations);
+
+        recommendationService.getRecommendationsAboutTarget(friendId, pagination, userId);
+
+        verify(userService, times(1)).isUserActivated(friendId);
+        verify(recommendationMapper, times(1)).getRecommendationsAboutTarget(friendId, pagination, userId);
+    }
 }

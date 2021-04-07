@@ -26,7 +26,7 @@ public class BlockUserService {
 
     public void blockUser(String userId, String targetId) {
         TargetValidator.targetNotSelf(userId, targetId);
-        TargetValidator.targetExistence(userService.isUserIdExist(targetId));
+        TargetValidator.targetExistence(userService.isUserActivated(targetId));
 
         if (isUserBlocked(userId, targetId)) {
             throw new DuplicateRequestException("이미 차단된 사용자를 다시 차단할 수 없습니다.");
@@ -46,6 +46,7 @@ public class BlockUserService {
         }
     }
 
+    @Transactional(readOnly = true)
     public boolean isUserBlocked(String userId, String targetId) {
         return blockUserMapper.isUserBlocked(userId, targetId);
     }
