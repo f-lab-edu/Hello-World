@@ -38,6 +38,7 @@
     </resultMap>
 
     <select id="getUserProfileData" resultMap="userProfileMap">
+
         SELECT
             u.userId AS userId,
             u.gender AS gender,
@@ -76,8 +77,10 @@
     </resultMap>
 
     <select id="getUserProfiles" parameterType="map"
-            resultMap="getUserProfilesMap">        SELECT id, userId, aboutMe,
-        profileImageName, profileImagePath
+            resultMap="getUserProfilesMap">
+
+        SELECT id, userId, aboutMe,
+            profileImageName, profileImagePath
         FROM users
         WHERE
         <if test="pagination.cursor != null">
@@ -87,7 +90,6 @@
         AND userId NOT IN (SELECT blockedBy FROM block WHERE blockId = #{userId})
         ORDER BY id DESC
         LIMIT #{pagination.pageSize}
-
     </select>
     
     <select id="getTotalRecommendationsNums" parameterType="String" resultType="int">
