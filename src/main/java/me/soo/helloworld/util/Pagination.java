@@ -14,9 +14,9 @@ public class Pagination {
     public static Pagination create(Integer cursor, int size) {
 
         return Pagination.builder()
-                                .cursor(cursor)
-                                .pageSize(size)
-                                .build();
+                        .cursor(cursor)
+                        .pageSize(size)
+                        .build();
     }
 
     public int calculateOffset(int pageLimit, int pageNumber) {

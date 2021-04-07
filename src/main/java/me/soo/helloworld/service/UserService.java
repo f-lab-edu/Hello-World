@@ -15,8 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
-import static me.soo.helloworld.util.CacheNames.REDIS_CACHE_MANAGER;
-import static me.soo.helloworld.util.CacheNames.USER_PROFILE;
+import static me.soo.helloworld.util.CacheNames.*;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +29,7 @@ public class UserService {
 
     private final EmailService emailService;
 
+    @CacheEvict(key = MAIN_PAGE_KEY,value = MAIN_PAGE_VALUE, cacheManager = REDIS_CACHE_MANAGER)
     public void userSignUp(User user) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         userMapper.insertUser(user.buildUserWithEncodedPassword(encodedPassword));

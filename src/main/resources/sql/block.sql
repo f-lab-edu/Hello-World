@@ -1,10 +1,10 @@
 create table block
 (
-    id      bigint auto_increment
+    id        bigint auto_increment
         primary key,
-    userId  varchar(20) not null,
-    blockId varchar(20) not null
+    blockId   varchar(20) charset latin1 not null,
+    blockedBy varchar(20) charset latin1 not null
 );
 
-create index table_name_userId_blockId_index
-    on block (userId);
+create index block_userId_blockId_index
+    on block (blockId, blockedBy);

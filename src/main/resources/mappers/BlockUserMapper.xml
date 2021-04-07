@@ -8,11 +8,11 @@
     </insert>
 
     <select id="isUserBlocked" parameterType="String" resultType="boolean">
-        SELECT EXISTS (SELECT blockId FROM block WHERE blockedBy = #{userId} AND blockId = #{targetId})
+        SELECT EXISTS (SELECT blockId FROM block WHERE blockId = #{targetId} AND blockedBy = #{userId})
     </select>
 
     <delete id="deleteBlockUser" parameterType="String">
-        DELETE FROM block WHERE blockedBy = #{userId} AND blockId = #{targetId}
+        DELETE FROM block WHERE blockId = #{targetId} AND blockedBy = #{userId}
     </delete>
 
     <select id="getBlockUserList" parameterType="me.soo.helloworld.model.blockuser.BlockUserListRequest"
