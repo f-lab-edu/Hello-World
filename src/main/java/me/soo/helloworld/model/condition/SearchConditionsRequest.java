@@ -7,9 +7,9 @@ import me.soo.helloworld.annotation.AgeRange;
 import me.soo.helloworld.enumeration.LanguageLevel;
 import org.springframework.lang.Nullable;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -38,11 +38,13 @@ public class SearchConditionsRequest {
     @Nullable
     private final Integer livingTown;
 
-    @NotNull(message = "사용자 검색 시 상대방의 구사언어 정보는 필수로 입력하셔야 합니다.")
-    private final Integer speakLanguage;
+    @NotNull
+    @Min(message = "상대방의 구사 언어 이름을 올바르게 입력해주세요.", value = 1)
+    private final int speakLanguage;
 
-    @NotNull(message = "사용자 검색 시 상대방이 학습하고 있는 언어 정보는 필수로 입력하셔야 합니다.")
-    private final Integer learningLanguage;
+    @NotNull
+    @Min(message = "상대방의 학습 언어 이름을 올바르게 입력해주세요.", value = 1)
+    private final int learningLanguage;
 
     @NotNull(message = "사용자 검색 시 상대방이 학습하고 있는 언어에 대한 레벨정보는 필수로 입력하셔야 합니다.")
     private final Set<LanguageLevel> learningLanguageLevel;

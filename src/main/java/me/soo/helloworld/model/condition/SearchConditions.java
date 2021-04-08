@@ -4,8 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import me.soo.helloworld.util.Pagination;
 
-import static me.soo.helloworld.util.validator.AgeRangeValidator.MAX_AGE_RANGE;
-import static me.soo.helloworld.util.validator.AgeRangeValidator.MIN_AGE_RANGE;
+import static me.soo.helloworld.util.validator.AgeRangeValidator.MAX_AGE_BOUND;
+import static me.soo.helloworld.util.validator.AgeRangeValidator.MIN_AGE_BOUND;
 
 @Getter
 @Builder
@@ -27,8 +27,8 @@ public class SearchConditions {
                                 .conditions(conditionsRequest)
                                 .currentUser(userId)
                                 .pagination(pagination)
-                                .defaultMaxAge(MAX_AGE_RANGE)
-                                .defaultMinAge(MIN_AGE_RANGE)
+                                .defaultMaxAge(MAX_AGE_BOUND)
+                                .defaultMinAge(MIN_AGE_BOUND)
                                 .build();
     }
 }

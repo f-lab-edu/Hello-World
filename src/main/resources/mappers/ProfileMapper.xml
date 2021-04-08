@@ -88,7 +88,6 @@
         AND userId NOT IN (SELECT blockedBy FROM block WHERE blockId = #{userId})
         ORDER BY id DESC
         LIMIT #{pagination.pageSize}
-
     </select>
     
     <select id="getTotalRecommendationsNums" parameterType="String" resultType="int">

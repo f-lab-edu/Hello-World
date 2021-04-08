@@ -11,23 +11,21 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import static me.soo.helloworld.TestLanguages.ENGLISH;
 import static me.soo.helloworld.TestLanguages.KOREAN;
-import static me.soo.helloworld.util.validator.AgeRangeValidator.MAX_AGE_RANGE;
-import static me.soo.helloworld.util.validator.AgeRangeValidator.MIN_AGE_RANGE;
+import static me.soo.helloworld.util.validator.AgeRangeValidator.MAX_AGE_BOUND;
+import static me.soo.helloworld.util.validator.AgeRangeValidator.MIN_AGE_BOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SearchProfilesValidatorTest {
 
-    private final String noSpeakLangExceptionMessage = "사용자 검색 시 상대방의 구사언어 정보는 필수로 입력하셔야 합니다.";
+    private final String inappropriateSpeakLangExceptionMessage = "상대방의 구사 언어 이름을 올바르게 입력해주세요.";
 
-    private final String noLearningLangExceptionMessage = "사용자 검색 시 상대방이 학습하고 있는 언어 정보는 필수로 입력하셔야 합니다.";
+    private final String inappropriateLearningLangExceptionMessage = "상대방의 학습 언어 이름을 올바르게 입력해주세요.";
 
     private final String noLearningLangLevelsExceptionMessage = "사용자 검색 시 상대방이 학습하고 있는 언어에 대한 레벨정보는 필수로 입력하셔야 합니다.";
 
@@ -36,9 +34,9 @@ public class SearchProfilesValidatorTest {
     private final String inappropriateAgeRangeExceptionMessage = "나이를 검색조건으로 지정할 때, 최대나이는 100살 이상, 최소나이는 9살 이하로 내려갈 수 없으며, " +
             "최소 나이는 항상 최대 나이보다 작은 값을 유지해야 합니다.";
 
-    private final int belowMinAgeLimit = MIN_AGE_RANGE - 1;
+    private final int belowMinAgeLimit = MIN_AGE_BOUND - 1;
 
-    private final int aboveMaxAgeLimit = MAX_AGE_RANGE + 1;
+    private final int aboveMaxAgeLimit = MAX_AGE_BOUND + 1;
 
     Validator validator;
 
@@ -137,7 +135,7 @@ public class SearchProfilesValidatorTest {
         assertFalse(violations.isEmpty());
         assertEquals(violations.size(), 1);
         assertThat(violations).extracting(ConstraintViolation::getMessage)
-                .containsOnly(noSpeakLangExceptionMessage);
+                .containsOnly(inappropriateSpeakLangExceptionMessage);
     }
 
     @Test
@@ -153,7 +151,7 @@ public class SearchProfilesValidatorTest {
         assertFalse(violations.isEmpty());
         assertEquals(violations.size(), 1);
         assertThat(violations).extracting(ConstraintViolation::getMessage)
-                .containsOnly(noLearningLangExceptionMessage);
+                .containsOnly(inappropriateLearningLangExceptionMessage);
     }
 
     @Test
@@ -184,7 +182,7 @@ public class SearchProfilesValidatorTest {
         assertFalse(violations.isEmpty());
         assertEquals(violations.size(), 2);
         assertThat(violations).extracting(ConstraintViolation::getMessage)
-                .containsExactlyInAnyOrder(noSpeakLangExceptionMessage, noLearningLangExceptionMessage);
+                .containsExactlyInAnyOrder(inappropriateSpeakLangExceptionMessage, inappropriateLearningLangExceptionMessage);
     }
 
     @Test
@@ -199,7 +197,7 @@ public class SearchProfilesValidatorTest {
         assertFalse(violations.isEmpty());
         assertEquals(violations.size(), 2);
         assertThat(violations).extracting(ConstraintViolation::getMessage)
-                .containsExactlyInAnyOrder(noSpeakLangExceptionMessage, noLearningLangLevelsExceptionMessage);
+                .containsExactlyInAnyOrder(inappropriateSpeakLangExceptionMessage, noLearningLangLevelsExceptionMessage);
     }
 
     @Test
@@ -214,7 +212,7 @@ public class SearchProfilesValidatorTest {
         assertFalse(violations.isEmpty());
         assertEquals(violations.size(), 2);
         assertThat(violations).extracting(ConstraintViolation::getMessage)
-                .containsExactlyInAnyOrder(noLearningLangExceptionMessage, noLearningLangLevelsExceptionMessage);
+                .containsExactlyInAnyOrder(inappropriateLearningLangExceptionMessage, noLearningLangLevelsExceptionMessage);
     }
 
     @Test
@@ -222,8 +220,8 @@ public class SearchProfilesValidatorTest {
     public void searchUserProfilesFailWithoutAnyObligatoryConditionsSelected() {
         notNullRequestWithNoMandatoryConditionsSelected = SearchConditionsRequest.builder()
                 .gender("M")
-                .minAge(MIN_AGE_RANGE)
-                .maxAge(MAX_AGE_RANGE)
+                .minAge(MIN_AGE_BOUND)
+                .maxAge(MAX_AGE_BOUND)
                 .build();
 
         Set<ConstraintViolation<SearchConditionsRequest>> violations = validator.validate(notNullRequestWithNoMandatoryConditionsSelected);
@@ -231,7 +229,7 @@ public class SearchProfilesValidatorTest {
         assertFalse(violations.isEmpty());
         assertEquals(violations.size(), 3);
         assertThat(violations).extracting(ConstraintViolation::getMessage)
-                .containsExactlyInAnyOrder(noSpeakLangExceptionMessage, noLearningLangExceptionMessage, noLearningLangLevelsExceptionMessage);
+                .containsExactlyInAnyOrder(inappropriateSpeakLangExceptionMessage, inappropriateLearningLangExceptionMessage, noLearningLangLevelsExceptionMessage);
     }
 
     @Test
@@ -354,7 +352,7 @@ public class SearchProfilesValidatorTest {
     public void searchUnitProfilesSuccessWithMaxAgeAloneAtExactMaxAgeLimit() {
         onlyMaxAgeRequestWithinMaxAgeLimit = SearchConditionsRequest.builder()
                 .gender("M")
-                .maxAge(MAX_AGE_RANGE)
+                .maxAge(MAX_AGE_BOUND)
                 .speakLanguage(KOREAN)
                 .learningLanguage(ENGLISH)
                 .learningLanguageLevel(levels)
@@ -370,7 +368,7 @@ public class SearchProfilesValidatorTest {
     public void searchUnitProfilesSuccessWithMaxAgeAloneAtExactMinAgeLimit() {
         onlyMaxAgeRequestWithinMaxAgeLimit = SearchConditionsRequest.builder()
                 .gender("M")
-                .maxAge(MIN_AGE_RANGE)
+                .maxAge(MIN_AGE_BOUND)
                 .speakLanguage(KOREAN)
                 .learningLanguage(ENGLISH)
                 .learningLanguageLevel(levels)
@@ -424,7 +422,7 @@ public class SearchProfilesValidatorTest {
     public void searchUnitProfilesSuccessWithMinAgeAloneAtExactMaxAgeLimit() {
         onlyMinAgeRequestWithinMixAgeLimit = SearchConditionsRequest.builder()
                 .gender("M")
-                .maxAge(MAX_AGE_RANGE)
+                .maxAge(MAX_AGE_BOUND)
                 .speakLanguage(KOREAN)
                 .learningLanguage(ENGLISH)
                 .learningLanguageLevel(levels)
@@ -440,7 +438,7 @@ public class SearchProfilesValidatorTest {
     public void searchUnitProfilesSuccessWithMinAgeAloneAtExactMinAgeLimit() {
         onlyMinAgeRequestWithinMixAgeLimit = SearchConditionsRequest.builder()
                 .gender("M")
-                .maxAge(MIN_AGE_RANGE)
+                .maxAge(MIN_AGE_BOUND)
                 .speakLanguage(KOREAN)
                 .learningLanguage(ENGLISH)
                 .learningLanguageLevel(levels)
@@ -457,7 +455,7 @@ public class SearchProfilesValidatorTest {
         bothAgesRequestWithMinBelowMinAgeLimit = SearchConditionsRequest.builder()
                 .gender("M")
                 .minAge(belowMinAgeLimit)
-                .maxAge(MAX_AGE_RANGE)
+                .maxAge(MAX_AGE_BOUND)
                 .speakLanguage(KOREAN)
                 .learningLanguage(ENGLISH)
                 .learningLanguageLevel(levels)
@@ -476,7 +474,7 @@ public class SearchProfilesValidatorTest {
     public void searchUnitProfilesFailWithBothMinAndMaxAgesWithMaxOverMaxAgeLimit() {
         bothAgesRequestWithMaxOverMaxAgeLimit = SearchConditionsRequest.builder()
                 .gender("M")
-                .minAge(MIN_AGE_RANGE)
+                .minAge(MIN_AGE_BOUND)
                 .maxAge(aboveMaxAgeLimit)
                 .speakLanguage(KOREAN)
                 .learningLanguage(ENGLISH)
@@ -518,8 +516,8 @@ public class SearchProfilesValidatorTest {
     public void searchUnitProfilesFailWithBothMinAndMaxAgesWithinLimitButWithMinGreaterThanMax() {
         bothAgesRequestWithinLimitButMinGreaterThanMax = SearchConditionsRequest.builder()
                 .gender("M")
-                .minAge(MAX_AGE_RANGE)
-                .maxAge(MAX_AGE_RANGE - 1)
+                .minAge(MAX_AGE_BOUND)
+                .maxAge(MAX_AGE_BOUND - 1)
                 .speakLanguage(KOREAN)
                 .learningLanguage(ENGLISH)
                 .learningLanguageLevel(levels)
@@ -539,8 +537,8 @@ public class SearchProfilesValidatorTest {
     public void searchUnitProfilesSuccessWithBothMinAndMaxAgesWithinLimitAndWithMaxEqualOrGreaterThanMin() {
         bothAgesRequestWithinLimitAndMaxEqualOrGreaterThanMin = SearchConditionsRequest.builder()
                 .gender("M")
-                .minAge(MAX_AGE_RANGE)
-                .maxAge(MAX_AGE_RANGE)
+                .minAge(MAX_AGE_BOUND)
+                .maxAge(MAX_AGE_BOUND)
                 .speakLanguage(KOREAN)
                 .learningLanguage(ENGLISH)
                 .learningLanguageLevel(levels)
@@ -565,8 +563,8 @@ public class SearchProfilesValidatorTest {
         assertFalse(violations.isEmpty());
         assertEquals(violations.size(), 5);
         assertThat(violations).extracting(ConstraintViolation::getMessage)
-                .containsExactlyInAnyOrder(inappropriateAgeRangeExceptionMessage, inappropriateGenderExceptionMessage, noSpeakLangExceptionMessage,
-                        noLearningLangExceptionMessage, noLearningLangLevelsExceptionMessage);
+                .containsExactlyInAnyOrder(inappropriateAgeRangeExceptionMessage, inappropriateGenderExceptionMessage, inappropriateSpeakLangExceptionMessage,
+                        inappropriateLearningLangExceptionMessage, noLearningLangLevelsExceptionMessage);
     }
 
     @Test
@@ -574,8 +572,8 @@ public class SearchProfilesValidatorTest {
     public void searchUnitProfilesSuccessWithAllConditionsValid() {
         allValidConditions = SearchConditionsRequest.builder()
                 .gender("M")
-                .minAge(MIN_AGE_RANGE)
-                .maxAge(MAX_AGE_RANGE)
+                .minAge(MIN_AGE_BOUND)
+                .maxAge(MAX_AGE_BOUND)
                 .speakLanguage(KOREAN)
                 .learningLanguage(ENGLISH)
                 .learningLanguageLevel(levels)

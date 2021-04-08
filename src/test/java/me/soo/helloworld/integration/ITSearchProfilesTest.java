@@ -30,7 +30,7 @@ import static me.soo.helloworld.TestLanguages.KOREAN;
 import static me.soo.helloworld.TestTowns.ABERDEEN;
 import static me.soo.helloworld.TestTowns.LIVERPOOL;
 import static me.soo.helloworld.TestUsersFixture.*;
-import static me.soo.helloworld.util.validator.AgeRangeValidator.MIN_AGE_RANGE;
+import static me.soo.helloworld.util.validator.AgeRangeValidator.MIN_AGE_BOUND;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
@@ -331,7 +331,7 @@ public class ITSearchProfilesTest {
                 .speakLanguage(ENGLISH)
                 .learningLanguage(KOREAN)
                 .learningLanguageLevel(allLevelsWithoutNativeLevel)
-                .minAge(MIN_AGE_RANGE)
+                .minAge(MIN_AGE_BOUND)
                 .build();
 
         List<UserProfiles> matchingProfiles = profileService.searchUserProfiles(request, CURRENT_USER.getUserId(), pagination);
