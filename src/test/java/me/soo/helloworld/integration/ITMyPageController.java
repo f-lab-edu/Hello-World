@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
@@ -28,6 +29,7 @@ import java.sql.Date;
 import static me.soo.helloworld.TestCountries.SOUTH_KOREA;
 import static me.soo.helloworld.TestCountries.UNITED_KINGDOM;
 import static me.soo.helloworld.TestTowns.NEWCASTLE;
+import static me.soo.helloworld.TestTowns.SEOUL;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -37,6 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@ActiveProfiles("test")
 public class ITMyPageController {
 
     User currentUser;
@@ -113,8 +116,8 @@ public class ITMyPageController {
 
         UserUpdateRequest updatedUser = UserUpdateRequest.builder()
                 .gender("M")
-                .livingCountry("Republic Of Ireland")
-                .livingTown("Dublin")
+                .livingCountry(SOUTH_KOREA)
+                .livingTown(SEOUL)
                 .aboutMe("I've just moved to Dublin today")
                 .build();
 

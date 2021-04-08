@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -13,6 +14,7 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
+@Profile("{prod, local}")
 @Configuration
 @EnableRedisHttpSession
 public class RedisSessionConfig {
@@ -23,10 +25,18 @@ public class RedisSessionConfig {
     @Value("${spring.redis.port}")
     private int port;
 
+    @Value("${spring.redis.password}")
+    private String password;
+
     @Primary
     @Bean("redisSessionConnectionFactory")
     public RedisConnectionFactory redisSessionConnectionFactory() {
-        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(host, port));
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
+        config.setHostName(host);
+        config.setPort(port);
+        config.setPassword(password);
+
+        return new LettuceConnectionFactory(config);
     }
 
     @Bean("redisSessionTemplate")
@@ -40,5 +50,4 @@ public class RedisSessionConfig {
 
         return redisTemplate;
     }
-
 }

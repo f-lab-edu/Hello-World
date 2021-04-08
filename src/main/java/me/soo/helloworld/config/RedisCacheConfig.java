@@ -7,10 +7,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -35,9 +37,17 @@ public class RedisCacheConfig {
     @Value("${spring.redis.cache.port}")
     private int port;
 
+    @Value("${spring.redis.cache.password}")
+    private String password;
+
     @Bean("redisCacheConnectionFactory")
     public RedisConnectionFactory redisCacheConnectionFactory() {
-        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(host, port));
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
+        config.setHostName(host);
+        config.setPort(port);
+        config.setPassword(password);
+
+        return new LettuceConnectionFactory(config);
     }
 
     @Primary

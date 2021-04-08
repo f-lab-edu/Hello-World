@@ -80,4 +80,11 @@ public class ControllerExceptionHandler {
         ExceptionResponse response = new ExceptionResponse("존재하지 않는 리소스입니다.", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(DuplicateLoginRequestException.class)
+    public ResponseEntity<ExceptionResponse> duplicateLoginRequestException (final DuplicateLoginRequestException ex) {
+        log.error(ex.getMessage(), ex);
+        ExceptionResponse response = new ExceptionResponse("중복된 로그인 요청입니다.", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
 }
