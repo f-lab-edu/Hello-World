@@ -80,7 +80,7 @@
             resultMap="getUserProfilesMap">
 
         SELECT id, userId, aboutMe,
-            profileImageName, profileImagePath
+               profileImageName, profileImagePath
         FROM users
         WHERE
         <if test="pagination.cursor != null">
@@ -94,5 +94,53 @@
     
     <select id="getTotalRecommendationsNums" parameterType="String" resultType="int">
         SELECT COUNT(recomTo) FROM recommendations WHERE recomTo = #{userId}
+    </select>
+
+    <select id="searchUserProfiles" resultMap="getUserProfilesMap">
+        SELECT
+            u.id AS id,
+            u.userId AS userId,
+            u.aboutMe AS aboutMe,
+            u.profileImageName AS profileImageName,
+            u.profileImagePath AS profileImagePath
+        FROM users AS u
+            INNER JOIN speak s ON u.userId = s.userId
+            INNER JOIN speak l ON u.userId = l.userId
+        WHERE
+        <if test="pagination.cursor != null">
+            u.id <![CDATA[<]]> #{pagination.cursor} AND
+        </if>
+        <if test="conditions.gender != null">
+            u.gender = #{conditions.gender} AND
+        </if>
+        <choose>
+            <when test="conditions.minAge != null and conditions.maxAge == null">
+                (FORMAT(DATEDIFF(CURDATE(), u.birthDay) / 365.25, 0) BETWEEN #{conditions.minAge} AND #{defaultMaxAge}) AND
+            </when>
+            <when test="conditions.minAge == null and conditions.maxAge != null">
+                (FORMAT(DATEDIFF(CURDATE(), u.birthDay) / 365.25, 0) BETWEEN #{defaultMinAge} AND #{conditions.maxAge}) AND
+            </when>
+            <when test="conditions.minAge != null and conditions.maxAge != null">
+                (FORMAT(DATEDIFF(CURDATE(), u.birthDay) / 365.25, 0) BETWEEN #{conditions.minAge} AND #{conditions.maxAge}) AND
+            </when>
+        </choose>
+        <if test="conditions.originCountry != null">
+            u.originCountry = #{conditions.originCountry} AND
+        </if>
+        <if test="conditions.livingCountry != null">
+            u.livingCountry = #{conditions.livingCountry} AND
+        </if>
+        <if test="conditions.livingTown != null">
+            u.livingTown = #{conditions.livingTown} AND
+        </if>
+            u.isDeactivated = 'N' AND
+            u.userId NOT IN (SELECT blockedBy FROM block WHERE blockId = #{currentUser}) AND
+            (s.langId = #{conditions.speakLanguage} AND
+             s.status IN (2, 3)) AND
+            (l.langId = #{conditions.learningLanguage} AND
+             l.level IN <foreach collection="conditions.learningLanguageLevel" item="level" open="(" close=")" separator=","> #{level} </foreach> AND
+             l.status = 1)
+        ORDER BY u.id DESC
+        LIMIT #{pagination.pageSize}
     </select>
 </mapper>

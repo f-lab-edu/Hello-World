@@ -1,5 +1,6 @@
 package me.soo.helloworld.mapper;
 
+import me.soo.helloworld.model.condition.SearchConditions;
 import me.soo.helloworld.model.user.UserDataOnProfile;
 import me.soo.helloworld.model.user.UserProfiles;
 import me.soo.helloworld.util.Pagination;
@@ -16,4 +17,6 @@ public interface ProfileMapper {
 
     public List<UserProfiles> getUserProfiles(@Param("userId") String userId,
                                               @Param("pagination") Pagination pagination);
+
+    public List<UserProfiles> searchUserProfiles(SearchConditions conditions);
 }

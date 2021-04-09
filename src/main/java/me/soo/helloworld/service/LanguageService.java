@@ -8,6 +8,7 @@ import me.soo.helloworld.exception.language.InvalidLanguageLevelException;
 import me.soo.helloworld.exception.language.LanguageLimitExceededException;
 import me.soo.helloworld.mapper.LanguageMapper;
 import me.soo.helloworld.model.language.LanguageData;
+import me.soo.helloworld.util.validator.LanguageLevelValidator;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +52,8 @@ public class LanguageService {
             throw new LanguageLimitExceededException("해당 status 로 추가 가능한 언어의 개수를 초과하였습니다.");
         }
 
-        validateLevel(newLanguages, status);
+        List<LanguageLevel> newLangLevels = extractLanguageLevelsOnly(newLanguages);
+        LanguageLevelValidator.validateLevel(newLangLevels, status);
 
         List<LanguageData> existingLanguages = getLanguages(userId);
         checkDuplicateLanguage(existingLanguages, newLanguages);
@@ -70,7 +72,9 @@ public class LanguageService {
             throw new InvalidLanguageLevelException("언어 status 가 모국어(NATIVE)로 등록되어 있는 언어들은 레벨을 변경할 수 없습니다.");
         }
 
-        validateLevel(languageNewLevels, status);
+        List<LanguageLevel> newLangLevels = extractLanguageLevelsOnly(languageNewLevels);
+        LanguageLevelValidator.validateLevel(newLangLevels, status);
+
         languageMapper.updateLevels(userId, languageNewLevels, status);
     }
 
@@ -111,40 +115,9 @@ public class LanguageService {
                 .collect(Collectors.toList());
     }
 
-
-    /*
-        추가 할 Status 맞게 언어 레벨을 설정했는지 확인하는 메소드
-
-        1. Status 가 Native 인 경우
-        - 추가하는 언어 모두 레벨이 NATIVE 로 이루어져 있어야 합니다.
-        2. Status 가 Native 가 아닌 경우 (CAN_SPEAK or LEARNING)
-        - 어떤 언어도 레벨이 NATIVE 가 되어서는 안됩니다.
-     */
-    private void validateLevel(List<LanguageData> languages, LanguageStatus status) {
-        boolean isLevelValid;
-
-        switch (status) {
-            case NATIVE:
-                isLevelValid = languages.stream()
-                                            .allMatch(level -> languages.get(languages.indexOf(level))
-                                            .getLevel().equals(LanguageLevel.NATIVE));
-                break;
-            case CAN_SPEAK:
-            case LEARNING:
-                isLevelValid = languages.stream()
-                                        .noneMatch(level -> languages.get(languages.indexOf(level))
-                                        .getLevel().equals(LanguageLevel.NATIVE));
-                break;
-            default:
-                throw new InvalidLanguageLevelException("해당 언어 status 는 존재하지 않습니다. 모국어(NATIVE), 구사 가능언어(CAN_SPEAK)," +
-                        " 학습 중인 언어(LEARNING) 중 한 가지만 선택해주세요.");
-        }
-
-        if (!isLevelValid) {
-            throw new InvalidLanguageLevelException("추가하실 언어에 대한 레벨을 잘못 입력하셨습니다. 모국어의 언어 레벨은 NATIVE 레벨로만 설정이 가능하며," +
-                    " 모국어가 아닌 언어에는 NATIVE 레벨로 설정이 불가능합니다.");
-        }
+    private List<LanguageLevel> extractLanguageLevelsOnly(List<LanguageData> languages) {
+        return languages.stream()
+                .map(lang -> languages.get(languages.indexOf(lang)).getLevel())
+                .collect(Collectors.toList());
     }
-
-
 }

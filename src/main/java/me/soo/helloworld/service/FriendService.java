@@ -9,7 +9,7 @@ import me.soo.helloworld.mapper.FriendMapper;
 import me.soo.helloworld.model.friend.FriendList;
 import me.soo.helloworld.model.friend.FriendListRequest;
 import me.soo.helloworld.util.Pagination;
-import me.soo.helloworld.util.TargetValidator;
+import me.soo.helloworld.util.validator.TargetUserValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +31,8 @@ public class FriendService {
 
     @Transactional
     public void sendFriendRequest(String userId, String targetId) {
-        TargetValidator.targetNotSelf(userId, targetId);
-        TargetValidator.targetExistence(userService.isUserActivated(targetId));
+        TargetUserValidator.targetNotSelf(userId, targetId);
+        TargetUserValidator.targetExistence(userService.isUserActivated(targetId));
 
         if (blockUserService.isUserBlocked(userId, targetId)) {
             throw new InvalidRequestException("차단되어 있는 사용자에게 친구 요청을 보낼 수 없습니다.");
