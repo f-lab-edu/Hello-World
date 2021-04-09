@@ -38,6 +38,7 @@
     </resultMap>
 
     <select id="getUserProfileData" resultMap="userProfileMap">
+
         SELECT
             u.userId AS userId,
             u.gender AS gender,
@@ -77,6 +78,7 @@
 
     <select id="getUserProfiles" parameterType="map"
             resultMap="getUserProfilesMap">
+
         SELECT id, userId, aboutMe,
                profileImageName, profileImagePath
         FROM users
