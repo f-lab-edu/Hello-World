@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class ITSearchProfilesTest {
+public class ITSearchProfiles {
 
     @Autowired
     UserService userService;
