@@ -3,7 +3,7 @@ package me.soo.helloworld.config;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import static me.soo.helloworld.util.DataSourceTypes.*;
+import static me.soo.helloworld.util.constant.DataSourceTypes.*;
 
 public class ReplicationRoutingDataSource extends AbstractRoutingDataSource {
 

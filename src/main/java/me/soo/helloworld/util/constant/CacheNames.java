@@ -1,4 +1,4 @@
-package me.soo.helloworld.util;
+package me.soo.helloworld.util.constant;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

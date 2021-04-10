@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.exception.DuplicateLoginRequestException;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserLoginRequest;
-import me.soo.helloworld.util.http.SessionKeys;
+import me.soo.helloworld.util.constant.SessionKeys;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;

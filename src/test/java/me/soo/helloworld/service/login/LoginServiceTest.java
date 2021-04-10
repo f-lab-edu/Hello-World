@@ -5,7 +5,7 @@ import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.service.SessionLoginService;
 import me.soo.helloworld.service.UserService;
-import me.soo.helloworld.util.http.SessionKeys;
+import me.soo.helloworld.util.constant.SessionKeys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

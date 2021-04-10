@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
-import static me.soo.helloworld.util.CacheNames.*;
+import static me.soo.helloworld.util.constant.CacheNames.*;
 
 @Configuration
 public class LocalCacheConfig {
