@@ -1,8 +1,11 @@
 package me.soo.helloworld.controller;
 
 import lombok.RequiredArgsConstructor;
+import me.soo.helloworld.annotation.CurrentUser;
+import me.soo.helloworld.annotation.LoginRequired;
 import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.service.LoginService;
+import me.soo.helloworld.service.PushNotificationService;
 import me.soo.helloworld.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,8 @@ public class UserController {
 
     private final LoginService loginService;
 
+    private final PushNotificationService pushNotificationService;
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/signup")
     public void userSignUp(@Valid @RequestBody User user) {
@@ -33,17 +38,27 @@ public class UserController {
         if (userService.isUserIdExist(userId)) {
             return HTTP_RESPONSE_CONFLICT;
         }
+
         return HTTP_RESPONSE_OK;
     }
 
     @PostMapping("/login")
     public void userLogin(@Valid @RequestBody UserLoginRequest loginRequest) {
         loginService.login(loginRequest);
+
+        if (loginRequest.getToken() != null) {
+            pushNotificationService.registerToken(loginRequest.getUserId(), loginRequest.getToken());
+        }
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @LoginRequired
     @GetMapping("/logout")
-    public void userLogout() {
+    public void userLogout(@CurrentUser String userId) {
+        if (pushNotificationService.getToken(userId) != null) {
+            pushNotificationService.destroyToken(userId);
+        }
+
         loginService.logout();
     }
 

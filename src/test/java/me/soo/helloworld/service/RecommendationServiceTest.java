@@ -50,6 +50,9 @@ public class RecommendationServiceTest {
     @Mock
     UserService userService;
 
+    @Mock
+    PushNotificationService pushNotificationService;
+
     String recommendationContent;
 
     String modifiedRecommendationContent;

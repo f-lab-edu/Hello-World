@@ -59,8 +59,11 @@ public class LoginServiceTest {
     @Test
     @DisplayName("DB에 등록된 회원정보와 일치하는 로그인 요청이 오면 로그인에 성공합니다.")
     public void successLoginRequestWithCorrectLoginRequest() {
+        UserLoginRequest loginRequest = UserLoginRequest.builder()
+                .userId(testUser.getUserId())
+                .password(testUser.getPassword())
+                .build();
 
-        UserLoginRequest loginRequest = new UserLoginRequest(testUser.getUserId(), testUser.getPassword());
         when(userService.getUser(loginRequest.getUserId(), loginRequest.getPassword())).thenReturn(testUser);
 
         loginService.login(loginRequest);
@@ -71,7 +74,10 @@ public class LoginServiceTest {
     @Test
     @DisplayName("이미 로그인 된 회원에게서 또 다시 로그인 요청이 오면 DuplicateLoginRequestException이 발생합니다.")
     public void failLoginRequestWithWrongLoginRequest() {
-        UserLoginRequest loginRequest = new UserLoginRequest(testUser.getUserId(), testUser.getPassword());
+        UserLoginRequest loginRequest = UserLoginRequest.builder()
+                .userId(testUser.getUserId())
+                .password(testUser.getPassword())
+                .build();
 
         httpSession.setAttribute(SessionKeys.USER_ID, loginRequest.getUserId());
 

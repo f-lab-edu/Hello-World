@@ -17,6 +17,7 @@ public class SessionLoginService implements LoginService {
 
     private final UserService userService;
 
+    @Override
     public void login(UserLoginRequest loginRequest) {
 
         if (getCurrentUserId() != null) {
@@ -28,6 +29,7 @@ public class SessionLoginService implements LoginService {
         httpSession.setAttribute(SessionKeys.USER_ID, user.getUserId());
     }
 
+    @Override
     public void logout() {
         httpSession.invalidate();
     }

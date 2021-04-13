@@ -37,6 +37,9 @@ public class FriendServiceTest {
     @Mock
     AlarmService alarmService;
 
+    @Mock
+    PushNotificationService pushNotificationService;
+
     /*
         친구 요청을 보낼 때 발생할 수 있는 예외들
 

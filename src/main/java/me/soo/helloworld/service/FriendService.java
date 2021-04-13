@@ -8,6 +8,7 @@ import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.FriendMapper;
 import me.soo.helloworld.model.friend.FriendList;
 import me.soo.helloworld.model.friend.FriendListRequest;
+import me.soo.helloworld.model.notification.PushNotificationRequest;
 import me.soo.helloworld.util.Pagination;
 import me.soo.helloworld.util.validator.TargetUserValidator;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,8 @@ public class FriendService {
 
     private final AlarmService alarmService;
 
+    private final PushNotificationService pushNotificationService;
+
     @Transactional
     public void sendFriendRequest(String userId, String targetId) {
         TargetUserValidator.targetNotSelf(userId, targetId);
@@ -43,6 +46,10 @@ public class FriendService {
 
         friendMapper.sendFriendRequest(userId, targetId);
         alarmService.dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
+
+        PushNotificationRequest request = PushNotificationRequest.create(
+                targetId, AlarmTypes.FRIEND_REQUEST_RECEIVED.name(), AlarmTypes.FRIEND_REQUEST_RECEIVED.getMessage());
+        pushNotificationService.sendPushNotification(request);
     }
 
     public FriendStatus getFriendStatus(String userId, String targetId) {
@@ -63,6 +70,10 @@ public class FriendService {
         validateFriendStatus(status, FRIEND_REQUEST_RECEIVED);
         friendMapper.updateFriendRequest(userId, targetId, FRIEND);
         alarmService.dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_ACCEPTED);
+
+        PushNotificationRequest request = PushNotificationRequest.create(
+                targetId, AlarmTypes.FRIEND_REQUEST_ACCEPTED.name(), AlarmTypes.FRIEND_REQUEST_ACCEPTED.getMessage());
+        pushNotificationService.sendPushNotification(request);
     }
 
     public void rejectFriendRequest(String userId, String targetId) {
