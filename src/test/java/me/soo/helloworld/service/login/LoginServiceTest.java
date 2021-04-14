@@ -1,6 +1,7 @@
 package me.soo.helloworld.service.login;
 
 import me.soo.helloworld.exception.DuplicateLoginRequestException;
+import me.soo.helloworld.model.user.UserLoginData;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.service.SessionLoginService;
@@ -31,6 +32,8 @@ public class LoginServiceTest {
 
     User testUser;
 
+    UserLoginData testUserLoginData;
+
     @InjectMocks
     SessionLoginService loginService;
 
@@ -54,6 +57,10 @@ public class LoginServiceTest {
                 .aboutMe("Hello, I'd love to make great friends here")
                 .build();
 
+        testUserLoginData = UserLoginData.builder()
+                .userId(testUser.getUserId())
+                .password(testUser.getPassword())
+                .build();
     }
 
     @Test
@@ -64,7 +71,7 @@ public class LoginServiceTest {
                 .password(testUser.getPassword())
                 .build();
 
-        when(userService.getUser(loginRequest.getUserId(), loginRequest.getPassword())).thenReturn(testUser);
+        when(userService.getUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword())).thenReturn(testUserLoginData);
 
         loginService.login(loginRequest);
 

@@ -8,6 +8,7 @@ import com.google.firebase.messaging.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.soo.helloworld.exception.FCMUninitializedException;
+import me.soo.helloworld.mapper.PushNotificationMapper;
 import me.soo.helloworld.model.notification.PushNotificationRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,6 +28,8 @@ public class FirebasePushNotificationService implements PushNotificationService 
 
     @Value("${fcm.account.path}")
     private String accountPath;
+
+    private final PushNotificationMapper pushNotificationMapper;
 
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -50,20 +53,12 @@ public class FirebasePushNotificationService implements PushNotificationService 
      */
     @Override
     public void registerToken(String userId, String token) {
-        redisTemplate.opsForValue().set(userId, token);
+        pushNotificationMapper.upsertToken(userId, token);
     }
 
     @Override
     public String getToken(String userId) {
-        return (String) redisTemplate.opsForValue().get(userId);
-    }
-
-    /*
-        사용자 로그아웃 시 토큰도 함께 소멸시킵니다.
-    */
-    @Override
-    public void destroyToken(String userId) {
-        redisTemplate.delete(userId);
+        return pushNotificationMapper.getToken(userId);
     }
 
     @Override

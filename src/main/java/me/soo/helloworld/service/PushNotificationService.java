@@ -8,7 +8,5 @@ public interface PushNotificationService {
 
     public String getToken(String userId);
 
-    public void destroyToken(String userId);
-
     public void sendPushNotification(PushNotificationRequest notificationRequest);
 }

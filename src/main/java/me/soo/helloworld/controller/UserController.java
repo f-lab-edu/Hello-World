@@ -25,8 +25,6 @@ public class UserController {
 
     private final LoginService loginService;
 
-    private final PushNotificationService pushNotificationService;
-
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/signup")
     public void userSignUp(@Valid @RequestBody User user) {
@@ -45,20 +43,11 @@ public class UserController {
     @PostMapping("/login")
     public void userLogin(@Valid @RequestBody UserLoginRequest loginRequest) {
         loginService.login(loginRequest);
-
-        if (loginRequest.getToken() != null) {
-            pushNotificationService.registerToken(loginRequest.getUserId(), loginRequest.getToken());
-        }
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @LoginRequired
     @GetMapping("/logout")
-    public void userLogout(@CurrentUser String userId) {
-        if (pushNotificationService.getToken(userId) != null) {
-            pushNotificationService.destroyToken(userId);
-        }
-
+    public void userLogout() {
         loginService.logout();
     }
 

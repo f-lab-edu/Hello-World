@@ -5,6 +5,7 @@ import me.soo.helloworld.mapper.UserMapper;
 import me.soo.helloworld.model.email.EmailBase;
 import me.soo.helloworld.model.email.FindPasswordEmail;
 import me.soo.helloworld.model.user.UserFindPasswordRequest;
+import me.soo.helloworld.model.user.UserLoginData;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.service.EmailService;
@@ -35,8 +36,9 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    @Mock
     User testUser;
+
+    UserLoginData testUserLoginData;
 
     @InjectMocks
     UserService userService;
@@ -62,6 +64,11 @@ class UserServiceTest {
                 .livingCountry(UNITED_KINGDOM)
                 .livingTown(NEWCASTLE)
                 .aboutMe("Hello, I'd love to make great friends here")
+                .build();
+
+        testUserLoginData = UserLoginData.builder()
+                .userId(testUser.getUserId())
+                .password(testUser.getPassword())
                 .build();
     }
 
@@ -93,12 +100,12 @@ class UserServiceTest {
                 .password(testUser.getPassword())
                 .build();
 
-        when(userMapper.getUserById(loginRequest.getUserId())).thenReturn(Optional.ofNullable(testUser));
+        when(userMapper.getUserLoginDataById(loginRequest.getUserId())).thenReturn(Optional.ofNullable(testUserLoginData));
         when(passwordEncoder.isMatch(loginRequest.getPassword(), testUser.getPassword())).thenReturn(true);
 
-        userService.getUser(loginRequest.getUserId(), loginRequest.getPassword());
+        userService.getUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword());
 
-        verify(userMapper, times(1)).getUserById(loginRequest.getUserId());
+        verify(userMapper, times(1)).getUserLoginDataById(loginRequest.getUserId());
         verify(passwordEncoder, times(1)).isMatch(loginRequest.getPassword(), testUser.getPassword());
     }
 
@@ -110,13 +117,13 @@ class UserServiceTest {
                 .password(testUser.getPassword())
                 .build();
 
-        when(userMapper.getUserById(loginRequest.getUserId())).thenReturn(Optional.empty());
+        when(userMapper.getUserLoginDataById(loginRequest.getUserId())).thenReturn(Optional.empty());
 
         assertThrows(InvalidUserInfoException.class, () -> {
-           userService.getUser(loginRequest.getUserId(), loginRequest.getPassword());
+           userService.getUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword());
         });
 
-        verify(userMapper, times(1)).getUserById(loginRequest.getUserId());
+        verify(userMapper, times(1)).getUserLoginDataById(loginRequest.getUserId());
     }
 
     @Test
@@ -127,14 +134,14 @@ class UserServiceTest {
                 .password("Typo is everywhere ~.")
                 .build();
 
-        when(userMapper.getUserById(loginRequest.getUserId())).thenReturn(Optional.ofNullable(testUser));
+        when(userMapper.getUserLoginDataById(loginRequest.getUserId())).thenReturn(Optional.ofNullable(testUserLoginData));
         when(passwordEncoder.isMatch(loginRequest.getPassword(), testUser.getPassword())).thenReturn(false);
 
         assertThrows(InvalidUserInfoException.class, () -> {
-            userService.getUser(loginRequest.getUserId(), loginRequest.getPassword());
+            userService.getUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword());
         });
 
-        verify(userMapper, times(1)).getUserById(loginRequest.getUserId());
+        verify(userMapper, times(1)).getUserLoginDataById(loginRequest.getUserId());
         verify(passwordEncoder, times(1)).isMatch(loginRequest.getPassword(), testUser.getPassword());
     }
 

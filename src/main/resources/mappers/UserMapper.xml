@@ -15,12 +15,27 @@
         SELECT EXISTS (SELECT userId FROM users WHERE userId = #{userId})
     </select>
 
-    <select id="getUserById"
-            parameterType="String" resultType="me.soo.helloworld.model.user.User">
+    <resultMap id="getUserLoginData" type="me.soo.helloworld.model.user.UserLoginData">
+        <constructor>
+            <arg column="userId" javaType="String"/>
+            <arg column="password" javaType="String"/>
+            <arg column="token" javaType="String"/>
+        </constructor>
+        <result property="userId" column="userId"/>
+        <result property="userId" column="password"/>
+        <result property="userId" column="token"/>
+    </resultMap>
 
-        SELECT userId, password, email, gender, birthDay, originCountry, livingCountry, livingTown, aboutMe,
-               profileImageName, profileImagePath
-        FROM users WHERE userId = #{userId} AND isDeactivated = 'N';
+    <select id="getUserLoginDataById"
+            parameterType="String" resultMap="getUserLoginData">
+
+        SELECT
+            u.userId AS userId,
+            u.password AS password,
+            t.token AS token
+        FROM users AS u
+            LEFT OUTER JOIN tokens AS t on u.userId = t.userId
+        WHERE u.userId = #{userId} AND isDeactivated = 'N';
     </select>
 
     <select id="getUserProfileImageById"
