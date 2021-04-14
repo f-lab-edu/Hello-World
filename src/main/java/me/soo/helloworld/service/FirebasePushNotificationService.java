@@ -11,7 +11,6 @@ import me.soo.helloworld.exception.FCMUninitializedException;
 import me.soo.helloworld.mapper.PushNotificationMapper;
 import me.soo.helloworld.model.notification.PushNotificationRequest;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -30,8 +29,6 @@ public class FirebasePushNotificationService implements PushNotificationService 
     private String accountPath;
 
     private final PushNotificationMapper pushNotificationMapper;
-
-    private final RedisTemplate<String, Object> redisTemplate;
 
     @PostConstruct
     public void init() {
