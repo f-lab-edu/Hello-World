@@ -22,8 +22,7 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import java.sql.Date;
 
-import static me.soo.helloworld.TestCountries.SOUTH_KOREA;
-import static me.soo.helloworld.TestCountries.UNITED_KINGDOM;
+import static me.soo.helloworld.TestCountries.*;
 import static me.soo.helloworld.TestTowns.NEWCASTLE;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -98,8 +97,8 @@ public class UserUpdateTest {
 
         UserUpdateRequest updatedUser = UserUpdateRequest.builder()
                 .gender("M")
-                .livingCountry("Wizarding World")
-                .livingTown("Hogwart")
+                .livingCountry(UNITED_KINGDOM)
+                .livingTown(OTHERS)
                 .aboutMe("I have just been accepted to the Hogwart of Witchcraft and Wizardary")
                 .build();
 

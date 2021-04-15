@@ -1,6 +1,6 @@
 package me.soo.helloworld.service.login;
 
-import me.soo.helloworld.exception.DuplicateRequestException;
+import me.soo.helloworld.exception.DuplicateLoginRequestException;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.service.SessionLoginService;
@@ -69,17 +69,15 @@ public class LoginServiceTest {
     }
 
     @Test
-    @DisplayName("이미 로그인 된 회원에게서 또 다시 로그인 요청이 오면 DuplicateRequestException이 발생합니다.")
+    @DisplayName("이미 로그인 된 회원에게서 또 다시 로그인 요청이 오면 DuplicateLoginRequestException이 발생합니다.")
     public void failLoginRequestWithWrongLoginRequest() {
-
         UserLoginRequest loginRequest = new UserLoginRequest(testUser.getUserId(), testUser.getPassword());
 
         httpSession.setAttribute(SessionKeys.USER_ID, loginRequest.getUserId());
 
-        assertThrows(DuplicateRequestException.class, () -> {
+        assertThrows(DuplicateLoginRequestException.class, () -> {
             loginService.login(loginRequest);
         });
-
     }
 
     @Test

@@ -1,7 +1,7 @@
 package me.soo.helloworld.service;
 
 import lombok.RequiredArgsConstructor;
-import me.soo.helloworld.exception.DuplicateRequestException;
+import me.soo.helloworld.exception.DuplicateLoginRequestException;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.util.http.SessionKeys;
@@ -20,7 +20,7 @@ public class SessionLoginService implements LoginService {
     public void login(UserLoginRequest loginRequest) {
 
         if (getCurrentUserId() != null) {
-            throw new DuplicateRequestException("이미 로그인 되어 있는 사용자입니다.");
+            throw new DuplicateLoginRequestException("이미 로그인 되어 있는 사용자입니다.");
         }
 
         User user = userService.getUser(loginRequest.getUserId(), loginRequest.getPassword());
