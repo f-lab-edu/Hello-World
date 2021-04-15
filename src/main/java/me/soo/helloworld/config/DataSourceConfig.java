@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
-import static me.soo.helloworld.util.DataSourceTypes.*;
+import static me.soo.helloworld.util.constant.DataSourceTypes.*;
 
 @Configuration
 @EnableTransactionManagement

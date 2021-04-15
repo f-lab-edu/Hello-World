@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
-import static me.soo.helloworld.util.CacheNames.*;
+import static me.soo.helloworld.util.constant.CacheNames.*;
 
 @Service
 @RequiredArgsConstructor

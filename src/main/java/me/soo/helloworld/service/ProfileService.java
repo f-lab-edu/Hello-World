@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
 import me.soo.helloworld.exception.InvalidRequestException;
-import me.soo.helloworld.exception.language.InvalidLanguageLevelException;
 import me.soo.helloworld.mapper.ProfileMapper;
 import me.soo.helloworld.model.condition.SearchConditions;
 import me.soo.helloworld.model.condition.SearchConditionsRequest;
@@ -26,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static me.soo.helloworld.util.CacheNames.*;
+import static me.soo.helloworld.util.constant.CacheNames.*;
 
 @Service
 @RequiredArgsConstructor

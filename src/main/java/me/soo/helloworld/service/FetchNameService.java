@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static me.soo.helloworld.util.CacheNames.*;
+import static me.soo.helloworld.util.constant.CacheNames.*;
 
 @Service
 @RequiredArgsConstructor

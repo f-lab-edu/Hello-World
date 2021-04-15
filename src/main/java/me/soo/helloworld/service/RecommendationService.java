@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static me.soo.helloworld.util.CacheNames.REDIS_CACHE_MANAGER;
-import static me.soo.helloworld.util.CacheNames.USER_PROFILE;
+import static me.soo.helloworld.util.constant.CacheNames.REDIS_CACHE_MANAGER;
+import static me.soo.helloworld.util.constant.CacheNames.USER_PROFILE;
 
 @Service
 @RequiredArgsConstructor
