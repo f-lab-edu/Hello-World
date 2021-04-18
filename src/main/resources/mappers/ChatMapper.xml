@@ -3,7 +3,33 @@
 
 <mapper namespace="me.soo.helloworld.mapper.ChatMapper">
 
-    <insert id="insertChat" parameterType="map">
-        INSERT INTO chats (recipient, sender, content) VALUES (#{chat.recipient}, #{sender}, #{content})
+    <insert id="insertChat" parameterType="me.soo.helloworld.model.chat.ChatData">
+
+        INSERT INTO chats (chatBoxId, recipient, content, sender)
+        VALUES (#{chatBoxId}, #{recipient}, #{content}, #{sender})
     </insert>
+
+    <select id="isChatBoxExist" parameterType="String" resultType="boolean">
+
+        SELECT EXISTS (
+            SELECT id
+            FROM chatboxes
+            WHERE userOne in (#{sender}, #{recipient})
+            AND userTwo in (#{sender}, #{recipient})
+        )
+    </select>
+
+    <insert id="insertChatBox" parameterType="String">
+
+        INSERT INTO chatboxes (userOne, userTwo)
+        VALUES (#{sender}, #{recipient})
+    </insert>
+
+    <select id="getChatBoxId" parameterType="String" resultType="int">
+
+        SELECT id FROM chatboxes
+        WHERE userOne in (#{sender}, #{recipient})
+	    AND userTwo in (#{sender}, #{recipient})
+    </select>
+
 </mapper>

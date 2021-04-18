@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChatSendRequest {
 
+    private final Integer chatBoxId;
+
     private final String recipient;
 
     private final String content;
