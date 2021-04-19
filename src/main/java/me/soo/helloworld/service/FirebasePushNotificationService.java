@@ -1,7 +1,11 @@
 package me.soo.helloworld.service;
 
 import com.google.api.core.ApiFuture;
+import com.google.api.core.ApiFutureCallback;
+import com.google.api.core.ApiFutures;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.*;
@@ -18,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 
 @Slf4j
 @Service
@@ -67,12 +71,7 @@ public class FirebasePushNotificationService implements PushNotificationService 
         }
 
         Message pushMessage = writePushMessage(pushNotificationRequest, token);
-        ApiFuture<String> response = FirebaseMessaging.getInstance().sendAsync(pushMessage);
-        try {
-            log.info("{} 님에게 푸시 알람 전송을 전송하였습니다. : {}", pushNotificationRequest.getTargetId(), response.get());
-        } catch (InterruptedException | ExecutionException e) {
-            throw new IllegalStateException("푸시알람 전송에 실패하였습니다.", e);
-        }
+        FirebaseMessaging.getInstance().sendAsync(pushMessage);
     }
 
     private Message writePushMessage(PushNotificationRequest pushNotificationRequest, String token) {

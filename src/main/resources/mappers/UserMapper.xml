@@ -22,8 +22,8 @@
             <arg column="token" javaType="String"/>
         </constructor>
         <result property="userId" column="userId"/>
-        <result property="userId" column="password"/>
-        <result property="userId" column="token"/>
+        <result property="password" column="password"/>
+        <result property="token" column="token"/>
     </resultMap>
 
     <select id="getUserLoginDataById"
