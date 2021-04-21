@@ -106,9 +106,12 @@ class ITUserController {
     public void userLoginSuccess() throws Exception {
         testUserSignUp(testUser);
 
-        UserLoginRequest testLoginRequest = new UserLoginRequest(testUser.getUserId(), testUser.getPassword());
+        UserLoginRequest loginRequest = UserLoginRequest.builder()
+                .userId(testUser.getUserId())
+                .password(testUser.getPassword())
+                .build();
 
-        String loginContent = objectMapper.writeValueAsString(testLoginRequest);
+        String loginContent = objectMapper.writeValueAsString(loginRequest);
 
         mockMvc.perform(post("/users/login")
                 .content(loginContent)
@@ -125,8 +128,12 @@ class ITUserController {
 
         httpSession.setAttribute("userId", testUser.getUserId());
 
-        UserLoginRequest testUserLogin = new UserLoginRequest(testUser.getUserId(), testUser.getPassword());
-        String loginContent = objectMapper.writeValueAsString(testUserLogin);
+        UserLoginRequest loginRequest = UserLoginRequest.builder()
+                .userId(testUser.getUserId())
+                .password(testUser.getPassword())
+                .build();
+
+        String loginContent = objectMapper.writeValueAsString(loginRequest);
 
         mockMvc.perform(post("/users/login")
                 .content(loginContent)
@@ -141,8 +148,12 @@ class ITUserController {
     public void userLoginFailNoSuchUser() throws Exception {
         testUserSignUp(testUser);
 
-        UserLoginRequest testUserLogin = new UserLoginRequest("WrongID!@34", "WrongPw!@34");
-        String loginContent = objectMapper.writeValueAsString(testUserLogin);
+        UserLoginRequest loginRequest = UserLoginRequest.builder()
+                .userId("WrongID!@34")
+                .password("WrongPw!@34")
+                .build();
+
+        String loginContent = objectMapper.writeValueAsString(loginRequest);
 
         mockMvc.perform(post("/users/login")
                 .content(loginContent)

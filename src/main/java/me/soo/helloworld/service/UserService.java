@@ -41,11 +41,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User getUser(String userId, String password) {
-        User user = userMapper.getUserById(userId)
+    public UserLoginData getUserLoginInfo(String userId, String password) {
+        UserLoginData loginData = userMapper.getUserLoginDataById(userId)
                                 .orElseThrow(() -> new InvalidUserInfoException("해당 사용자는 존재하지 않습니다. 아이디를 다시 확인해 주세요."));
-        isValidPassword(password, user.getPassword());
-        return user;
+        isValidPassword(password, loginData.getPassword());
+        return loginData;
     }
 
     public void userPasswordUpdate(String userid, UserPasswordRequest userPasswordRequest) {

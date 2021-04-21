@@ -5,6 +5,7 @@ import me.soo.helloworld.enumeration.AlarmTypes;
 import me.soo.helloworld.exception.DuplicateRequestException;
 import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.RecommendationMapper;
+import me.soo.helloworld.model.notification.PushNotificationRequest;
 import me.soo.helloworld.model.recommendation.RecommendationForProfile;
 import me.soo.helloworld.model.recommendation.Recommendation;
 import me.soo.helloworld.model.recommendation.Recommendations;
@@ -35,6 +36,8 @@ public class RecommendationService {
 
     private final UserService userService;
 
+    private final PushNotificationService pushNotificationService;
+
     @Transactional
     @CacheEvict(key = "#to", value = USER_PROFILE, cacheManager = REDIS_CACHE_MANAGER)
     public void leaveRecommendation(String from, String to, String content) {
@@ -45,6 +48,10 @@ public class RecommendationService {
 
         recommendationMapper.insertRecommendation(Recommendation.create(from, to, content));
         alarmService.dispatchAlarm(to, from, AlarmTypes.RECOMMENDATION_LEFT);
+
+        PushNotificationRequest request = PushNotificationRequest.create(
+                to, AlarmTypes.RECOMMENDATION_LEFT.name(), AlarmTypes.RECOMMENDATION_LEFT.getMessage());
+        pushNotificationService.sendPushNotification(request);
     }
 
     @CacheEvict(key = "#to", value = USER_PROFILE, cacheManager = REDIS_CACHE_MANAGER)

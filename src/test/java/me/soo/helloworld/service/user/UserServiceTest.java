@@ -5,6 +5,7 @@ import me.soo.helloworld.mapper.UserMapper;
 import me.soo.helloworld.model.email.EmailBase;
 import me.soo.helloworld.model.email.FindPasswordEmail;
 import me.soo.helloworld.model.user.UserFindPasswordRequest;
+import me.soo.helloworld.model.user.UserLoginData;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.service.EmailService;
@@ -35,8 +36,9 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    @Mock
     User testUser;
+
+    UserLoginData testUserLoginData;
 
     @InjectMocks
     UserService userService;
@@ -63,6 +65,11 @@ class UserServiceTest {
                 .livingTown(NEWCASTLE)
                 .aboutMe("Hello, I'd love to make great friends here")
                 .build();
+
+        testUserLoginData = UserLoginData.builder()
+                .userId(testUser.getUserId())
+                .password(testUser.getPassword())
+                .build();
     }
 
     @Test
@@ -88,41 +95,53 @@ class UserServiceTest {
     @Test
     @DisplayName("유저 정보를 얻기 위해 요청 받은 아이디와 비밀번호가 DB에 저장되어 있는 사용자의 아이디와 비밀번호에 일치하는 경우 사용자를 리턴하는데 성공합니다.")
     public void getUserWithCorrectIdAndPasswordSuccess() {
-        UserLoginRequest loginRequest = new UserLoginRequest(testUser.getUserId(), testUser.getPassword());
-        when(userMapper.getUserById(loginRequest.getUserId())).thenReturn(Optional.ofNullable(testUser));
+        UserLoginRequest loginRequest = UserLoginRequest.builder()
+                .userId(testUser.getUserId())
+                .password(testUser.getPassword())
+                .build();
+
+        when(userMapper.getUserLoginDataById(loginRequest.getUserId())).thenReturn(Optional.ofNullable(testUserLoginData));
         when(passwordEncoder.isMatch(loginRequest.getPassword(), testUser.getPassword())).thenReturn(true);
 
-        userService.getUser(loginRequest.getUserId(), loginRequest.getPassword());
+        userService.getUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword());
 
-        verify(userMapper, times(1)).getUserById(loginRequest.getUserId());
+        verify(userMapper, times(1)).getUserLoginDataById(loginRequest.getUserId());
         verify(passwordEncoder, times(1)).isMatch(loginRequest.getPassword(), testUser.getPassword());
     }
 
     @Test
     @DisplayName("유저 정보를 얻기 위해 요청 받은 아이디가 DB에 존재하지 않는 경우 InvalidUserInfoException 이 발생하며 테스트에 실패합니다.")
     public void getUserWithWrongIdFail() {
-        UserLoginRequest loginRequest = new UserLoginRequest("I'm a wrong user", testUser.getPassword());
-        when(userMapper.getUserById(loginRequest.getUserId())).thenReturn(Optional.empty());
+        UserLoginRequest loginRequest = UserLoginRequest.builder()
+                .userId("I'm a wrong user.")
+                .password(testUser.getPassword())
+                .build();
+
+        when(userMapper.getUserLoginDataById(loginRequest.getUserId())).thenReturn(Optional.empty());
 
         assertThrows(InvalidUserInfoException.class, () -> {
-           userService.getUser(loginRequest.getUserId(), loginRequest.getPassword());
+           userService.getUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword());
         });
 
-        verify(userMapper, times(1)).getUserById(loginRequest.getUserId());
+        verify(userMapper, times(1)).getUserLoginDataById(loginRequest.getUserId());
     }
 
     @Test
     @DisplayName("유저 정보를 얻기 위해 요청 받은 비밀번호가 일치하지 않는 경우 InvalidUserInfoException 이 발생하며 테스트에 실패합니다.")
     public void getUserWithWrongPasswordFail() {
-        UserLoginRequest loginRequest = new UserLoginRequest(testUser.getUserId(), "Typo is everywhere~");
-        when(userMapper.getUserById(loginRequest.getUserId())).thenReturn(Optional.ofNullable(testUser));
+        UserLoginRequest loginRequest = UserLoginRequest.builder()
+                .userId(testUser.getUserId())
+                .password("Typo is everywhere ~.")
+                .build();
+
+        when(userMapper.getUserLoginDataById(loginRequest.getUserId())).thenReturn(Optional.ofNullable(testUserLoginData));
         when(passwordEncoder.isMatch(loginRequest.getPassword(), testUser.getPassword())).thenReturn(false);
 
         assertThrows(InvalidUserInfoException.class, () -> {
-            userService.getUser(loginRequest.getUserId(), loginRequest.getPassword());
+            userService.getUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword());
         });
 
-        verify(userMapper, times(1)).getUserById(loginRequest.getUserId());
+        verify(userMapper, times(1)).getUserLoginDataById(loginRequest.getUserId());
         verify(passwordEncoder, times(1)).isMatch(loginRequest.getPassword(), testUser.getPassword());
     }
 

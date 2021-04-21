@@ -1,6 +1,7 @@
 package me.soo.helloworld.service.login;
 
 import me.soo.helloworld.exception.DuplicateLoginRequestException;
+import me.soo.helloworld.model.user.UserLoginData;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.service.SessionLoginService;
@@ -31,6 +32,8 @@ public class LoginServiceTest {
 
     User testUser;
 
+    UserLoginData testUserLoginData;
+
     @InjectMocks
     SessionLoginService loginService;
 
@@ -54,14 +57,21 @@ public class LoginServiceTest {
                 .aboutMe("Hello, I'd love to make great friends here")
                 .build();
 
+        testUserLoginData = UserLoginData.builder()
+                .userId(testUser.getUserId())
+                .password(testUser.getPassword())
+                .build();
     }
 
     @Test
     @DisplayName("DB에 등록된 회원정보와 일치하는 로그인 요청이 오면 로그인에 성공합니다.")
     public void successLoginRequestWithCorrectLoginRequest() {
+        UserLoginRequest loginRequest = UserLoginRequest.builder()
+                .userId(testUser.getUserId())
+                .password(testUser.getPassword())
+                .build();
 
-        UserLoginRequest loginRequest = new UserLoginRequest(testUser.getUserId(), testUser.getPassword());
-        when(userService.getUser(loginRequest.getUserId(), loginRequest.getPassword())).thenReturn(testUser);
+        when(userService.getUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword())).thenReturn(testUserLoginData);
 
         loginService.login(loginRequest);
 
@@ -71,7 +81,10 @@ public class LoginServiceTest {
     @Test
     @DisplayName("이미 로그인 된 회원에게서 또 다시 로그인 요청이 오면 DuplicateLoginRequestException이 발생합니다.")
     public void failLoginRequestWithWrongLoginRequest() {
-        UserLoginRequest loginRequest = new UserLoginRequest(testUser.getUserId(), testUser.getPassword());
+        UserLoginRequest loginRequest = UserLoginRequest.builder()
+                .userId(testUser.getUserId())
+                .password(testUser.getPassword())
+                .build();
 
         httpSession.setAttribute(SessionKeys.USER_ID, loginRequest.getUserId());
 

@@ -14,9 +14,9 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
-@Profile("{prod, local}")
 @Configuration
 @EnableRedisHttpSession
+@Profile({"prod", "local"})
 public class RedisSessionConfig {
 
     @Value("${spring.redis.host}")
