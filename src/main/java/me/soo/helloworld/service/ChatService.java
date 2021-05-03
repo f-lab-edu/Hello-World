@@ -2,10 +2,9 @@ package me.soo.helloworld.service;
 
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.mapper.ChatMapper;
-import me.soo.helloworld.model.chat.ChatData;
-import me.soo.helloworld.model.chat.ChatNotification;
-import me.soo.helloworld.model.chat.ChatSendRequest;
+import me.soo.helloworld.model.chat.*;
 import me.soo.helloworld.util.validator.TargetUserValidator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +19,11 @@ public class ChatService {
 
     private final UserService userService;
 
+    private final KafkaProducerService kafkaProducerService;
+
+    @Value("${kafka.topic.name}")
+    private String kafkaTopic;
+
     @Transactional
     public void sendChat(String sender, ChatSendRequest chatRequest) {
         Integer chatBoxId = chatRequest.getChatBoxId();
@@ -28,10 +32,12 @@ public class ChatService {
             chatBoxId = fetchChatBoxId(sender, chatRequest.getRecipient());
         }
 
-        ChatData chatData = ChatData.create(sender, chatBoxId, chatRequest.getRecipient(), chatRequest.getContent());
-        chatMapper.insertChat(chatData);
-        messagingTemplate.convertAndSendToUser(chatRequest.getRecipient(), "/queue/messages",
-                new ChatNotification(chatRequest.getRecipient(), chatRequest.getContent()));
+        ChatWrite chat = ChatWrite.create(sender, chatBoxId, chatRequest.getRecipient(),
+                chatRequest.getContent(), chatRequest.getSentAt());
+
+        kafkaProducerService.deliverChatsToKafka(kafkaTopic, chat);
+        messagingTemplate.convertAndSendToUser(chat.getRecipient(), "/queue/messages",
+                new ChatNotification(chat.getSender(), chat.getContent()));
     }
 
     private int fetchChatBoxId(String sender, String recipient) {
