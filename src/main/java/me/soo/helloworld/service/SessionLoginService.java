@@ -31,6 +31,16 @@ public class SessionLoginService implements LoginService {
     }
 
     @Override
+    public void testLogin(UserLoginRequest loginRequest) {
+        validateDuplicateLogin(getCurrentUserId());
+
+        UserLoginData loginData = userService.testGetUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword());
+        httpSession.setAttribute(SessionKeys.USER_ID, loginData.getUserId());
+
+        updateTokenIfRequired(loginRequest.getUserId(), loginRequest.getToken(), loginData.getToken());
+    }
+
+    @Override
     public void logout() {
         httpSession.invalidate();
     }

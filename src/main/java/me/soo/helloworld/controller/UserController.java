@@ -45,6 +45,11 @@ public class UserController {
         loginService.login(loginRequest);
     }
 
+    @PostMapping("/login/test")
+    public void testUserLogin(@Valid @RequestBody UserLoginRequest loginRequest) {
+        loginService.testLogin(loginRequest);
+    }
+
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @GetMapping("/logout")
     public void userLogout() {

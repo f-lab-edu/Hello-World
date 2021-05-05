@@ -8,7 +8,7 @@ public class PasswordEncoderBcrypt implements PasswordEncoder {
 
     @Override
     public String encode(String rawPassword) {
-        return BCrypt.hashpw(rawPassword, BCrypt.gensalt(4));
+        return BCrypt.hashpw(rawPassword, BCrypt.gensalt(0));
     }
 
     @Override

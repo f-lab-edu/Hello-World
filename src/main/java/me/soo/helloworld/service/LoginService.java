@@ -6,6 +6,8 @@ public interface LoginService {
 
     public void login(UserLoginRequest loginRequest);
 
+    public void testLogin(UserLoginRequest loginRequest);
+
     public void logout();
 
     String getCurrentUserId();

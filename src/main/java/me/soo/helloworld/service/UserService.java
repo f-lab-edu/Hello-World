@@ -1,5 +1,6 @@
 package me.soo.helloworld.service;
 
+import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.exception.InvalidUserInfoException;
 import me.soo.helloworld.mapper.UserMapper;
@@ -8,6 +9,7 @@ import me.soo.helloworld.model.email.FindPasswordEmail;
 import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.util.encoder.PasswordEncoder;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +48,18 @@ public class UserService {
                                 .orElseThrow(() -> new InvalidUserInfoException("해당 사용자는 존재하지 않습니다. 아이디를 다시 확인해 주세요."));
 
         if (!passwordEncoder.isMatch(password, loginData.getPassword())) {
+            throw new InvalidUserInfoException("입력하신 비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.");
+        }
+//        isValidPassword(password, loginData.getPassword());
+        return loginData;
+    }
+
+    @Transactional(readOnly = true)
+    public UserLoginData testGetUserLoginInfo(String userId, String password) {
+        UserLoginData loginData = userMapper.getUserLoginDataById(userId)
+                .orElseThrow(() -> new InvalidUserInfoException("해당 사용자는 존재하지 않습니다. 아이디를 다시 확인해 주세요."));
+
+        if (!StringUtils.equals(password, loginData.getPassword())) {
             throw new InvalidUserInfoException("입력하신 비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.");
         }
 //        isValidPassword(password, loginData.getPassword());
