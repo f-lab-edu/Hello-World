@@ -44,7 +44,11 @@ public class UserService {
     public UserLoginData getUserLoginInfo(String userId, String password) {
         UserLoginData loginData = userMapper.getUserLoginDataById(userId)
                                 .orElseThrow(() -> new InvalidUserInfoException("해당 사용자는 존재하지 않습니다. 아이디를 다시 확인해 주세요."));
-        isValidPassword(password, loginData.getPassword());
+
+        if (!passwordEncoder.isMatch(password, loginData.getPassword())) {
+            throw new InvalidUserInfoException("입력하신 비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.");
+        }
+//        isValidPassword(password, loginData.getPassword());
         return loginData;
     }
 
