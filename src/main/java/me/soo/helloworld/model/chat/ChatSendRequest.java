@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @RequiredArgsConstructor
@@ -14,4 +16,6 @@ public class ChatSendRequest {
     private final String recipient;
 
     private final String content;
+
+    private final LocalDateTime sentAt;
 }

@@ -1,12 +1,14 @@
 package me.soo.helloworld.mapper;
 
-import me.soo.helloworld.model.chat.ChatData;
+import me.soo.helloworld.model.chat.ChatWrite;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 @Mapper
 public interface ChatMapper {
 
-    public void insertChat(ChatData chatData);
+    public void insertChats(List<ChatWrite> chats);
 
     public boolean isChatBoxExist(String sender, String recipient);
 

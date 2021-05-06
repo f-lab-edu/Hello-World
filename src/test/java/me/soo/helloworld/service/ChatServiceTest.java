@@ -2,9 +2,7 @@ package me.soo.helloworld.service;
 
 import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.ChatMapper;
-import me.soo.helloworld.model.chat.ChatData;
-import me.soo.helloworld.model.chat.ChatNotification;
-import me.soo.helloworld.model.chat.ChatSendRequest;
+import me.soo.helloworld.model.chat.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,9 +10,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+import java.time.*;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.*;
 
@@ -29,6 +33,8 @@ public class ChatServiceTest {
 
     private final String content = "Test";
 
+    private final LocalDateTime now = LocalDateTime.now(Clock.fixed(Instant.now(), ZoneId.of("Asia/Seoul")));
+
     @InjectMocks
     ChatService chatService;
 
@@ -41,13 +47,16 @@ public class ChatServiceTest {
     @Mock
     UserService userService;
 
+    @Mock
+    KafkaProducerService kafkaProducerService;
+
     ChatSendRequest requestIncludingChatBoxId;
 
     ChatSendRequest requestWithoutChatBoxId;
 
     ChatSendRequest requestWithoutChatBoxIdToSelf;
 
-    ChatData chatData;
+    ChatWrite chatWrite;
 
     @BeforeEach
     public void createChatRequest() {
@@ -55,28 +64,32 @@ public class ChatServiceTest {
                 .chatBoxId(CHAT_BOX_ID)
                 .recipient(recipient)
                 .content(content)
+                .sentAt(now)
                 .build();
 
         requestWithoutChatBoxId = ChatSendRequest.builder()
                 .recipient(recipient)
                 .content(content)
+                .sentAt(now)
                 .build();
 
         requestWithoutChatBoxIdToSelf = ChatSendRequest.builder()
                 .recipient(sender)
                 .content(content)
+                .sentAt(now)
                 .build();
     }
 
     @BeforeEach
     public void createChatDataAndNotification() {
-        chatData = ChatData.create(sender, CHAT_BOX_ID, recipient, content);
+        chatWrite = ChatWrite.create(sender, CHAT_BOX_ID, recipient, content, now);
     }
 
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     @DisplayName("Chat 관련 데이터와 ChatBox 아이디가 함께 전달되는 경우 별도의 처리과정 없이 해당 ChatBox 아이디를 이용해 메시지를 저장하고 전달하는데 성공합니다.")
     public void sendChatSuccessWhenChatBoxIdComesTogether() {
-        doNothing().when(chatMapper).insertChat(refEq((chatData)));
+        doNothing().when(kafkaProducerService).deliverChatsToKafka(anyString(), refEq(chatWrite));
         doNothing().when(messagingTemplate).convertAndSendToUser(anyString(), anyString(), any(ChatNotification.class));
 
         chatService.sendChat(sender, requestIncludingChatBoxId);
@@ -85,7 +98,6 @@ public class ChatServiceTest {
         verify(userService, never()).isUserActivated(recipient);
         verify(chatMapper, never()).insertChatBox(sender, recipient);
         verify(chatMapper, never()).getChatBoxId(sender, recipient);
-        verify(chatMapper, times(1)).insertChat(refEq(chatData));
         verify(messagingTemplate, times(1)).convertAndSendToUser(anyString(), anyString(), any(ChatNotification.class));
     }
 
@@ -101,7 +113,7 @@ public class ChatServiceTest {
         verify(userService, never()).isUserActivated(recipient);
         verify(chatMapper, never()).insertChatBox(sender, recipient);
         verify(chatMapper, never()).getChatBoxId(sender, recipient);
-        verify(chatMapper, never()).insertChat(refEq(chatData));
+        verify(kafkaProducerService, never()).deliverChatsToKafka(anyString(), refEq(chatWrite));
         verify(messagingTemplate, never()).convertAndSendToUser(anyString(), anyString(), any(ChatNotification.class));
     }
 
@@ -119,10 +131,12 @@ public class ChatServiceTest {
         verify(userService, times(1)).isUserActivated(recipient);
         verify(chatMapper, never()).insertChatBox(sender, recipient);
         verify(chatMapper, never()).getChatBoxId(sender, recipient);
-        verify(chatMapper, never()).insertChat(refEq(chatData));
+        verify(kafkaProducerService, never()).deliverChatsToKafka(anyString(), refEq(chatWrite));
         verify(messagingTemplate, never()).convertAndSendToUser(anyString(), anyString(), any(ChatNotification.class));
     }
 
+
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     @DisplayName("ChatBox 아이디 값 없이 Chat 관련 데이터만 전달되는 경우 ChatBox 의 존재 유무를 확인하고 없으면 상호 간의 새로운 ChatBox 를 생성한 뒤 " +
             " 해당 ChatBox 의 아이디를 얻어와 해당 메시지를 전달합니다.")
@@ -131,7 +145,7 @@ public class ChatServiceTest {
         when(userService.isUserActivated(recipient)).thenReturn(true);
         doNothing().when(chatMapper).insertChatBox(sender, recipient);
         when(chatMapper.getChatBoxId(sender, recipient)).thenReturn(CHAT_BOX_ID);
-        doNothing().when(chatMapper).insertChat(refEq((chatData)));
+        doNothing().when(kafkaProducerService).deliverChatsToKafka(anyString(), refEq(chatWrite));
         doNothing().when(messagingTemplate).convertAndSendToUser(anyString(), anyString(), any(ChatNotification.class));
 
         chatService.sendChat(sender, requestWithoutChatBoxId);
@@ -140,17 +154,17 @@ public class ChatServiceTest {
         verify(userService, times(1)).isUserActivated(recipient);
         verify(chatMapper, times(1)).insertChatBox(sender, recipient);
         verify(chatMapper, times(1)).getChatBoxId(sender, recipient);
-        verify(chatMapper, times(1)).insertChat(refEq(chatData));
         verify(messagingTemplate, times(1)).convertAndSendToUser(anyString(), anyString(), any(ChatNotification.class));
     }
 
+    @MockitoSettings(strictness = Strictness.LENIENT)
     @Test
     @DisplayName("ChatBox 아이디 값 없이 Chat 관련 데이터만 전달되는 경우 ChatBox 의 존재 유무를 확인하고 있으면 새로운 ChatBox 의 생성과정 없이 기존의 " +
             " ChatBox 의 아이디를 얻어와 해당 메시지를 전달합니다.")
     public void sendChatSuccessWithoutChatBoxIdByFetchingChatBoxIdWhenOneChatBoxAlreadyExistsBetweenTwo() {
         when(chatMapper.isChatBoxExist(sender, recipient)).thenReturn(true);
         when(chatMapper.getChatBoxId(sender, recipient)).thenReturn(CHAT_BOX_ID);
-        doNothing().when(chatMapper).insertChat(refEq((chatData)));
+        doNothing().when(kafkaProducerService).deliverChatsToKafka(anyString(), refEq(chatWrite));
         doNothing().when(messagingTemplate).convertAndSendToUser(anyString(), anyString(), any(ChatNotification.class));
 
         chatService.sendChat(sender, requestWithoutChatBoxId);
@@ -159,7 +173,6 @@ public class ChatServiceTest {
         verify(userService, never()).isUserActivated(recipient);
         verify(chatMapper, never()).insertChatBox(sender, recipient);
         verify(chatMapper, times(1)).getChatBoxId(sender, recipient);
-        verify(chatMapper, times(1)).insertChat(refEq(chatData));
         verify(messagingTemplate, times(1)).convertAndSendToUser(anyString(), anyString(), any(ChatNotification.class));
     }
 }

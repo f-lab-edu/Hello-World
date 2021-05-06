@@ -3,10 +3,12 @@
 
 <mapper namespace="me.soo.helloworld.mapper.ChatMapper">
 
-    <insert id="insertChat" parameterType="me.soo.helloworld.model.chat.ChatData">
+    <insert id="insertChats" parameterType="me.soo.helloworld.model.chat.ChatWrite">
 
-        INSERT INTO chats (chatBoxId, recipient, content, sender)
-        VALUES (#{chatBoxId}, #{recipient}, #{content}, #{sender})
+        INSERT INTO chats (chatBoxId, recipient, sender, content, sentAt) VALUES
+        <foreach collection="chats" item="chat" separator=",">
+            (#{chat.chatBoxId}, #{chat.recipient}, #{chat.sender}, #{chat.content}, #{chat.sentAt})
+        </foreach>
     </insert>
 
     <select id="isChatBoxExist" parameterType="String" resultType="boolean">
