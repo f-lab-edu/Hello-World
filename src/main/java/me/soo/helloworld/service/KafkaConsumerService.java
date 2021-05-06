@@ -21,7 +21,6 @@ public class KafkaConsumerService {
             topics = "${kafka.topic.name}"
     )
     public void saveChats(List<ChatWrite> chats) {
-        log.info("size {} messages will be inserted into the database", chats.size());
         chatMapper.insertChats(chats);
     }
 }
