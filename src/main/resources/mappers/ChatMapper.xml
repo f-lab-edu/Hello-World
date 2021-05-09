@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.soo.helloworld.mapper.ChatMapper">
+
+    <insert id="insertChats" parameterType="me.soo.helloworld.model.chat.ChatWrite">
+
+        INSERT INTO chats (chatBoxId, recipient, sender, content, sentAt) VALUES
+        <foreach collection="chats" item="chat" separator=",">
+            (#{chat.chatBoxId}, #{chat.recipient}, #{chat.sender}, #{chat.content}, #{chat.sentAt})
+        </foreach>
+    </insert>
+
+    <select id="isChatBoxExist" parameterType="String" resultType="boolean">
+
+        SELECT EXISTS (
+            SELECT id
+            FROM chatboxes
+            WHERE userOne in (#{sender}, #{recipient})
+            AND userTwo in (#{sender}, #{recipient})
+        )
+    </select>
+
+    <insert id="insertChatBox" parameterType="String">
+
+        INSERT INTO chatboxes (userOne, userTwo)
+        VALUES (#{sender}, #{recipient})
+    </insert>
+
+    <select id="getChatBoxId" parameterType="String" resultType="int">
+
+        SELECT id FROM chatboxes
+        WHERE userOne in (#{sender}, #{recipient})
+	    AND userTwo in (#{sender}, #{recipient})
+    </select>
+
+</mapper>
