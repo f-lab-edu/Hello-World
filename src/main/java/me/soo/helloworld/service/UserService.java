@@ -9,6 +9,7 @@ import me.soo.helloworld.model.email.FindPasswordEmail;
 import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.*;
 import me.soo.helloworld.util.encoder.PasswordEncoder;
+import me.soo.helloworld.util.encoder.PasswordEncoderSHA256;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,12 @@ public class UserService {
         userMapper.insertUser(user.buildUserWithEncodedPassword(encodedPassword));
     }
 
+    @CacheEvict(key = MAIN_PAGE_KEY,value = MAIN_PAGE_VALUE, cacheManager = REDIS_CACHE_MANAGER)
+    public void testUserSignUp(User user) {
+        String encodedPassword = PasswordEncoderSHA256.encode(user.getPassword());
+        userMapper.insertUser(user.buildUserWithEncodedPassword(encodedPassword));
+    }
+
     @Transactional(readOnly = true)
     public boolean isUserIdExist(String userId) {
         return userMapper.isUserIdExist(userId);
@@ -59,7 +66,7 @@ public class UserService {
         UserLoginData loginData = userMapper.getUserLoginDataById(userId)
                 .orElseThrow(() -> new InvalidUserInfoException("해당 사용자는 존재하지 않습니다. 아이디를 다시 확인해 주세요."));
 
-        if (!StringUtils.equals(password, loginData.getPassword())) {
+        if (!StringUtils.equals(PasswordEncoderSHA256.encode(password), loginData.getPassword())) {
             throw new InvalidUserInfoException("입력하신 비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.");
         }
 //        isValidPassword(password, loginData.getPassword());

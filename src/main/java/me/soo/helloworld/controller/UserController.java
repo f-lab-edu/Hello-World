@@ -31,6 +31,12 @@ public class UserController {
         userService.userSignUp(user);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/test-signup")
+    public void testUserSignUp(@Valid @RequestBody User user) {
+        userService.testUserSignUp(user);
+    }
+
     @GetMapping("/id-check")
     public ResponseEntity<Void> isUserIdDuplicate(@RequestParam String userId) {
         if (userService.isUserIdExist(userId)) {
