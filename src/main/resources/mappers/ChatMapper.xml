@@ -34,4 +34,22 @@
 	    AND userTwo in (#{sender}, #{recipient})
     </select>
 
+    <select id="getChatBoxes" parameterType="map" resultType="me.soo.helloworld.model.chat.ChatBox">
+
+        SELECT
+            c1.id AS id,
+            c1.chatBoxId AS chatBoxId,
+            IF(c1.recipient = #{userId}, c1.sender, c1.recipient) AS partner,
+            c1.content AS content,
+            c1.sentAt AS sentAt
+        FROM chats AS c1
+            LEFT OUTER JOIN chats AS c2 on c1.chatBoxId = c2.chatboxId AND c1.id <![CDATA[<]]> c2.id
+        WHERE c2.id IS NULL
+            <if test="pagination.cursor != null">
+            AND c1.id <![CDATA[<]]> #{pagination.cursor}
+            </if>
+            AND #{userId} IN (c1.recipient, c1.sender)
+        ORDER BY id DESC
+        LIMIT #{pagination.pageSize}
+    </select>
 </mapper>

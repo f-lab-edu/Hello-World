@@ -3,11 +3,14 @@ package me.soo.helloworld.service;
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.mapper.ChatMapper;
 import me.soo.helloworld.model.chat.*;
+import me.soo.helloworld.util.Pagination;
 import me.soo.helloworld.util.validator.TargetUserValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +41,11 @@ public class ChatService {
         kafkaProducerService.deliverChatsToKafka(kafkaTopic, chat);
         messagingTemplate.convertAndSendToUser(chat.getRecipient(), "/queue/messages",
                 new ChatNotification(chat.getSender(), chat.getContent()));
+    }
+
+    @Transactional(readOnly = true)
+    public List<ChatBox> getChatBoxes(String userId, Pagination pagination) {
+        return chatMapper.getChatBoxes(userId, pagination);
     }
 
     private int fetchChatBoxId(String sender, String recipient) {
