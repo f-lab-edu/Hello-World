@@ -52,4 +52,24 @@
         ORDER BY id DESC
         LIMIT #{pagination.pageSize}
     </select>
+
+    <select id="getChats" parameterType="map" resultType="me.soo.helloworld.model.chat.Chat">
+
+        SELECT id, recipient, sender, content, hasRead, sentAt
+        FROM chats
+        WHERE chatBoxId = #{chatBoxId}
+        <if test="pagination.cursor != null">
+            AND id <![CDATA[<]]> #{pagination.cursor}
+        </if>
+            AND #{userId} IN (sender, recipient)
+        ORDER BY id DESC
+        LIMIT #{pagination.pageSize}
+    </select>
+
+    <update id="updateToRead" parameterType="int">
+
+        UPDATE chats SET hasRead = 'Y'
+        WHERE id
+        IN (<foreach collection="unReadChatIds" item="id" separator=","> #{id} </foreach>)
+    </update>
 </mapper>

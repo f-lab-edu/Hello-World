@@ -1,5 +1,6 @@
 package me.soo.helloworld.mapper;
 
+import me.soo.helloworld.model.chat.Chat;
 import me.soo.helloworld.model.chat.ChatBox;
 import me.soo.helloworld.model.chat.ChatWrite;
 import me.soo.helloworld.util.Pagination;
@@ -21,4 +22,10 @@ public interface ChatMapper {
 
     public List<ChatBox> getChatBoxes(@Param("userId") String userId,
                                       @Param("pagination") Pagination pagination);
+
+    public List<Chat> getChats(@Param("chatBoxId") int chatBoxId,
+                               @Param("userId") String userId,
+                               @Param("pagination") Pagination pagination);
+
+    public void updateToRead(List<Integer> unReadChatIds);
 }
