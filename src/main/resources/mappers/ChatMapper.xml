@@ -57,11 +57,12 @@
 
         SELECT id, recipient, sender, content, hasRead, sentAt
         FROM chats
-        WHERE chatBoxId = #{chatBoxId}
+        WHERE
         <if test="pagination.cursor != null">
-            AND id <![CDATA[<]]> #{pagination.cursor}
+            id <![CDATA[<]]> #{pagination.cursor} AND
         </if>
-            AND #{userId} IN (sender, recipient)
+            chatBoxId = #{chatBoxId} AND
+            #{userId} IN (sender, recipient)
         ORDER BY id DESC
         LIMIT #{pagination.pageSize}
     </select>
