@@ -3,6 +3,7 @@ package me.soo.helloworld.controller;
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.annotation.CurrentUser;
 import me.soo.helloworld.annotation.LoginRequired;
+import me.soo.helloworld.model.chat.Chat;
 import me.soo.helloworld.model.chat.ChatBox;
 import me.soo.helloworld.model.chat.ChatSendRequest;
 import me.soo.helloworld.service.ChatService;
@@ -34,5 +35,13 @@ public class ChatController {
     public List<ChatBox> getChatBoxes(@CurrentUser String userId,
                                       @RequestParam(required = false) Integer cursor) {
         return chatService.getChatBoxes(userId, Pagination.create(cursor, pageSize));
+    }
+
+    @LoginRequired
+    @GetMapping("/{chat-box-id}/chats")
+    public List<Chat> getChats(@PathVariable("chat-box-id") Integer chatBoxId,
+                               @CurrentUser String userId,
+                               @RequestParam(required = false) Integer cursor) {
+        return chatService.getChats(chatBoxId, userId, Pagination.create(cursor, pageSize));
     }
 }

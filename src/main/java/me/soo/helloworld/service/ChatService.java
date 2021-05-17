@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +49,13 @@ public class ChatService {
         return chatMapper.getChatBoxes(userId, pagination);
     }
 
+    @Transactional
+    public List<Chat> getChats(int chatBoxId, String userId, Pagination pagination) {
+        List<Chat> chats = chatMapper.getChats(chatBoxId, userId, pagination);
+        markUnreadAsRead(userId, chats);
+        return chats;
+    }
+
     private int fetchChatBoxId(String sender, String recipient) {
         createIfNotExist(sender, recipient);
         return chatMapper.getChatBoxId(sender, recipient);
@@ -60,6 +68,17 @@ public class ChatService {
             TargetUserValidator.targetNotSelf(sender, recipient);
             TargetUserValidator.targetExistence(userService.isUserActivated(recipient));
             chatMapper.insertChatBox(sender, recipient);
+        }
+    }
+
+    private void markUnreadAsRead(String userId, List<Chat> chats) {
+        List<Integer> unReadChatIds = chats.stream()
+                .filter(chat -> "N".equals(chat.getHasRead()) && userId.equals(chat.getRecipient()))
+                .map(Chat::getId)
+                .collect(Collectors.toList());
+
+        if (!unReadChatIds.isEmpty()) {
+            chatMapper.updateToRead(unReadChatIds);
         }
     }
 }
