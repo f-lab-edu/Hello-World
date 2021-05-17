@@ -62,8 +62,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserLoginData testGetUserLoginInfo(String userId, String password) {
-        UserLoginData loginData = userMapper.getUserLoginDataById(userId)
+    public TestUserLoginData testGetUserLoginInfo(String userId, String password) {
+        TestUserLoginData loginData = userMapper.getTestUserLoginDataById(userId)
                 .orElseThrow(() -> new InvalidUserInfoException("해당 사용자는 존재하지 않습니다. 아이디를 다시 확인해 주세요."));
 
         if (!StringUtils.equals(PasswordEncoderSHA256.encode(password), loginData.getPassword())) {

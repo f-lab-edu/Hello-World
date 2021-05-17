@@ -38,6 +38,16 @@
         WHERE u.userId = #{userId} AND isDeactivated = 'N';
     </select>
 
+    <select id="getTestUserLoginDataById"
+            parameterType="String" resultType="me.soo.helloworld.model.user.TestUserLoginData">
+
+        SELECT
+            userId,
+            password
+        FROM users AS u
+        WHERE userId = #{userId} AND isDeactivated = 'N';
+    </select>
+
     <select id="getUserProfileImageById"
             parameterType="String" resultType="me.soo.helloworld.model.file.FileData">
         SELECT profileImageName, profileImagePath FROM users WHERE userId = #{userId}

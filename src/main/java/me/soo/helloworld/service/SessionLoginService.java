@@ -2,6 +2,7 @@ package me.soo.helloworld.service;
 
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.exception.DuplicateLoginRequestException;
+import me.soo.helloworld.model.user.TestUserLoginData;
 import me.soo.helloworld.model.user.UserLoginData;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.util.constant.SessionKeys;
@@ -34,10 +35,10 @@ public class SessionLoginService implements LoginService {
     public void testLogin(UserLoginRequest loginRequest) {
         validateDuplicateLogin(getCurrentUserId());
 
-        UserLoginData loginData = userService.testGetUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword());
-        httpSession.setAttribute(SessionKeys.USER_ID, loginData.getUserId());
+        TestUserLoginData testUserLoginData = userService.testGetUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword());
+        httpSession.setAttribute(SessionKeys.USER_ID, testUserLoginData.getUserId());
 
-        updateTokenIfRequired(loginRequest.getUserId(), loginRequest.getToken(), loginData.getToken());
+//        updateTokenIfRequired(loginRequest.getUserId(), loginRequest.getToken(), loginData.getToken());
     }
 
     @Override

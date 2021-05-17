@@ -1,10 +1,7 @@
 package me.soo.helloworld.mapper;
 
 import me.soo.helloworld.model.file.FileData;
-import me.soo.helloworld.model.user.User;
-import me.soo.helloworld.model.user.UserFindPasswordRequest;
-import me.soo.helloworld.model.user.UserLoginData;
-import me.soo.helloworld.model.user.UserUpdateRequest;
+import me.soo.helloworld.model.user.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,6 +15,8 @@ public interface UserMapper {
     public boolean isUserIdExist(String userId);
 
     public Optional<UserLoginData> getUserLoginDataById(String userId);
+
+    public Optional<TestUserLoginData> getTestUserLoginDataById(String userId);
 
     public FileData getUserProfileImageById(String userId);
 
