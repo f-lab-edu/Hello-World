@@ -33,6 +33,11 @@ public class ProfileController {
         return profileService.getUserProfile(targetId, userId);
     }
 
+    @GetMapping("/test/{targetId}")
+    public UserProfile getUserProfileTest(@PathVariable String targetId) {
+        return profileService.getUserProfile(targetId, "gomsu1045");
+    }
+
     @LoginRequired
     @GetMapping
     public List<UserProfiles> getUserProfiles(@CurrentUser String userId,
