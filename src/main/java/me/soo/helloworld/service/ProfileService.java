@@ -38,7 +38,7 @@ public class ProfileService {
     private final RecommendationService recommendationService;
 
     @Transactional(readOnly = true)
-//    @Cacheable(key = "#targetId", value = USER_PROFILE, cacheManager = REDIS_CACHE_MANAGER)
+    @Cacheable(key = "#targetId", value = USER_PROFILE, cacheManager = REDIS_CACHE_MANAGER)
     public UserProfile getUserProfile(String targetId, String userId) {
         UserDataOnProfile profile = profileMapper.getUserProfileData(targetId, userId)
                 .orElseThrow(() -> new InvalidRequestException("존재하지 않거나 정보가 올바르게 등록되지 않은 사용자의 경우 프로필 조회가 불가능합니다."));
@@ -50,10 +50,10 @@ public class ProfileService {
     }
 
     @Transactional(readOnly = true)
-//    @Caching(cacheable = {
-//            @Cacheable(key = MAIN_PAGE_KEY, value = MAIN_PAGE_VALUE, condition = "#pagination.cursor == null", cacheManager = REDIS_CACHE_MANAGER),
-//            @Cacheable(key = "#pagination.cursor", value = USER_PROFILES, condition = "#pagination.cursor != null", cacheManager = REDIS_CACHE_MANAGER)
-//    })
+    @Caching(cacheable = {
+            @Cacheable(key = MAIN_PAGE_KEY, value = MAIN_PAGE_VALUE, condition = "#pagination.cursor == null", cacheManager = REDIS_CACHE_MANAGER),
+            @Cacheable(key = "#pagination.cursor", value = USER_PROFILES, condition = "#pagination.cursor != null", cacheManager = REDIS_CACHE_MANAGER)
+    })
     public List<UserProfiles> getUserProfiles(String userId, Pagination pagination) {
         return profileMapper.getUserProfiles(userId, pagination);
     }
