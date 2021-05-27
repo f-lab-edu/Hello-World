@@ -71,27 +71,29 @@
         <result property="aboutMe" column="aboutMe"/>
         <result property="profileImageName" column="profileImageName"/>
         <result property="profileImagePath" column="profileImagePath"/>
-        <association property="recommendationNums" column="userId"
-                     javaType="_int" select="getTotalRecommendationsNums"/>
+        <result property="recommendationNums" column="recommendationNums" />
     </resultMap>
 
     <select id="getUserProfiles" parameterType="map"
             resultMap="getUserProfilesMap">
-        SELECT id, userId, aboutMe,
-               profileImageName, profileImagePath
-        FROM users
+        SELECT
+               u.id AS id,
+               u.userId AS userId,
+               u.aboutMe AS aboutMe,
+               u.profileImageName AS profileImageName,
+               u.profileImagePath AS profileImagePath,
+               COUNT(r.recomTo) AS recommendationNums
+        FROM users AS u
+            LEFT OUTER JOIN recommendations AS r ON u.userId = r.recomTo
         WHERE
         <if test="pagination.cursor != null">
-            id <![CDATA[<]]> #{pagination.cursor} AND
+            u.id <![CDATA[<]]> #{pagination.cursor} AND
         </if>
-        isDeactivated = 'N'
-        AND userId NOT IN (SELECT blockedBy FROM block WHERE blockId = #{userId})
-        ORDER BY id DESC
+        u.isDeactivated = 'N'
+        AND u.userId NOT IN (SELECT blockedBy FROM block WHERE blockId = #{userId})
+        GROUP BY u.id
+        ORDER BY u.id DESC
         LIMIT #{pagination.pageSize}
-    </select>
-    
-    <select id="getTotalRecommendationsNums" parameterType="String" resultType="int">
-        SELECT COUNT(recomTo) FROM recommendations WHERE recomTo = #{userId}
     </select>
 
     <select id="searchUserProfiles" resultMap="getUserProfilesMap">
