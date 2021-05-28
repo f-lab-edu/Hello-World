@@ -32,7 +32,7 @@ public class UserService {
     @CacheEvict(key = MAIN_PAGE_KEY,value = MAIN_PAGE_VALUE, cacheManager = REDIS_CACHE_MANAGER)
     public void userSignUp(User user) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
-        userMapper.insertUser(user.buildUserWithEncodedPassword(encodedPassword));
+        userMapper.insertUser(user.createUserWithEncodedPassword(encodedPassword));
     }
 
     @Transactional(readOnly = true)
@@ -70,7 +70,7 @@ public class UserService {
         userMapper.updateUserProfileImage(userId, newProfileImage);
     }
 
-    public void findUserPassword(UserFindPasswordRequest findPasswordRequest) {
+    public void findPassword(UserFindPasswordRequest findPasswordRequest) {
         if (!userMapper.isEmailValid(findPasswordRequest)) {
             throw new InvalidUserInfoException("해당 사용자가 존재하지 않거나 이메일이 일치하지 않습니다. 입력하신 정보를 다시 확인해 주세요.");
         }

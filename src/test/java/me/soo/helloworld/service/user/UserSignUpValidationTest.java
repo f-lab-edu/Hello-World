@@ -17,45 +17,42 @@ class UserSignUpValidationTest {
     private Validator validator;
 
     private User getUserWithVariousName(String name) {
-        return User.builder()
-                .userId(name)
-                .password("!@#$!@#$Gomsu1045")
-                .email("test@test.com")
-                .gender("M")
-                .birthday(Date.valueOf("1993-09-25"))
-                .originCountry(SOUTH_KOREA)
-                .livingCountry(UNITED_KINGDOM)
-                .livingTown(NEWCASTLE)
-                .aboutMe("Hello, I'd love to make great friends here")
-                .build();
+        return new User(
+                name,
+                "!@#$!@#$Gomsu1045",
+                "test@test.com",
+                "M",
+                Date.valueOf("2009-01-01"),
+                SOUTH_KOREA,
+                UNITED_KINGDOM,
+                NEWCASTLE
+        );
     }
 
     private User getUserWithVariousPassword(String password) {
-        return User.builder()
-                .userId("gomsu1045")
-                .password(password)
-                .email("test@test.com")
-                .gender("M")
-                .birthday(Date.valueOf("1993-09-25"))
-                .originCountry(SOUTH_KOREA)
-                .livingCountry(UNITED_KINGDOM)
-                .livingTown(NEWCASTLE)
-                .aboutMe("Hello, I'd love to make great friends here")
-                .build();
+        return new User(
+                "gomsu1045",
+                password,
+                "test@test.com",
+                "M",
+                Date.valueOf("2009-01-01"),
+                SOUTH_KOREA,
+                UNITED_KINGDOM,
+                NEWCASTLE
+        );
     }
 
     private User getUserWithVariousEmail(String email) {
-        return User.builder()
-                .userId("Gomsu1045")
-                .password("!@#$!@#$Gomsu1045")
-                .email(email)
-                .gender("M")
-                .birthday(Date.valueOf("1993-09-25"))
-                .originCountry(SOUTH_KOREA)
-                .livingCountry(UNITED_KINGDOM)
-                .livingTown(NEWCASTLE)
-                .aboutMe("Hello, I'd love to make great friends here")
-                .build();
+        return new User(
+                "gomsu1045",
+                "!@#$!@#$Gomsu1045",
+                email,
+                "M",
+                Date.valueOf("2009-01-01"),
+                SOUTH_KOREA,
+                UNITED_KINGDOM,
+                NEWCASTLE
+        );
     }
 
     @BeforeEach
@@ -86,15 +83,6 @@ class UserSignUpValidationTest {
     @DisplayName("빈 문자열을 userId에 넣으면 validation 위반이 발생합니다.")
     public void userIdWithEmptyStringFail() {
         String userId = "";
-        User testUser = getUserWithVariousName(userId);
-        Set<ConstraintViolation<User>> violations = validator.validate(testUser);
-        assertFalse(violations.isEmpty());
-    }
-
-    @Test
-    @DisplayName("null을 userId에 넣으면 validation 위반이 발생합니다.")
-    public void userIdWithNullFail() {
-        String userId = null;
         User testUser = getUserWithVariousName(userId);
         Set<ConstraintViolation<User>> violations = validator.validate(testUser);
         assertFalse(violations.isEmpty());
@@ -140,15 +128,6 @@ class UserSignUpValidationTest {
     @DisplayName("빈 문자열을 password 에 넣으면 validation 위반이 발생합니다.")
     public void userPasswordWithEmptyStringFail() {
         String password = "";
-        User testUser = getUserWithVariousPassword(password);
-        Set<ConstraintViolation<User>> violations = validator.validate(testUser);
-        assertFalse(violations.isEmpty());
-    }
-
-    @Test
-    @DisplayName("null을 password 에 넣으면 validation 위반이 발생합니다.")
-    public void userPasswordWithNullFail() {
-        String password = null;
         User testUser = getUserWithVariousPassword(password);
         Set<ConstraintViolation<User>> violations = validator.validate(testUser);
         assertFalse(violations.isEmpty());
@@ -211,7 +190,7 @@ class UserSignUpValidationTest {
     @Test
     @DisplayName("email에 잘못된 이메일 형식을 입력하는 경우 validation 위반이 발생합니다.")
     public void userEmailWithInvalidFormatFail() {
-        String email = "test@";
+        String email = "test@ccc";
         User testUser = getUserWithVariousEmail(email);
         Set<ConstraintViolation<User>> violations = validator.validate(testUser);
         assertFalse(violations.isEmpty());
@@ -222,15 +201,6 @@ class UserSignUpValidationTest {
     public void userEmailWithEmptyStringFail() {
         String email = "";
         User testUser = getUserWithVariousEmail(email);
-        Set<ConstraintViolation<User>> violations = validator.validate(testUser);
-        assertFalse(violations.isEmpty());
-    }
-
-    @Test
-    @DisplayName("email에 null을 입력하는 경우 validation 위반이 발생합니다.")
-    public void userEmailWithNullFail() {
-        String password = null;
-        User testUser = getUserWithVariousPassword(password);
         Set<ConstraintViolation<User>> violations = validator.validate(testUser);
         assertFalse(violations.isEmpty());
     }

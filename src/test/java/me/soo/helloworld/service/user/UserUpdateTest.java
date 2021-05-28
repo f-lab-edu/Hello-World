@@ -20,17 +20,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 
-import java.sql.Date;
-
 import static me.soo.helloworld.TestCountries.*;
-import static me.soo.helloworld.TestTowns.NEWCASTLE;
+import static me.soo.helloworld.TestUsersFixture.CURRENT_USER;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserUpdateTest {
-
-    User testUser;
 
     @InjectMocks
     UserService userService;
@@ -49,24 +45,9 @@ public class UserUpdateTest {
 
     @BeforeEach
     public void setUp() {
-
         String filePath = "D:\\Project\\Hello-World\\Files";
 
         String fileName = "IsItSuccessful.jpg";
-
-        testUser = User.builder()
-                .userId("gomsu1045")
-                .password("Gomsu1045!0$%")
-                .email("test@test.com")
-                .gender("Male")
-                .birthday(Date.valueOf("1993-09-25"))
-                .originCountry(SOUTH_KOREA)
-                .livingCountry(UNITED_KINGDOM)
-                .livingTown(NEWCASTLE)
-                .aboutMe("Hello, I'd love to make great friends here")
-                .profileImageName(fileName)
-                .profileImagePath(filePath)
-                .build();
     }
 
 
@@ -77,18 +58,18 @@ public class UserUpdateTest {
         String differentPassword = "Do you wanna build a snow man?";
 
         UserPasswordRequest newPassword = UserPasswordRequest.builder()
-                .currentPassword(testUser.getPassword())
+                .currentPassword(CURRENT_USER.getPassword())
                 .newPassword(differentPassword)
                 .checkNewPassword(differentPassword)
                 .build();
 
         String encodedPassword = passwordEncoder.encode(newPassword.getNewPassword());
 
-        doNothing().when(userMapper).updateUserPassword(testUser.getUserId(), encodedPassword);
+        doNothing().when(userMapper).updateUserPassword(CURRENT_USER.getUserId(), encodedPassword);
 
-        userService.userPasswordUpdate(testUser.getUserId(), newPassword);
+        userService.userPasswordUpdate(CURRENT_USER.getUserId(), newPassword);
 
-        verify(userMapper, times(1)).updateUserPassword(testUser.getUserId(), encodedPassword);
+        verify(userMapper, times(1)).updateUserPassword(CURRENT_USER.getUserId(), encodedPassword);
     }
 
     @Test
@@ -102,11 +83,11 @@ public class UserUpdateTest {
                 .aboutMe("I have just been accepted to the Hogwart of Witchcraft and Wizardary")
                 .build();
 
-        doNothing().when(userMapper).updateUserInfo(testUser.getUserId(), updatedUser);
+        doNothing().when(userMapper).updateUserInfo(CURRENT_USER.getUserId(), updatedUser);
 
-        userService.userInfoUpdate(testUser.getUserId(), updatedUser);
+        userService.userInfoUpdate(CURRENT_USER.getUserId(), updatedUser);
 
-        verify(userMapper, times(1)).updateUserInfo(testUser.getUserId(), updatedUser);
+        verify(userMapper, times(1)).updateUserInfo(CURRENT_USER.getUserId(), updatedUser);
     }
 
     @Test
@@ -121,15 +102,15 @@ public class UserUpdateTest {
 
         String newFileName = "HermioneGranger.jpg";
 
-        FileData newProfileImage = new FileData(newFileName, testUser.getProfileImagePath());
+        FileData newProfileImage = new FileData(newFileName, CURRENT_USER.getProfileImagePath());
 
-        when(fileService.uploadFile(testImageFile, testUser.getUserId())).thenReturn(newProfileImage);
-        doNothing().when(userMapper).updateUserProfileImage(testUser.getUserId(), newProfileImage);
+        when(fileService.uploadFile(testImageFile, CURRENT_USER.getUserId())).thenReturn(newProfileImage);
+        doNothing().when(userMapper).updateUserProfileImage(CURRENT_USER.getUserId(), newProfileImage);
 
-        userService.userProfileImageUpdate(testUser.getUserId(), testImageFile);
+        userService.userProfileImageUpdate(CURRENT_USER.getUserId(), testImageFile);
 
-        verify(fileService, times(1)).uploadFile(testImageFile, testUser.getUserId());
-        verify(userMapper, times(1)).updateUserProfileImage(testUser.getUserId(), newProfileImage);
+        verify(fileService, times(1)).uploadFile(testImageFile, CURRENT_USER.getUserId());
+        verify(userMapper, times(1)).updateUserProfileImage(CURRENT_USER.getUserId(), newProfileImage);
 
     }
 
@@ -137,7 +118,7 @@ public class UserUpdateTest {
     @DisplayName("현재 유저의 기존 프로필 사진 삭제에 실패하면 프로필 사진 업데이트에 실패하며 FileNotDeletedException 이 발생합니다.")
     public void userProfileImageUpdateFailWithExistingFileRemovalNotPossible() {
 
-        FileData oldProfileImage = new FileData(testUser.getProfileImageName(), "D:\\Project\\");
+        FileData oldProfileImage = new FileData(CURRENT_USER.getProfileImageName(), "D:\\Project\\");
 
         MockMultipartFile testImageFile = new MockMultipartFile(
                 "profileImage",
@@ -145,11 +126,11 @@ public class UserUpdateTest {
                 "image/jpeg",
                 "Hello There".getBytes());
 
-        when(userMapper.getUserProfileImageById(testUser.getUserId())).thenReturn(oldProfileImage);
+        when(userMapper.getUserProfileImageById(CURRENT_USER.getUserId())).thenReturn(oldProfileImage);
         doThrow(FileNotDeletedException.class).when(fileService).deleteFile(oldProfileImage);
 
         assertThrows(FileNotDeletedException.class, () -> {
-            userService.userProfileImageUpdate(testUser.getUserId(), testImageFile);
+            userService.userProfileImageUpdate(CURRENT_USER.getUserId(), testImageFile);
         });
 
         verify(fileService, times(1)).deleteFile(oldProfileImage);
@@ -159,7 +140,7 @@ public class UserUpdateTest {
     @DisplayName("새로운 프로필 사진의 업로드에 실패하는 경우 프로필 사진 업데이트에 실패하며 FileNotUploadedException 이 발생합니다.")
     public void userProfileImageUpdateFailWithUploadingNotPossible() {
 
-        FileData oldProfileImage = new FileData(testUser.getProfileImageName(), testUser.getProfileImagePath());
+        FileData oldProfileImage = new FileData(CURRENT_USER.getProfileImageName(), CURRENT_USER.getProfileImagePath());
 
         MockMultipartFile testImageFile = new MockMultipartFile(
                 "profileImage",
@@ -169,17 +150,17 @@ public class UserUpdateTest {
 
         String newFileName = "HermioneGranger.jpg";
 
-        when(userMapper.getUserProfileImageById(testUser.getUserId())).thenReturn(oldProfileImage);
+        when(userMapper.getUserProfileImageById(CURRENT_USER.getUserId())).thenReturn(oldProfileImage);
         doNothing().when(fileService).deleteFile(oldProfileImage);
 
-        when(fileService.uploadFile(testImageFile, testUser.getUserId())).thenThrow(FileNotUploadedException.class);
+        when(fileService.uploadFile(testImageFile, CURRENT_USER.getUserId())).thenThrow(FileNotUploadedException.class);
 
         assertThrows(FileNotUploadedException.class, () -> {
-            userService.userProfileImageUpdate(testUser.getUserId(), testImageFile);
+            userService.userProfileImageUpdate(CURRENT_USER.getUserId(), testImageFile);
         });
 
         verify(fileService, times(1)).deleteFile(oldProfileImage);
-        verify(fileService, times(1)).uploadFile(testImageFile, testUser.getUserId());
+        verify(fileService, times(1)).uploadFile(testImageFile, CURRENT_USER.getUserId());
 
     }
 }
