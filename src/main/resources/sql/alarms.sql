@@ -10,5 +10,4 @@ create table alarms
 );
 
 create index alarms_alarmTo_alarmFrom_index
-    on alarms (alarmTo);
-
+    on alarms (alarmTo, alarmFrom);

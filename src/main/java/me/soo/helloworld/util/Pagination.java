@@ -18,4 +18,8 @@ public class Pagination {
                         .pageSize(size)
                         .build();
     }
+
+    public int calculateOffset(int pageLimit, int pageNumber) {
+        return pageLimit * (Math.max(pageNumber, 1) - 1);
+    }
 }
