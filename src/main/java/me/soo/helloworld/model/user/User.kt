@@ -1,11 +1,9 @@
 package me.soo.helloworld.model.user
 
-import java.util.*
-import javax.validation.constraints.Email
-import javax.validation.constraints.NotNull
+import java.util.Date
 import javax.validation.constraints.Pattern
 
-data class User @JvmOverloads constructor (
+data class User @JvmOverloads constructor(
 
     @field:Pattern(
         regexp = "^[0-9a-zA-Z]{5,20}$",
@@ -46,19 +44,18 @@ data class User @JvmOverloads constructor (
     val profileImagePath: String? = null
 ) {
 
-    fun createUserWithEncodedPassword(encodedPassword: String): User {
-        return User(
-            userId= userId,
-            password=encodedPassword,
-            email= email,
-            gender= gender,
-            birthday= birthday,
-            originCountry= originCountry,
-            livingCountry= livingCountry,
-            livingTown= livingTown,
-            aboutMe= aboutMe,
-            profileImageName= profileImageName,
-            profileImagePath= profileImagePath
+    fun createUserWithEncodedPassword(encodedPassword: String) =
+        User(
+            userId = userId,
+            password = encodedPassword,
+            email = email,
+            gender = gender,
+            birthday = birthday,
+            originCountry = originCountry,
+            livingCountry = livingCountry,
+            livingTown = livingTown,
+            aboutMe = aboutMe,
+            profileImageName = profileImageName,
+            profileImagePath = profileImagePath
         )
-    }
 }
