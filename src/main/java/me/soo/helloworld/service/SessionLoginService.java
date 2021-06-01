@@ -3,7 +3,7 @@ package me.soo.helloworld.service;
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.exception.DuplicateLoginRequestException;
 import me.soo.helloworld.model.user.UserLoginData;
-import me.soo.helloworld.model.user.UserLoginRequest;
+import me.soo.helloworld.model.user.LoginRequest;
 import me.soo.helloworld.util.constant.SessionKeys;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class SessionLoginService implements LoginService {
     private final PushNotificationService pushNotificationService;
 
     @Override
-    public void login(UserLoginRequest loginRequest) {
+    public void login(LoginRequest loginRequest) {
         validateDuplicateLogin(getCurrentUserId());
 
         UserLoginData loginData = userService.getUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword());

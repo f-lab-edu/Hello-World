@@ -3,6 +3,8 @@ package me.soo.helloworld.service;
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.exception.InvalidUserInfoException;
 import me.soo.helloworld.mapper.UserMapper;
+import me.soo.helloworld.model.user.UpdatePasswordRequest;
+import me.soo.helloworld.model.user.UpdateInfoRequest;
 import me.soo.helloworld.model.email.EmailBase;
 import me.soo.helloworld.model.email.FindPasswordEmail;
 import me.soo.helloworld.model.file.FileData;
@@ -48,13 +50,13 @@ public class UserService {
         return loginData;
     }
 
-    public void userPasswordUpdate(String userid, UserPasswordRequest userPasswordRequest) {
+    public void userPasswordUpdate(String userId, UpdatePasswordRequest userPasswordRequest) {
         String encodedPassword = passwordEncoder.encode(userPasswordRequest.getNewPassword());
-        userMapper.updateUserPassword(userid, encodedPassword);
+        userMapper.updateUserPassword(userId, encodedPassword);
     }
 
     @CacheEvict(key = "#userId", value = USER_PROFILE, cacheManager = REDIS_CACHE_MANAGER)
-    public void userInfoUpdate(String userId, UserUpdateRequest updateRequest) {
+    public void userInfoUpdate(String userId, UpdateInfoRequest updateRequest) {
         userMapper.updateUserInfo(userId, updateRequest);
     }
 
@@ -70,7 +72,7 @@ public class UserService {
         userMapper.updateUserProfileImage(userId, newProfileImage);
     }
 
-    public void findPassword(UserFindPasswordRequest findPasswordRequest) {
+    public void findPassword(FindPasswordRequest findPasswordRequest) {
         if (!userMapper.isEmailValid(findPasswordRequest)) {
             throw new InvalidUserInfoException("해당 사용자가 존재하지 않거나 이메일이 일치하지 않습니다. 입력하신 정보를 다시 확인해 주세요.");
         }

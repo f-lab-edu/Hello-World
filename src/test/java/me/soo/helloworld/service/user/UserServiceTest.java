@@ -4,9 +4,9 @@ import me.soo.helloworld.exception.InvalidUserInfoException;
 import me.soo.helloworld.mapper.UserMapper;
 import me.soo.helloworld.model.email.EmailBase;
 import me.soo.helloworld.model.email.FindPasswordEmail;
-import me.soo.helloworld.model.user.UserFindPasswordRequest;
+import me.soo.helloworld.model.user.FindPasswordRequest;
 import me.soo.helloworld.model.user.UserLoginData;
-import me.soo.helloworld.model.user.UserLoginRequest;
+import me.soo.helloworld.model.user.LoginRequest;
 import me.soo.helloworld.service.EmailService;
 import me.soo.helloworld.service.UserService;
 import me.soo.helloworld.util.encoder.PasswordEncoder;
@@ -91,7 +91,7 @@ class UserServiceTest {
     @Test
     @DisplayName("유저 정보를 얻기 위해 요청 받은 아이디와 비밀번호가 DB에 저장되어 있는 사용자의 아이디와 비밀번호에 일치하는 경우 사용자를 리턴하는데 성공합니다.")
     public void getUserWithCorrectIdAndPasswordSuccess() {
-        UserLoginRequest loginRequest = new UserLoginRequest(
+        LoginRequest loginRequest = new LoginRequest(
                 CURRENT_USER.getUserId(),
                 CURRENT_USER.getPassword()
         );
@@ -108,7 +108,7 @@ class UserServiceTest {
     @Test
     @DisplayName("유저 정보를 얻기 위해 요청 받은 아이디가 DB에 존재하지 않는 경우 InvalidUserInfoException 이 발생하며 테스트에 실패합니다.")
     public void getUserWithWrongIdFail() {
-        UserLoginRequest loginRequest = new UserLoginRequest(
+        LoginRequest loginRequest = new LoginRequest(
                 "I'm a wrong user.",
                 CURRENT_USER.getPassword()
         );
@@ -125,7 +125,7 @@ class UserServiceTest {
     @Test
     @DisplayName("유저 정보를 얻기 위해 요청 받은 비밀번호가 일치하지 않는 경우 InvalidUserInfoException 이 발생하며 테스트에 실패합니다.")
     public void getUserWithWrongPasswordFail() {
-        UserLoginRequest loginRequest = new UserLoginRequest(
+        LoginRequest loginRequest = new LoginRequest(
                 CURRENT_USER.getUserId(),
                 "Typo is everywhere ~."
         );
@@ -145,7 +145,7 @@ class UserServiceTest {
     @Test
     @DisplayName("올바른 아이디와 이메일로 비밀번호 찾기를 요청한 경우 임시 비밀번호가 이메일로 전송되고, DB 정보에도 업데이트 됩니다.")
     public void findUserPasswordSuccess() {
-        UserFindPasswordRequest findPasswordRequest = new UserFindPasswordRequest(CURRENT_USER.getUserId(), CURRENT_USER.getEmail());
+        FindPasswordRequest findPasswordRequest = new FindPasswordRequest(CURRENT_USER.getUserId(), CURRENT_USER.getEmail());
         when(userMapper.isEmailValid(findPasswordRequest)).thenReturn(true);
 
         String temporaryPassword = UUID.randomUUID().toString();
@@ -162,7 +162,7 @@ class UserServiceTest {
     @Test
     @DisplayName("비밀번호 찾기를 위해 요청받은 사용자 ID가 존재하지 않는 경우 InvalidUserInfoException 이 발생합니다.")
     public void findUserPasswordFailWithWrongID() {
-        UserFindPasswordRequest findPasswordRequest = new UserFindPasswordRequest("HahaWrongId", CURRENT_USER.getEmail());
+        FindPasswordRequest findPasswordRequest = new FindPasswordRequest("HahaWrongId", CURRENT_USER.getEmail());
         when(userMapper.isEmailValid(findPasswordRequest)).thenReturn(false);
 
         assertThrows(InvalidUserInfoException.class, () -> {
@@ -175,7 +175,7 @@ class UserServiceTest {
     @Test
     @DisplayName("비밀번호 찾기를 위해 요청받은 사용자의 이메일이 DB에 있는 정보와 일치하지 않는 경우 InvalidUserInfoException 이 발생합니다.")
     public void findUserPasswordFailWithWrongEmail() {
-        UserFindPasswordRequest findPasswordRequest = new UserFindPasswordRequest(CURRENT_USER.getUserId(), "some@wrong.email");
+        FindPasswordRequest findPasswordRequest = new FindPasswordRequest(CURRENT_USER.getUserId(), "some@wrong.email");
         when(userMapper.isEmailValid(findPasswordRequest)).thenReturn(false);
 
         assertThrows(InvalidUserInfoException.class, () -> {

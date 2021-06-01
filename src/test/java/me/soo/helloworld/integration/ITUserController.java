@@ -1,7 +1,7 @@
 package me.soo.helloworld.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.soo.helloworld.model.user.UserLoginRequest;
+import me.soo.helloworld.model.user.LoginRequest;
 import me.soo.helloworld.util.constant.SessionKeys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -87,7 +87,7 @@ class ITUserController {
     public void userLoginSuccess() throws Exception {
         testUserSignUp();
 
-        UserLoginRequest loginRequest = new UserLoginRequest(
+        LoginRequest loginRequest = new LoginRequest(
                 CURRENT_USER.getUserId(),
                 CURRENT_USER.getPassword()
         );
@@ -109,7 +109,7 @@ class ITUserController {
 
         httpSession.setAttribute("userId", CURRENT_USER.getUserId());
 
-        UserLoginRequest loginRequest = new UserLoginRequest(
+        LoginRequest loginRequest = new LoginRequest(
                 CURRENT_USER.getUserId(),
                 CURRENT_USER.getPassword()
         );
@@ -129,7 +129,7 @@ class ITUserController {
     public void userLoginFailNoSuchUser() throws Exception {
         testUserSignUp();
 
-        UserLoginRequest loginRequest = new UserLoginRequest(
+        LoginRequest loginRequest = new LoginRequest(
                 "WrongID!@34",
                 "WrongPW!@34"
         );

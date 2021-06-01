@@ -2,7 +2,7 @@ package me.soo.helloworld.service.login;
 
 import me.soo.helloworld.exception.DuplicateLoginRequestException;
 import me.soo.helloworld.model.user.UserLoginData;
-import me.soo.helloworld.model.user.UserLoginRequest;
+import me.soo.helloworld.model.user.LoginRequest;
 import me.soo.helloworld.service.SessionLoginService;
 import me.soo.helloworld.service.UserService;
 import me.soo.helloworld.util.constant.SessionKeys;
@@ -61,7 +61,7 @@ public class LoginServiceTest {
     @Test
     @DisplayName("DB에 등록된 회원정보와 일치하는 로그인 요청이 오면 로그인에 성공합니다.")
     public void successLoginRequestWithCorrectLoginRequest() {
-        UserLoginRequest loginRequest = new UserLoginRequest(
+        LoginRequest loginRequest = new LoginRequest(
                 CURRENT_USER.getUserId(),
                 CURRENT_USER.getPassword()
         );
@@ -76,7 +76,7 @@ public class LoginServiceTest {
     @Test
     @DisplayName("이미 로그인 된 회원에게서 또 다시 로그인 요청이 오면 DuplicateLoginRequestException이 발생합니다.")
     public void failLoginRequestWithWrongLoginRequest() {
-        UserLoginRequest loginRequest = new UserLoginRequest(
+        LoginRequest loginRequest = new LoginRequest(
                 CURRENT_USER.getUserId(),
                 CURRENT_USER.getPassword()
         );

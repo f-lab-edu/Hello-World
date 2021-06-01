@@ -1,8 +1,8 @@
 package me.soo.helloworld.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.soo.helloworld.model.user.UserPasswordRequest;
-import me.soo.helloworld.model.user.UserUpdateRequest;
+import me.soo.helloworld.model.user.UpdateInfoRequest;
+import me.soo.helloworld.model.user.UpdatePasswordRequest;
 import me.soo.helloworld.util.constant.SessionKeys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,8 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.transaction.annotation.Transactional;
 
-import static me.soo.helloworld.TestCountries.SOUTH_KOREA;
-import static me.soo.helloworld.TestTowns.SEOUL;
+import static me.soo.helloworld.TestCountries.*;
 import static me.soo.helloworld.TestUsersFixture.CURRENT_USER;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -68,14 +67,13 @@ public class ITMyPageController {
     @DisplayName("현재 사용자의 비밀번호 변경에 성공하면 Http Status Code 200(OK)를 리턴합니다.")
     public void userPasswordUpdateTestSuccess() throws Exception {
         testUserSignUp();
-
         String differentPassword = "!Msugo1@";
 
-        UserPasswordRequest newPassword = UserPasswordRequest.builder()
-                .currentPassword(CURRENT_USER.getPassword())
-                .newPassword(differentPassword)
-                .checkNewPassword(differentPassword)
-                .build();
+        UpdatePasswordRequest newPassword = new UpdatePasswordRequest(
+                CURRENT_USER.getPassword(),
+                differentPassword,
+                differentPassword
+        );
 
         String content = objectMapper.writeValueAsString(newPassword);
         httpSession.setAttribute(SessionKeys.USER_ID, CURRENT_USER.getUserId());
@@ -94,12 +92,12 @@ public class ITMyPageController {
     public void userInfoUpdateTestSuccess() throws Exception {
         testUserSignUp();
 
-        UserUpdateRequest updatedUser = UserUpdateRequest.builder()
-                .gender("M")
-                .livingCountry(SOUTH_KOREA)
-                .livingTown(SEOUL)
-                .aboutMe("I've just moved to Dublin today")
-                .build();
+        UpdateInfoRequest updatedUser = new UpdateInfoRequest(
+                "M",
+                UNITED_KINGDOM,
+                OTHERS,
+                "I have just been accepted to the Hogwart of Witchcraft and Wizardary"
+        );
 
         String content = objectMapper.writeValueAsString(updatedUser);
         httpSession.setAttribute(SessionKeys.USER_ID, CURRENT_USER.getUserId());
