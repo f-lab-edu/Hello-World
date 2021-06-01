@@ -1,7 +1,6 @@
 package me.soo.helloworld.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserPasswordRequest;
 import me.soo.helloworld.model.user.UserUpdateRequest;
 import me.soo.helloworld.util.constant.SessionKeys;
@@ -24,12 +23,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
-
 import static me.soo.helloworld.TestCountries.SOUTH_KOREA;
-import static me.soo.helloworld.TestCountries.UNITED_KINGDOM;
-import static me.soo.helloworld.TestTowns.NEWCASTLE;
 import static me.soo.helloworld.TestTowns.SEOUL;
+import static me.soo.helloworld.TestUsersFixture.CURRENT_USER;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -42,8 +38,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 public class ITMyPageController {
 
-    User currentUser;
-
     @Autowired
     ObjectMapper objectMapper;
 
@@ -54,25 +48,11 @@ public class ITMyPageController {
 
     @BeforeEach
     public void setUp() {
-        currentUser = User.builder()
-                .userId("gomsu1045")
-                .password("Gomsu1045!0$%")
-                .email("test@test.com")
-                .gender("M")
-                .birthday(Date.valueOf("1993-09-25"))
-                .originCountry(SOUTH_KOREA)
-                .livingCountry(UNITED_KINGDOM)
-                .livingTown(NEWCASTLE)
-                .aboutMe("Hello, I'd love to make great friends here")
-                .profileImageName("328fd95f-e25d-46f3-ab1d-cf0fefbde7ab.jpg")
-                .profileImagePath("D:\\Project\\Hello-World\\gomsu1045")
-                .build();
-
         httpSession = new MockHttpSession();
     }
 
-    private void testUserSignUp(User testUser) throws Exception {
-        String content = objectMapper.writeValueAsString(testUser);
+    private void testUserSignUp() throws Exception {
+        String content = objectMapper.writeValueAsString(CURRENT_USER);
 
         mockMvc.perform(post("/users/signup")
                 .content(content)
@@ -87,18 +67,18 @@ public class ITMyPageController {
     @Test
     @DisplayName("현재 사용자의 비밀번호 변경에 성공하면 Http Status Code 200(OK)를 리턴합니다.")
     public void userPasswordUpdateTestSuccess() throws Exception {
-        testUserSignUp(currentUser);
+        testUserSignUp();
 
         String differentPassword = "!Msugo1@";
 
         UserPasswordRequest newPassword = UserPasswordRequest.builder()
-                .currentPassword(currentUser.getPassword())
+                .currentPassword(CURRENT_USER.getPassword())
                 .newPassword(differentPassword)
                 .checkNewPassword(differentPassword)
                 .build();
 
         String content = objectMapper.writeValueAsString(newPassword);
-        httpSession.setAttribute(SessionKeys.USER_ID, currentUser.getUserId());
+        httpSession.setAttribute(SessionKeys.USER_ID, CURRENT_USER.getUserId());
 
         mockMvc.perform(put("/my-infos/password")
                 .content(content)
@@ -112,7 +92,7 @@ public class ITMyPageController {
     @Test
     @DisplayName("현재 사용자의 유저정보 업데이트에 성공하면 Http Status Code 200(OK)를 리턴합니다.")
     public void userInfoUpdateTestSuccess() throws Exception {
-        testUserSignUp(currentUser);
+        testUserSignUp();
 
         UserUpdateRequest updatedUser = UserUpdateRequest.builder()
                 .gender("M")
@@ -122,7 +102,7 @@ public class ITMyPageController {
                 .build();
 
         String content = objectMapper.writeValueAsString(updatedUser);
-        httpSession.setAttribute(SessionKeys.USER_ID, currentUser.getUserId());
+        httpSession.setAttribute(SessionKeys.USER_ID, CURRENT_USER.getUserId());
 
         mockMvc.perform(put("/my-infos")
                 .content(content)
@@ -135,7 +115,7 @@ public class ITMyPageController {
     @Test
     @DisplayName("현재 사용자의 프로파일 사진 업데이트에 성공하면 Http Status Code 200(OK)를 리턴합니다.")
     public void userProfileUpdateTestSuccess() throws Exception {
-        testUserSignUp(currentUser);
+        testUserSignUp();
 
         MockMultipartFile testImageFile = new MockMultipartFile(
                 "profileImage",
@@ -158,7 +138,7 @@ public class ITMyPageController {
             }
         });
 
-        httpSession.setAttribute(SessionKeys.USER_ID, currentUser.getUserId());
+        httpSession.setAttribute(SessionKeys.USER_ID, CURRENT_USER.getUserId());
 
         mockMvc.perform(builders.file(testImageFile)
                 .contentType(MediaType.MULTIPART_FORM_DATA)

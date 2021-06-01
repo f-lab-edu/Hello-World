@@ -1,7 +1,6 @@
 package me.soo.helloworld.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.soo.helloworld.model.user.User;
 import me.soo.helloworld.model.user.UserLoginRequest;
 import me.soo.helloworld.util.constant.SessionKeys;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,11 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
-
-import static me.soo.helloworld.TestCountries.SOUTH_KOREA;
-import static me.soo.helloworld.TestCountries.UNITED_KINGDOM;
-import static me.soo.helloworld.TestTowns.NEWCASTLE;
+import static me.soo.helloworld.TestUsersFixture.CURRENT_USER;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -36,8 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 class ITUserController {
 
-    User testUser;
-
     @Autowired
     ObjectMapper objectMapper;
 
@@ -48,24 +41,12 @@ class ITUserController {
 
     @BeforeEach
     public void setUp() {
-        testUser = User.builder()
-                .userId("gomsu1045")
-                .password("Gomsu1045!0$%")
-                .email("test@test.com")
-                .gender("M")
-                .birthday(Date.valueOf("1993-09-25"))
-                .originCountry(SOUTH_KOREA)
-                .livingCountry(UNITED_KINGDOM)
-                .livingTown(NEWCASTLE)
-                .aboutMe("Hello, I'd love to make great friends here")
-                .build();
-
         httpSession = new MockHttpSession();
     }
 
     // 매번 중복되는 유저 Sign Up 요청 분리
-    private void testUserSignUp(User testUser) throws Exception {
-        String content = objectMapper.writeValueAsString(testUser);
+    private void testUserSignUp() throws Exception {
+        String content = objectMapper.writeValueAsString(CURRENT_USER);
 
         mockMvc.perform(post("/users/signup")
                 .content(content)
@@ -78,16 +59,16 @@ class ITUserController {
     @Test
     @DisplayName("회원가입에 성공할 경우 Http Status Code 201(Created)를 리턴합니다.")
     public void userSignUpController() throws Exception {
-        testUserSignUp(testUser);
+        testUserSignUp();
     }
 
     @Test
     @DisplayName("이미 등록되어 있는 아이디일 경우 Http Status Code 409(Conflict)를 리턴합니다.")
     public void duplicateIdCheckTestWithDuplicateID() throws Exception {
-        testUserSignUp(testUser);
+        testUserSignUp();
 
         mockMvc.perform(get("/users/id-check")
-                .param("userId", testUser.getUserId()))
+                .param("userId", CURRENT_USER.getUserId()))
                 .andDo(print())
                 .andExpect(status().isConflict());
     }
@@ -96,7 +77,7 @@ class ITUserController {
     @DisplayName("등록되어 있는 ID가 아닌 경우 Http Status Code 200(Ok)를 리턴합니다.")
     public void duplicateIdCheckTestWithNoDuplicateId() throws Exception {
         mockMvc.perform(get("/users/id-check")
-                .param("userId", testUser.getUserId()))
+                .param("userId", CURRENT_USER.getUserId()))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -104,12 +85,12 @@ class ITUserController {
     @Test
     @DisplayName("DB에 등록된 정보와 일치하는 정보를 입력하면 로그인에 성공하고 Http Status Code 200(Ok)를 리턴합니다.")
     public void userLoginSuccess() throws Exception {
-        testUserSignUp(testUser);
+        testUserSignUp();
 
-        UserLoginRequest loginRequest = UserLoginRequest.builder()
-                .userId(testUser.getUserId())
-                .password(testUser.getPassword())
-                .build();
+        UserLoginRequest loginRequest = new UserLoginRequest(
+                CURRENT_USER.getUserId(),
+                CURRENT_USER.getPassword()
+        );
 
         String loginContent = objectMapper.writeValueAsString(loginRequest);
 
@@ -124,14 +105,14 @@ class ITUserController {
     @Test
     @DisplayName("이미 로그인된 회원의 경우 로그인에 실패하며 Http Status Code 401(Unauthorized)를 리턴합니다.")
     public void userLoginFailAlreadyLogin() throws Exception {
-        testUserSignUp(testUser);
+        testUserSignUp();
 
-        httpSession.setAttribute("userId", testUser.getUserId());
+        httpSession.setAttribute("userId", CURRENT_USER.getUserId());
 
-        UserLoginRequest loginRequest = UserLoginRequest.builder()
-                .userId(testUser.getUserId())
-                .password(testUser.getPassword())
-                .build();
+        UserLoginRequest loginRequest = new UserLoginRequest(
+                CURRENT_USER.getUserId(),
+                CURRENT_USER.getPassword()
+        );
 
         String loginContent = objectMapper.writeValueAsString(loginRequest);
 
@@ -146,12 +127,12 @@ class ITUserController {
     @Test
     @DisplayName("등록되지 않은 사용자의 경우 로그인에 실패하며 Http Status Code 404(Not Found)를 리턴합니다.")
     public void userLoginFailNoSuchUser() throws Exception {
-        testUserSignUp(testUser);
+        testUserSignUp();
 
-        UserLoginRequest loginRequest = UserLoginRequest.builder()
-                .userId("WrongID!@34")
-                .password("WrongPw!@34")
-                .build();
+        UserLoginRequest loginRequest = new UserLoginRequest(
+                "WrongID!@34",
+                "WrongPW!@34"
+        );
 
         String loginContent = objectMapper.writeValueAsString(loginRequest);
 
