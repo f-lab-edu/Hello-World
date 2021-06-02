@@ -1,8 +1,8 @@
 package me.soo.helloworld.controller
 
+import me.soo.helloworld.model.user.FindPasswordRequest
+import me.soo.helloworld.model.user.LoginRequest
 import me.soo.helloworld.model.user.User
-import me.soo.helloworld.model.user.UserFindPasswordRequest
-import me.soo.helloworld.model.user.UserLoginRequest
 import me.soo.helloworld.service.LoginService
 import me.soo.helloworld.service.UserService
 import me.soo.helloworld.util.http.HttpResponse
@@ -34,14 +34,13 @@ class UserController(
         if (!userService.isUserIdExist(userId)) HttpResponse.OK else HttpResponse.CONFLICT
 
     @PostMapping("/login")
-    fun login(@Valid @RequestBody loginRequest: UserLoginRequest) = loginService.login(loginRequest)
+    fun login(@Valid @RequestBody loginRequest: LoginRequest) = loginService.login(loginRequest)
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @GetMapping("/logout")
     fun logout() = loginService.logout()
 
     @PostMapping("/pw-finder")
-    fun findPassword(@Valid @RequestBody findPasswordRequest: UserFindPasswordRequest) {
+    fun findPassword(@Valid @RequestBody findPasswordRequest: FindPasswordRequest) =
         userService.findPassword(findPasswordRequest)
-    }
 }

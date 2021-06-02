@@ -51,7 +51,7 @@
 
         UPDATE users SET gender = #{updateRequest.gender}, livingCountry = #{updateRequest.livingCountry},
                          livingTown = #{updateRequest.livingTown}, aboutMe = #{updateRequest.aboutMe}
-            WHERE userId = #{userId}
+        WHERE userId = #{userId}
     </update>
 
     <update id="updateUserProfileImage" parameterType="map">
@@ -68,12 +68,11 @@
         UPDATE users SET isDeactivated = 'Y' WHERE userId = #{userId}
     </update>
 
-    <select id="isUserEmailExist" parameterType="me.soo.helloworld.model.user.UserFindPasswordRequest" resultType="boolean">
+    <select id="isEmailValid" parameterType="me.soo.helloworld.model.user.FindPasswordRequest" resultType="boolean">
         SELECT EXISTS(SELECT email FROM users WHERE userId = #{userId} AND email = #{email} AND isDeactivated = 'N')
     </select>
 
     <select id="isUserActivated" parameterType="String" resultType="boolean">
         SELECT EXISTS (SELECT userId FROM users WHERE userId = #{userId} AND isDeactivated = 'N')
     </select>
-
 </mapper>

@@ -44,7 +44,8 @@ public class TestUsersFixture {
             "F",
             Date.valueOf("2009-01-01"),
             SOUTH_KOREA,
-            SOUTH_KOREA
+            SOUTH_KOREA,
+            GWANGJU
     );
 
     public static final User FORTIES_MALE_FROM_UK_LIVING_KOREA_SEOUL = new User(

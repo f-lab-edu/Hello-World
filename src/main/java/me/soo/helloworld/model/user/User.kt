@@ -35,7 +35,7 @@ data class User @JvmOverloads constructor(
 
     val livingCountry: Int,
 
-    val livingTown: Int? = null,
+    val livingTown: Int,
 
     val aboutMe: String? = null,
 
