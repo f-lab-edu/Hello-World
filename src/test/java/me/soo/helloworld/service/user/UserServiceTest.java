@@ -169,7 +169,7 @@ class UserServiceTest {
             userService.findPassword(findPasswordRequest);
         });
 
-        verify(userMapper, times(1)).isEmailValid(findPasswordRequest);
+        verify(userMapper, times(1)).isUserEmailExist(findPasswordRequest);
     }
 
     @Test
@@ -182,6 +182,6 @@ class UserServiceTest {
             userService.findPassword(findPasswordRequest);
         });
 
-        verify(userMapper, times(1)).isEmailValid(findPasswordRequest);
+        verify(userMapper, times(1)).isUserEmailExist(findPasswordRequest);
     }
 }
