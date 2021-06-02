@@ -5,9 +5,10 @@ import me.soo.helloworld.mapper.UserMapper;
 import me.soo.helloworld.model.email.EmailBase;
 import me.soo.helloworld.model.email.FindPasswordEmail;
 import me.soo.helloworld.model.user.FindPasswordRequest;
-import me.soo.helloworld.model.user.UserLoginData;
+import me.soo.helloworld.model.user.LoginResponse;
 import me.soo.helloworld.model.user.LoginRequest;
 import me.soo.helloworld.service.EmailService;
+import me.soo.helloworld.service.FileService;
 import me.soo.helloworld.service.UserService;
 import me.soo.helloworld.util.encoder.PasswordEncoder;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static me.soo.helloworld.TestUsersFixture.CURRENT_USER;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    UserLoginData testUserLoginData;
+    LoginResponse testUserLoginRes;
 
     @InjectMocks
     UserService userService;
@@ -45,6 +45,9 @@ class UserServiceTest {
 
     @Mock
     EmailService emailService;
+
+    @Mock
+    FileService fileService;
 
     /*
         Basic User Fixture
@@ -62,10 +65,10 @@ class UserServiceTest {
     */
     @BeforeEach
     public void setUp() {
-        testUserLoginData = UserLoginData.builder()
-                .userId(CURRENT_USER.getUserId())
-                .password(CURRENT_USER.getPassword())
-                .build();
+        testUserLoginRes = new LoginResponse(
+                CURRENT_USER.getUserId(),
+                CURRENT_USER.getPassword()
+        );
     }
 
     @Test
@@ -96,7 +99,7 @@ class UserServiceTest {
                 CURRENT_USER.getPassword()
         );
 
-        when(userMapper.getUserLoginDataById(loginRequest.getUserId())).thenReturn(Optional.ofNullable(testUserLoginData));
+        when(userMapper.getUserLoginDataById(loginRequest.getUserId())).thenReturn(testUserLoginRes);
         when(passwordEncoder.isMatch(loginRequest.getPassword(), CURRENT_USER.getPassword())).thenReturn(true);
 
         userService.getUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword());
@@ -113,7 +116,7 @@ class UserServiceTest {
                 CURRENT_USER.getPassword()
         );
 
-        when(userMapper.getUserLoginDataById(loginRequest.getUserId())).thenReturn(Optional.empty());
+        when(userMapper.getUserLoginDataById(loginRequest.getUserId())).thenReturn(null);
 
         assertThrows(InvalidUserInfoException.class, () -> {
            userService.getUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword());
@@ -130,7 +133,7 @@ class UserServiceTest {
                 "Typo is everywhere ~."
         );
 
-        when(userMapper.getUserLoginDataById(loginRequest.getUserId())).thenReturn(Optional.ofNullable(testUserLoginData));
+        when(userMapper.getUserLoginDataById(loginRequest.getUserId())).thenReturn(testUserLoginRes);
         when(passwordEncoder.isMatch(loginRequest.getPassword(), CURRENT_USER.getPassword())).thenReturn(false);
 
         assertThrows(InvalidUserInfoException.class, () -> {

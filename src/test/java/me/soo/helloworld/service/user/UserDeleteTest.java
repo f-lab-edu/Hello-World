@@ -2,6 +2,8 @@ package me.soo.helloworld.service.user;
 
 import me.soo.helloworld.exception.InvalidUserInfoException;
 import me.soo.helloworld.mapper.UserMapper;
+import me.soo.helloworld.service.EmailService;
+import me.soo.helloworld.service.FileService;
 import me.soo.helloworld.service.UserService;
 import me.soo.helloworld.util.encoder.PasswordEncoder;
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +29,12 @@ public class UserDeleteTest {
 
     @Mock
     UserMapper userMapper;
+
+    @Mock
+    FileService fileService;
+
+    @Mock
+    EmailService emailService;
 
     @Mock
     MockHttpSession httpSession;

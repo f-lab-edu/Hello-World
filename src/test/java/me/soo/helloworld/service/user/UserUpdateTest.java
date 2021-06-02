@@ -6,6 +6,7 @@ import me.soo.helloworld.mapper.UserMapper;
 import me.soo.helloworld.model.file.FileData;
 import me.soo.helloworld.model.user.UpdatePasswordRequest;
 import me.soo.helloworld.model.user.UpdateInfoRequest;
+import me.soo.helloworld.service.EmailService;
 import me.soo.helloworld.service.FileService;
 import me.soo.helloworld.service.LoginService;
 import me.soo.helloworld.service.UserService;
@@ -37,6 +38,9 @@ public class UserUpdateTest {
 
     @Mock
     FileService fileService;
+
+    @Mock
+    EmailService emailService;
 
     @Mock
     LoginService loginService;

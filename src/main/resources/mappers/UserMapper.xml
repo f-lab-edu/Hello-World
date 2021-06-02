@@ -15,7 +15,7 @@
         SELECT EXISTS (SELECT userId FROM users WHERE userId = #{userId})
     </select>
 
-    <resultMap id="getUserLoginData" type="me.soo.helloworld.model.user.UserLoginData">
+    <resultMap id="getUserLoginData" type="me.soo.helloworld.model.user.LoginResponse">
         <constructor>
             <arg column="userId" javaType="String"/>
             <arg column="password" javaType="String"/>

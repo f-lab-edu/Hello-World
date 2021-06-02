@@ -42,8 +42,8 @@ class MyPageController(
 
     @LoginRequired
     @DeleteMapping("/account")
-    fun deleteAccount(@CurrentUser userId: String, @RequestParam password: String) {
-        userService.userDeleteAccount(userId, password)
+    fun deleteAccount(@CurrentUser userId: String, @RequestParam reqPassword: String) {
+        userService.userDeleteAccount(userId, reqPassword)
         loginService.logout()
     }
 }
