@@ -69,10 +69,14 @@
 - [Google Cloud Platform](https://console.cloud.google.com/compute/instances?hl=ko&orgonly=true&project=scientific-glow-309614&supportedpurview=organizationId)
 
 ## 🗺️ 프로젝트 전체 구성도
+![image](https://user-images.githubusercontent.com/68094005/120600730-114e3f80-c484-11eb-9255-8ef7756afce2.png)
 
 ## 🗺️ DB ERD
-![image](https://user-images.githubusercontent.com/68094005/120588436-24f0aa80-c472-11eb-807a-40078b614624.png)
+![image](https://user-images.githubusercontent.com/68094005/120588923-0212c600-c473-11eb-90c7-aad73a9079a5.png)
+
 
 ## 🗺️ 기능정의
+- [내용 ](https://github.com/f-lab-edu/Hello-World/wiki/01-Use-Case)
 
 ## 🗺️ 테크니컬 이슈와 해결과정
+- [내용 살펴보기](https://github.com/f-lab-edu/Hello-World/wiki/04-Issues&Resolutions-Blogs)
