@@ -1,7 +1,7 @@
 package me.soo.helloworld.service.login;
 
 import me.soo.helloworld.exception.DuplicateLoginRequestException;
-import me.soo.helloworld.model.user.LoginResponse;
+import me.soo.helloworld.model.user.LoginData;
 import me.soo.helloworld.model.user.LoginRequest;
 import me.soo.helloworld.service.SessionLoginService;
 import me.soo.helloworld.service.UserService;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class LoginServiceTest {
 
-    LoginResponse testUserLoginRes;
+    LoginData testUserLoginRes;
 
     @InjectMocks
     SessionLoginService loginService;
@@ -52,7 +52,7 @@ public class LoginServiceTest {
     */
     @BeforeEach
     public void setUp() {
-        testUserLoginRes = new LoginResponse(
+        testUserLoginRes = new LoginData(
                 CURRENT_USER.getUserId(),
                 CURRENT_USER.getPassword()
         );
@@ -66,7 +66,7 @@ public class LoginServiceTest {
                 CURRENT_USER.getPassword()
         );
 
-        when(userService.getUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword())).thenReturn(testUserLoginRes);
+        when(userService.getValidUserLoginData(loginRequest.getUserId(), loginRequest.getPassword())).thenReturn(testUserLoginRes);
 
         loginService.login(loginRequest);
 

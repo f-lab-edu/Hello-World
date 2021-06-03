@@ -57,7 +57,7 @@ public class UserUpdateTest {
         String encodedPassword = passwordEncoder.encode(newPassword.getNewPassword());
 
         doNothing().when(userMapper).updateUserPassword(CURRENT_USER.getUserId(), encodedPassword);
-        userService.userPasswordUpdate(CURRENT_USER.getUserId(), newPassword);
+        userService.updatePassword(CURRENT_USER.getUserId(), newPassword);
 
         verify(userMapper, times(1)).updateUserPassword(CURRENT_USER.getUserId(), encodedPassword);
     }
@@ -73,7 +73,7 @@ public class UserUpdateTest {
         );
 
         doNothing().when(userMapper).updateUserInfo(CURRENT_USER.getUserId(), updatedUser);
-        userService.userInfoUpdate(CURRENT_USER.getUserId(), updatedUser);
+        userService.updateProfile(CURRENT_USER.getUserId(), updatedUser);
 
         verify(userMapper, times(1)).updateUserInfo(CURRENT_USER.getUserId(), updatedUser);
     }
@@ -81,7 +81,6 @@ public class UserUpdateTest {
     @Test
     @DisplayName("현재 유저의 프로필 사진이 성공적으로 업데이트 됩니다.")
     public void userProfileImageUpdateSuccess() {
-
         MockMultipartFile testImageFile = new MockMultipartFile(
                 "profileImage",
                 "profileImage",
@@ -95,7 +94,7 @@ public class UserUpdateTest {
         when(fileService.uploadFile(testImageFile, CURRENT_USER.getUserId())).thenReturn(newProfileImage);
         doNothing().when(userMapper).updateUserProfileImage(CURRENT_USER.getUserId(), newProfileImage);
 
-        userService.userProfileImageUpdate(CURRENT_USER.getUserId(), testImageFile);
+        userService.updateProfileImage(CURRENT_USER.getUserId(), testImageFile);
 
         verify(fileService, times(1)).uploadFile(testImageFile, CURRENT_USER.getUserId());
         verify(userMapper, times(1)).updateUserProfileImage(CURRENT_USER.getUserId(), newProfileImage);
@@ -105,7 +104,6 @@ public class UserUpdateTest {
     @Test
     @DisplayName("현재 유저의 기존 프로필 사진 삭제에 실패하면 프로필 사진 업데이트에 실패하며 FileNotDeletedException 이 발생합니다.")
     public void userProfileImageUpdateFailWithExistingFileRemovalNotPossible() {
-
         FileData oldProfileImage = new FileData(CURRENT_USER.getProfileImageName(), "D:\\Project\\");
 
         MockMultipartFile testImageFile = new MockMultipartFile(
@@ -118,7 +116,7 @@ public class UserUpdateTest {
         doThrow(FileNotDeletedException.class).when(fileService).deleteFile(oldProfileImage);
 
         assertThrows(FileNotDeletedException.class, () -> {
-            userService.userProfileImageUpdate(CURRENT_USER.getUserId(), testImageFile);
+            userService.updateProfileImage(CURRENT_USER.getUserId(), testImageFile);
         });
 
         verify(fileService, times(1)).deleteFile(oldProfileImage);
@@ -127,7 +125,6 @@ public class UserUpdateTest {
     @Test
     @DisplayName("새로운 프로필 사진의 업로드에 실패하는 경우 프로필 사진 업데이트에 실패하며 FileNotUploadedException 이 발생합니다.")
     public void userProfileImageUpdateFailWithUploadingNotPossible() {
-
         FileData oldProfileImage = new FileData(CURRENT_USER.getProfileImageName(), CURRENT_USER.getProfileImagePath());
 
         MockMultipartFile testImageFile = new MockMultipartFile(
@@ -144,12 +141,11 @@ public class UserUpdateTest {
         when(fileService.uploadFile(testImageFile, CURRENT_USER.getUserId())).thenThrow(FileNotUploadedException.class);
 
         assertThrows(FileNotUploadedException.class, () -> {
-            userService.userProfileImageUpdate(CURRENT_USER.getUserId(), testImageFile);
+            userService.updateProfileImage(CURRENT_USER.getUserId(), testImageFile);
         });
 
         verify(fileService, times(1)).deleteFile(oldProfileImage);
         verify(fileService, times(1)).uploadFile(testImageFile, CURRENT_USER.getUserId());
-
     }
 }
 

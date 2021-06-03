@@ -2,10 +2,9 @@ package me.soo.helloworld.service.user;
 
 import me.soo.helloworld.exception.InvalidUserInfoException;
 import me.soo.helloworld.mapper.UserMapper;
-import me.soo.helloworld.model.email.EmailBase;
-import me.soo.helloworld.model.email.FindPasswordEmail;
+import me.soo.helloworld.model.email.Email;
 import me.soo.helloworld.model.user.FindPasswordRequest;
-import me.soo.helloworld.model.user.LoginResponse;
+import me.soo.helloworld.model.user.LoginData;
 import me.soo.helloworld.model.user.LoginRequest;
 import me.soo.helloworld.service.EmailService;
 import me.soo.helloworld.service.FileService;
@@ -24,6 +23,8 @@ import org.mockito.quality.Strictness;
 import java.util.UUID;
 
 import static me.soo.helloworld.TestUsersFixture.CURRENT_USER;
+import static me.soo.helloworld.model.email.EmailKt.FIND_PASSWORD_BODY;
+import static me.soo.helloworld.model.email.EmailKt.FIND_PASSWORD_TITLE;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -32,7 +33,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    LoginResponse testUserLoginRes;
+    LoginData testUserLoginData;
 
     @InjectMocks
     UserService userService;
@@ -65,7 +66,7 @@ class UserServiceTest {
     */
     @BeforeEach
     public void setUp() {
-        testUserLoginRes = new LoginResponse(
+        testUserLoginData = new LoginData(
                 CURRENT_USER.getUserId(),
                 CURRENT_USER.getPassword()
         );
@@ -99,10 +100,10 @@ class UserServiceTest {
                 CURRENT_USER.getPassword()
         );
 
-        when(userMapper.getUserLoginDataById(loginRequest.getUserId())).thenReturn(testUserLoginRes);
+        when(userMapper.getUserLoginDataById(loginRequest.getUserId())).thenReturn(testUserLoginData);
         when(passwordEncoder.isMatch(loginRequest.getPassword(), CURRENT_USER.getPassword())).thenReturn(true);
 
-        userService.getUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword());
+        userService.getValidUserLoginData(loginRequest.getUserId(), loginRequest.getPassword());
 
         verify(userMapper, times(1)).getUserLoginDataById(loginRequest.getUserId());
         verify(passwordEncoder, times(1)).isMatch(loginRequest.getPassword(), CURRENT_USER.getPassword());
@@ -119,7 +120,7 @@ class UserServiceTest {
         when(userMapper.getUserLoginDataById(loginRequest.getUserId())).thenReturn(null);
 
         assertThrows(InvalidUserInfoException.class, () -> {
-           userService.getUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword());
+           userService.getValidUserLoginData(loginRequest.getUserId(), loginRequest.getPassword());
         });
 
         verify(userMapper, times(1)).getUserLoginDataById(loginRequest.getUserId());
@@ -133,11 +134,11 @@ class UserServiceTest {
                 "Typo is everywhere ~."
         );
 
-        when(userMapper.getUserLoginDataById(loginRequest.getUserId())).thenReturn(testUserLoginRes);
+        when(userMapper.getUserLoginDataById(loginRequest.getUserId())).thenReturn(testUserLoginData);
         when(passwordEncoder.isMatch(loginRequest.getPassword(), CURRENT_USER.getPassword())).thenReturn(false);
 
         assertThrows(InvalidUserInfoException.class, () -> {
-            userService.getUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword());
+            userService.getValidUserLoginData(loginRequest.getUserId(), loginRequest.getPassword());
         });
 
         verify(userMapper, times(1)).getUserLoginDataById(loginRequest.getUserId());
@@ -148,18 +149,18 @@ class UserServiceTest {
     @Test
     @DisplayName("올바른 아이디와 이메일로 비밀번호 찾기를 요청한 경우 임시 비밀번호가 이메일로 전송되고, DB 정보에도 업데이트 됩니다.")
     public void findUserPasswordSuccess() {
-        FindPasswordRequest findPasswordRequest = new FindPasswordRequest(CURRENT_USER.getUserId(), CURRENT_USER.getEmail());
-        when(userMapper.isEmailValid(findPasswordRequest)).thenReturn(true);
+        FindPasswordRequest req = new FindPasswordRequest(CURRENT_USER.getUserId(), CURRENT_USER.getEmail());
+        when(userMapper.isEmailValid(req)).thenReturn(true);
 
-        String temporaryPassword = UUID.randomUUID().toString();
-        EmailBase email = FindPasswordEmail.create(findPasswordRequest.getEmail(), temporaryPassword);
+        String tempPassword = UUID.randomUUID().toString();
+        Email email = Email.Companion.create(req.getEmail(), FIND_PASSWORD_TITLE, FIND_PASSWORD_BODY + tempPassword);
         doNothing().when(emailService).sendEmail(email);
 
         String encodedPassword = UUID.randomUUID().toString();
-        when(passwordEncoder.encode(temporaryPassword)).thenReturn(encodedPassword);
-        doNothing().when(userMapper).updateUserPassword(findPasswordRequest.getUserId(), encodedPassword);
+        when(passwordEncoder.encode(tempPassword)).thenReturn(encodedPassword);
+        doNothing().when(userMapper).updateUserPassword(req.getUserId(), encodedPassword);
 
-        userService.findPassword(findPasswordRequest);
+        userService.findPassword(req);
     }
 
     @Test

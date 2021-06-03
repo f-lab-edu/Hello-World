@@ -64,7 +64,7 @@ public class UserDeleteTest {
 
         doNothing().when(userMapper).deleteUser(userId);
 
-        userService.userDeleteAccount(userId, password);
+        userService.deleteMyAccount(userId, password);
 
         verify(userMapper, times(1)).getUserPasswordById(userId);
         verify(passwordEncoder,times(1)).isMatch(password, CURRENT_USER.getPassword());
@@ -81,7 +81,7 @@ public class UserDeleteTest {
         when(passwordEncoder.isMatch(password, CURRENT_USER.getPassword())).thenReturn(false);
 
         assertThrows(InvalidUserInfoException.class, () -> {
-            userService.userDeleteAccount(userId, password);
+            userService.deleteMyAccount(userId, password);
         });
 
         verify(userMapper, times(1)).getUserPasswordById(userId);
@@ -99,14 +99,14 @@ public class UserDeleteTest {
 
         doNothing().when(userMapper).deleteUser(userId);
 
-        userService.userDeleteAccount(userId, password);
+        userService.deleteMyAccount(userId, password);
 
         when(userMapper.getUserPasswordById(userId)).thenReturn(CURRENT_USER.getPassword());
         when(passwordEncoder.isMatch(password, CURRENT_USER.getPassword())).thenReturn(true);
         doThrow(NullPointerException.class).when(userMapper).deleteUser(userId);
 
         assertThrows(NullPointerException.class, () -> {
-            userService.userDeleteAccount(userId, password);
+            userService.deleteMyAccount(userId, password);
         });
 
         verify(userMapper, times(2)).getUserPasswordById(userId);

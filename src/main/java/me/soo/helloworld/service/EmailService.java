@@ -2,7 +2,7 @@ package me.soo.helloworld.service;
 
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.exception.MailNotSentException;
-import me.soo.helloworld.model.email.EmailBase;
+import me.soo.helloworld.model.email.Email;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -25,7 +25,7 @@ public class EmailService {
         비밀번호 찾기만 아니라 차후에 다른 내용의 이메일을 보내는데도 재사용할 수 있도록 (ex. 친구추가 요청 알림 등) 이메일에 들어갈 값을 담을
         EmailBase 클래스를 두고 내용에 맞게 객체를 주입받아서 이메일 내용의 변화에는 영향받지 않도록 하는 것이 목표
     */
-    public void sendEmail(EmailBase email) {
+    public void sendEmail(Email email) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");

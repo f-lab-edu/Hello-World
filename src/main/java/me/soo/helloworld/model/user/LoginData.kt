@@ -1,6 +1,6 @@
 package me.soo.helloworld.model.user
 
-data class LoginResponse @JvmOverloads constructor(
+data class LoginData @JvmOverloads constructor(
 
     val userId: String,
 

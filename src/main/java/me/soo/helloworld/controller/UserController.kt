@@ -27,7 +27,7 @@ class UserController(
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/signup")
-    fun signUp(@Valid @RequestBody user: User) = userService.userSignUp(user)
+    fun signUp(@Valid @RequestBody user: User) = userService.signUp(user)
 
     @GetMapping("/id-check")
     fun checkDuplicateId(@RequestParam userId: String) =

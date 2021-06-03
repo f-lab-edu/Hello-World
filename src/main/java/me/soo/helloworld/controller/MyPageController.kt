@@ -28,22 +28,22 @@ class MyPageController(
     @LoginRequired
     @PutMapping("/password")
     fun updatePassword(@CurrentUser userId: String, @RequestBody @Valid updatePasswordRequest: UpdatePasswordRequest) =
-        userService.userPasswordUpdate(userId, updatePasswordRequest)
+        userService.updatePassword(userId, updatePasswordRequest)
 
     @LoginRequired
     @PutMapping("/profile-image")
     fun updateProfileImage(@CurrentUser userId: String, @RequestPart profileImage: MultipartFile) =
-        userService.userProfileImageUpdate(userId, profileImage)
+        userService.updateProfileImage(userId, profileImage)
 
     @LoginRequired
     @PutMapping
-    fun updateInfo(@CurrentUser userId: String, @Valid @RequestBody updateInfoRequest: UpdateInfoRequest) =
-        userService.userInfoUpdate(userId, updateInfoRequest)
+    fun updateProfile(@CurrentUser userId: String, @Valid @RequestBody updateInfoRequest: UpdateInfoRequest) =
+        userService.updateProfile(userId, updateInfoRequest)
 
     @LoginRequired
     @DeleteMapping("/account")
     fun deleteAccount(@CurrentUser userId: String, @RequestParam reqPassword: String) {
-        userService.userDeleteAccount(userId, reqPassword)
+        userService.deleteMyAccount(userId, reqPassword)
         loginService.logout()
     }
 }
