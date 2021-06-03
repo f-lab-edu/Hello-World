@@ -76,7 +76,7 @@
 
 
 ## 🗺️ 기능정의
-- [내용 ](https://github.com/f-lab-edu/Hello-World/wiki/01-Use-Case)
+- [내용 살펴보기](https://github.com/f-lab-edu/Hello-World/wiki/01-Use-Case)
 
 ## 🗺️ 테크니컬 이슈와 해결과정
 - [내용 살펴보기](https://github.com/f-lab-edu/Hello-World/wiki/04-Issues&Resolutions-Blogs)
