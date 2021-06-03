@@ -54,13 +54,24 @@
 - 그래서, 작성한 비즈니스 로직에 대한 단위테스트를 최대한 꼼꼼히 작성함으로써 테스트 커버리지를 높여 기능의 명확한 동작을 보장하고, 차후에 코드를 리팩토링하거나 CI를 도입하는데 있어서도 이러한 테스트 코드를 바탕으로 신속하고 정확하게 문제가 없음을 보증할 수 있도록 하는 것을 목표로 합니다.
  
 ## 🗺️ 사용기술
-![image](https://user-images.githubusercontent.com/68094005/116855410-4cb2df80-ac34-11eb-9021-f83cb94c5807.png)
+- [Java 11](https://docs.oracle.com/en/java/javase/11/)
+- [Spring Boot](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
+- [JUnit](https://junit.org/junit5/docs/current/user-guide/)
+- [MySQL 8.0](https://dev.mysql.com/doc/refman/8.0/en/)
+- [MyBatis](https://mybatis.org/mybatis-3/)
+- [Redis](https://redis.io/documentation)
+- [Kafka](https://kafka.apache.org/documentation/)
+- [Jenkins](https://www.jenkins.io/doc/)
+- [Firebase Cloud Messaging(FCM)](https://firebase.google.com/docs/cloud-messaging)
+- [nGrinder](http://naver.github.io/ngrinder/)
+- [pinpoint](https://github.com/pinpoint-apm/pinpoint)
+- [Naver Cloud](https://www.navercloudcorp.com/)
+- [Google Cloud Platform](https://console.cloud.google.com/compute/instances?hl=ko&orgonly=true&project=scientific-glow-309614&supportedpurview=organizationId)
 
 ## 🗺️ 프로젝트 전체 구성도
 
-## 🗺️ 화면예시
-
 ## 🗺️ DB ERD
+![image](https://user-images.githubusercontent.com/68094005/120588436-24f0aa80-c472-11eb-807a-40078b614624.png)
 
 ## 🗺️ 기능정의
 
