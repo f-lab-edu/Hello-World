@@ -7,7 +7,7 @@ import me.soo.helloworld.exception.language.DuplicateLanguageException;
 import me.soo.helloworld.exception.language.InvalidLanguageLevelException;
 import me.soo.helloworld.exception.language.LanguageLimitExceededException;
 import me.soo.helloworld.mapper.LanguageMapper;
-import me.soo.helloworld.model.language.LanguageData;
+import me.soo.helloworld.model.language.LanguageRequest;
 import me.soo.helloworld.util.validator.LanguageLevelValidator;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -22,6 +22,7 @@ import static me.soo.helloworld.util.constant.CacheNames.USER_PROFILE;
 @Service
 @RequiredArgsConstructor
 public class LanguageService {
+
     private static final int MAX_TOTAL_LANGUAGES = 16;
 
     private final LanguageMapper languageMapper;
@@ -45,7 +46,7 @@ public class LanguageService {
      */
 
     @CacheEvict(key = "#userId", value = USER_PROFILE, cacheManager = REDIS_CACHE_MANAGER)
-    public void addLanguages(String userId, List<LanguageData> newLanguages, LanguageStatus status) {
+    public void addLanguages(String userId, List<LanguageRequest> newLanguages, LanguageStatus status) {
         int dbLangCounts = languageMapper.countLanguages(userId, status);
 
         if (dbLangCounts + newLanguages.size() > status.getAddLimit()) {
@@ -55,19 +56,19 @@ public class LanguageService {
         List<LanguageLevel> newLangLevels = extractLanguageLevelsOnly(newLanguages);
         LanguageLevelValidator.validateLevel(newLangLevels, status);
 
-        List<LanguageData> existingLanguages = getLanguages(userId);
+        List<LanguageRequest> existingLanguages = getLanguages(userId);
         checkDuplicateLanguage(existingLanguages, newLanguages);
 
         languageMapper.insertLanguages(userId, newLanguages, status);
     }
 
     @Transactional(readOnly = true)
-    public List<LanguageData> getLanguages(String userId) {
+    public List<LanguageRequest> getLanguages(String userId) {
         return languageMapper.getLanguages(userId);
     }
 
     @CacheEvict(key = "#userId", value = USER_PROFILE, cacheManager = REDIS_CACHE_MANAGER)
-    public void modifyLanguageLevels(String userId, List<LanguageData> languageNewLevels, LanguageStatus status) {
+    public void modifyLanguageLevels(String userId, List<LanguageRequest> languageNewLevels, LanguageStatus status) {
         if (status.equals(LanguageStatus.NATIVE)) {
             throw new InvalidLanguageLevelException("언어 status 가 모국어(NATIVE)로 등록되어 있는 언어들은 레벨을 변경할 수 없습니다.");
         }
@@ -93,7 +94,7 @@ public class LanguageService {
         1. 새로 요청받은 언어 목록 중에 중복되는 언어가 있는 경우 예외 발생
         2. DB 내에 추가된 언어 목록과 비교해서 중복 요청이 들어온 경우 예외 발생
      */
-    private void checkDuplicateLanguage(List<LanguageData> existingLanguages, List<LanguageData> newLanguages) {
+    private void checkDuplicateLanguage(List<LanguageRequest> existingLanguages, List<LanguageRequest> newLanguages) {
         List<Integer> newLangIds = extractLanguageIdsOnly(newLanguages);
 
         // 새로 요청 받은 언어목록을 확인
@@ -109,13 +110,13 @@ public class LanguageService {
         }
     }
 
-    private List<Integer> extractLanguageIdsOnly(List<LanguageData> languages) {
+    private List<Integer> extractLanguageIdsOnly(List<LanguageRequest> languages) {
         return languages.stream()
                 .map(langId -> languages.get(languages.indexOf(langId)).getId())
                 .collect(Collectors.toList());
     }
 
-    private List<LanguageLevel> extractLanguageLevelsOnly(List<LanguageData> languages) {
+    private List<LanguageLevel> extractLanguageLevelsOnly(List<LanguageRequest> languages) {
         return languages.stream()
                 .map(lang -> languages.get(languages.indexOf(lang)).getLevel())
                 .collect(Collectors.toList());

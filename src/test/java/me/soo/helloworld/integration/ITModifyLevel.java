@@ -3,7 +3,7 @@ package me.soo.helloworld.integration;
 import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
 import me.soo.helloworld.exception.language.InvalidLanguageLevelException;
-import me.soo.helloworld.model.language.LanguageData;
+import me.soo.helloworld.model.language.LanguageRequest;
 import me.soo.helloworld.service.LanguageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,64 +35,64 @@ public class ITModifyLevel {
     @Autowired
     LanguageService languageService;
 
-    List<LanguageData> learningLang;
+    List<LanguageRequest> learningLang;
 
-    List<LanguageData> canSpeakLang;
+    List<LanguageRequest> canSpeakLang;
 
-    List<LanguageData> nativeLang;
+    List<LanguageRequest> nativeLang;
 
-    List<LanguageData> learningLangValidLevelSet;
+    List<LanguageRequest> learningLangValidLevelSet;
 
-    List<LanguageData> canSpeakLangValidLevelSet;
+    List<LanguageRequest> canSpeakLangValidLevelSet;
 
-    List<LanguageData> learningLangInvalidLevelSet;
+    List<LanguageRequest> learningLangInvalidLevelSet;
 
-    List<LanguageData> canSpeakLangInValidLevelSet;
+    List<LanguageRequest> canSpeakLangInValidLevelSet;
 
 
     @BeforeEach
     public void setUp() {
         learningLang = new ArrayList<>();
-        learningLang.add(new LanguageData(KOREAN, LanguageLevel.BEGINNER));
-        learningLang.add(new LanguageData(ENGLISH, LanguageLevel.BEGINNER));
-        learningLang.add(new LanguageData(FRENCH, LanguageLevel.BEGINNER));
-        learningLang.add(new LanguageData(SPANISH, LanguageLevel.BEGINNER));
+        learningLang.add(new LanguageRequest(KOREAN, LanguageLevel.BEGINNER));
+        learningLang.add(new LanguageRequest(ENGLISH, LanguageLevel.BEGINNER));
+        learningLang.add(new LanguageRequest(FRENCH, LanguageLevel.BEGINNER));
+        learningLang.add(new LanguageRequest(SPANISH, LanguageLevel.BEGINNER));
 
         canSpeakLang = new ArrayList<>();
-        canSpeakLang.add(new LanguageData(RUSSIAN, LanguageLevel.BEGINNER));
-        canSpeakLang.add(new LanguageData(GERMAN, LanguageLevel.BEGINNER));
-        canSpeakLang.add(new LanguageData(ITALIAN, LanguageLevel.BEGINNER));
-        canSpeakLang.add(new LanguageData(CHINESE_CANTONESE, LanguageLevel.BEGINNER));
+        canSpeakLang.add(new LanguageRequest(RUSSIAN, LanguageLevel.BEGINNER));
+        canSpeakLang.add(new LanguageRequest(GERMAN, LanguageLevel.BEGINNER));
+        canSpeakLang.add(new LanguageRequest(ITALIAN, LanguageLevel.BEGINNER));
+        canSpeakLang.add(new LanguageRequest(CHINESE_CANTONESE, LanguageLevel.BEGINNER));
 
         nativeLang = new ArrayList<>();
-        nativeLang.add(new LanguageData(RUSSIAN, LanguageLevel.NATIVE));
-        nativeLang.add(new LanguageData(GERMAN, LanguageLevel.NATIVE));
-        nativeLang.add(new LanguageData(ITALIAN, LanguageLevel.NATIVE));
-        nativeLang.add(new LanguageData(CHINESE_CANTONESE, LanguageLevel.NATIVE));
+        nativeLang.add(new LanguageRequest(RUSSIAN, LanguageLevel.NATIVE));
+        nativeLang.add(new LanguageRequest(GERMAN, LanguageLevel.NATIVE));
+        nativeLang.add(new LanguageRequest(ITALIAN, LanguageLevel.NATIVE));
+        nativeLang.add(new LanguageRequest(CHINESE_CANTONESE, LanguageLevel.NATIVE));
 
         learningLangValidLevelSet = new ArrayList<>();
-        learningLangValidLevelSet.add(new LanguageData(KOREAN, LanguageLevel.ADVANCED));
-        learningLangValidLevelSet.add(new LanguageData(ENGLISH, LanguageLevel.PROFICIENCY));
-        learningLangValidLevelSet.add(new LanguageData(FRENCH, LanguageLevel.UPPER_INTERMEDIATE));
-        learningLangValidLevelSet.add(new LanguageData(SPANISH, LanguageLevel.ELEMENTARY));
+        learningLangValidLevelSet.add(new LanguageRequest(KOREAN, LanguageLevel.ADVANCED));
+        learningLangValidLevelSet.add(new LanguageRequest(ENGLISH, LanguageLevel.PROFICIENCY));
+        learningLangValidLevelSet.add(new LanguageRequest(FRENCH, LanguageLevel.UPPER_INTERMEDIATE));
+        learningLangValidLevelSet.add(new LanguageRequest(SPANISH, LanguageLevel.ELEMENTARY));
 
         canSpeakLangValidLevelSet = new ArrayList<>();
-        canSpeakLangValidLevelSet.add(new LanguageData(RUSSIAN, LanguageLevel.ADVANCED));
-        canSpeakLangValidLevelSet.add(new LanguageData(GERMAN, LanguageLevel.PROFICIENCY));
-        canSpeakLangValidLevelSet.add(new LanguageData(ITALIAN, LanguageLevel.UPPER_INTERMEDIATE));
-        canSpeakLangValidLevelSet.add(new LanguageData(CHINESE_CANTONESE, LanguageLevel.ELEMENTARY));
+        canSpeakLangValidLevelSet.add(new LanguageRequest(RUSSIAN, LanguageLevel.ADVANCED));
+        canSpeakLangValidLevelSet.add(new LanguageRequest(GERMAN, LanguageLevel.PROFICIENCY));
+        canSpeakLangValidLevelSet.add(new LanguageRequest(ITALIAN, LanguageLevel.UPPER_INTERMEDIATE));
+        canSpeakLangValidLevelSet.add(new LanguageRequest(CHINESE_CANTONESE, LanguageLevel.ELEMENTARY));
 
         learningLangInvalidLevelSet = new ArrayList<>();
-        learningLangInvalidLevelSet.add(new LanguageData(KOREAN, LanguageLevel.ADVANCED));
-        learningLangInvalidLevelSet.add(new LanguageData(ENGLISH, LanguageLevel.PROFICIENCY));
-        learningLangInvalidLevelSet.add(new LanguageData(FRENCH, LanguageLevel.UPPER_INTERMEDIATE));
-        learningLangInvalidLevelSet.add(new LanguageData(SPANISH, LanguageLevel.NATIVE));
+        learningLangInvalidLevelSet.add(new LanguageRequest(KOREAN, LanguageLevel.ADVANCED));
+        learningLangInvalidLevelSet.add(new LanguageRequest(ENGLISH, LanguageLevel.PROFICIENCY));
+        learningLangInvalidLevelSet.add(new LanguageRequest(FRENCH, LanguageLevel.UPPER_INTERMEDIATE));
+        learningLangInvalidLevelSet.add(new LanguageRequest(SPANISH, LanguageLevel.NATIVE));
 
         canSpeakLangInValidLevelSet = new ArrayList<>();
-        canSpeakLangInValidLevelSet.add(new LanguageData(RUSSIAN, LanguageLevel.ADVANCED));
-        canSpeakLangInValidLevelSet.add(new LanguageData(GERMAN, LanguageLevel.PROFICIENCY));
-        canSpeakLangInValidLevelSet.add(new LanguageData(ITALIAN, LanguageLevel.UPPER_INTERMEDIATE));
-        canSpeakLangInValidLevelSet.add(new LanguageData(CHINESE_CANTONESE, LanguageLevel.NATIVE));
+        canSpeakLangInValidLevelSet.add(new LanguageRequest(RUSSIAN, LanguageLevel.ADVANCED));
+        canSpeakLangInValidLevelSet.add(new LanguageRequest(GERMAN, LanguageLevel.PROFICIENCY));
+        canSpeakLangInValidLevelSet.add(new LanguageRequest(ITALIAN, LanguageLevel.UPPER_INTERMEDIATE));
+        canSpeakLangInValidLevelSet.add(new LanguageRequest(CHINESE_CANTONESE, LanguageLevel.NATIVE));
     }
 
     @Test
@@ -104,10 +104,10 @@ public class ITModifyLevel {
         languageService.modifyLanguageLevels(userId, learningLangValidLevelSet, LanguageStatus.LEARNING);
         languageService.modifyLanguageLevels(userId, canSpeakLangValidLevelSet, LanguageStatus.CAN_SPEAK);
 
-        List<LanguageData> languageList = languageService.getLanguages(userId);
+        List<LanguageRequest> languageList = languageService.getLanguages(userId);
 
         Map<Integer, LanguageLevel> languageMap = languageList.stream()
-                .collect(Collectors.toMap(LanguageData::getId, LanguageData::getLevel));
+                .collect(Collectors.toMap(LanguageRequest::getId, LanguageRequest::getLevel));
 
         assertTrue(learningLangValidLevelSet.stream().allMatch(languageData -> languageMap.get(languageData.getId()).equals(languageData.getLevel())));
         assertTrue(canSpeakLangValidLevelSet.stream().allMatch(languageData -> languageMap.get(languageData.getId()).equals(languageData.getLevel())));
