@@ -1,7 +1,5 @@
 package me.soo.helloworld.model.user
 
-import me.soo.helloworld.exception.InvalidUserInfoException
-import me.soo.helloworld.util.encoder.PasswordEncoder
 import java.util.Date
 import javax.validation.constraints.Pattern
 
