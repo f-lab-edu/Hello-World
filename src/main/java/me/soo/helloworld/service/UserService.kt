@@ -45,7 +45,7 @@ class UserService(
         val loginData = userMapper.getUserLoginDataById(userId)
             ?: throw InvalidUserInfoException("해당 사용자는 존재하지 않습니다. 아이디를 다시 확인해 주세요.")
 
-        User.verifyPassword(reqPassword, loginData.password, passwordEncoder)
+        verifyPassword(reqPassword, loginData.password)
         return loginData
     }
 
@@ -67,7 +67,9 @@ class UserService(
     }
 
     fun findPassword(findPasswordRequest: FindPasswordRequest) {
-        User.verifyEmail(userMapper.isEmailValid(findPasswordRequest))
+        if (!userMapper.isEmailValid(findPasswordRequest)) {
+            throw InvalidUserInfoException("해당 사용자가 존재하지 않거나 이메일이 일치하지 않습니다. 입력하신 정보를 다시 확인해 주세요.")
+        }
 
         val tempPassword = UUID.randomUUID().toString()
         val email = Email.create(findPasswordRequest.email, FIND_PASSWORD_TITLE, FIND_PASSWORD_BODY + tempPassword)
@@ -76,10 +78,14 @@ class UserService(
 
     fun deleteMyAccount(userId: String, reqPassword: String) {
         val userPassword = userMapper.getUserPasswordById(userId)
-        User.verifyPassword(reqPassword, userPassword, passwordEncoder)
+        verifyPassword(reqPassword, userPassword)
         userMapper.deleteUser(userId)
     }
 
     @Transactional(readOnly = true)
     fun isUserActivated(userId: String) = userMapper.isUserActivated(userId)
+
+    private fun verifyPassword(reqPassword: String, userPassword: String) =
+        if (!passwordEncoder.isMatch(reqPassword, userPassword))
+            throw InvalidUserInfoException("입력하신 비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.") else Unit
 }

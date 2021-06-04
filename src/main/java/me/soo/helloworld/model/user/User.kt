@@ -46,18 +46,6 @@ data class User @JvmOverloads constructor(
     val profileImagePath: String? = null
 ) {
 
-    companion object {
-        fun verifyPassword(reqPassword: String, userPassword: String, passwordEncoder: PasswordEncoder) {
-            if (!passwordEncoder.isMatch(reqPassword, userPassword))
-                throw InvalidUserInfoException("입력하신 비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.")
-        }
-
-        fun verifyEmail(isEmailValid: Boolean) {
-            if (!isEmailValid)
-                throw InvalidUserInfoException("해당 사용자가 존재하지 않거나 이메일이 일치하지 않습니다. 입력하신 정보를 다시 확인해 주세요.")
-        }
-    }
-
     fun createUserWithEncodedPassword(encodedPassword: String) =
         User(
             userId = userId,
