@@ -29,9 +29,6 @@ class SessionLoginService(
 
     override fun getCurrentUserId() = httpSession.getAttribute(USER_ID)?.toString()
 
-    private fun updateTokenIfRequired(userId: String, oldToken: String?, newToken: String?) {
-        if (!oldToken.equals(newToken)) {
-            pushNotificationService.registerToken(userId, newToken)
-        }
-    }
+    private fun updateTokenIfRequired(userId: String, oldToken: String?, newToken: String?) =
+        if (!oldToken.equals(newToken)) pushNotificationService.registerToken(userId, newToken) else Unit
 }
