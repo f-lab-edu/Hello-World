@@ -3,7 +3,7 @@ package me.soo.helloworld.util.http
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
-class HttpResponse {
+class HttpResponse private constructor() {
 
     companion object {
 

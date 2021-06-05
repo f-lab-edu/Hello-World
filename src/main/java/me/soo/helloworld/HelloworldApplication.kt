@@ -6,7 +6,7 @@ import org.springframework.cache.annotation.EnableCaching
 
 @SpringBootApplication
 @EnableCaching
-open class HelloworldApplication
+class HelloworldApplication
 
 fun main(args: Array<String>) {
     runApplication<HelloworldApplication>(*args)

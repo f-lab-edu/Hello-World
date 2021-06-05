@@ -140,13 +140,13 @@ public class ITSearchProfiles {
     }
 
     private void insertUsers() {
-        userService.userSignUp(TENS_MALE_FROM_UK_LIVING_LONDON);
-        userService.userSignUp(FORTIES_MALE_FROM_UK_LIVING_KOREA_SEOUL);
-        userService.userSignUp(SEVENTIES_FEMALE_FROM_UK_LIVING_LIVERPOOL);
+        userService.signUp(TENS_MALE_FROM_UK_LIVING_LONDON);
+        userService.signUp(FORTIES_MALE_FROM_UK_LIVING_KOREA_SEOUL);
+        userService.signUp(SEVENTIES_FEMALE_FROM_UK_LIVING_LIVERPOOL);
 
-        userService.userSignUp(TENS_FEMALE_FROM_KOREA);
+        userService.signUp(TENS_FEMALE_FROM_KOREA);
 
-        userService.userSignUp(CURRENT_USER);
+        userService.signUp(CURRENT_USER);
     }
 
     private void insertLanguages() {
@@ -407,7 +407,7 @@ public class ITSearchProfiles {
         insertUsers();
         insertLanguages();
         assertTrue(userService.isUserActivated(FORTIES_MALE_FROM_UK_LIVING_KOREA_SEOUL.getUserId()));
-        userService.userDeleteAccount(FORTIES_MALE_FROM_UK_LIVING_KOREA_SEOUL.getUserId(), FORTIES_MALE_FROM_UK_LIVING_KOREA_SEOUL.getPassword());
+        userService.deleteMyAccount(FORTIES_MALE_FROM_UK_LIVING_KOREA_SEOUL.getUserId(), FORTIES_MALE_FROM_UK_LIVING_KOREA_SEOUL.getPassword());
 
         SearchConditionsRequest request = SearchConditionsRequest.builder()
                 .speakLanguage(ENGLISH)

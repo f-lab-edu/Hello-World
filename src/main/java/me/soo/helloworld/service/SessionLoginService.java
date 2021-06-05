@@ -2,7 +2,7 @@ package me.soo.helloworld.service;
 
 import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.exception.DuplicateLoginRequestException;
-import me.soo.helloworld.model.user.UserLoginData;
+import me.soo.helloworld.model.user.LoginData;
 import me.soo.helloworld.model.user.LoginRequest;
 import me.soo.helloworld.util.constant.SessionKeys;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +24,7 @@ public class SessionLoginService implements LoginService {
     public void login(LoginRequest loginRequest) {
         validateDuplicateLogin(getCurrentUserId());
 
-        UserLoginData loginData = userService.getUserLoginInfo(loginRequest.getUserId(), loginRequest.getPassword());
+        LoginData loginData = userService.getValidUserLoginData(loginRequest.getUserId(), loginRequest.getPassword());
         httpSession.setAttribute(SessionKeys.USER_ID, loginData.getUserId());
 
         updateTokenIfRequired(loginRequest.getUserId(), loginRequest.getToken(), loginData.getToken());
