@@ -3,7 +3,8 @@ package me.soo.helloworld.integration;
 import lombok.extern.slf4j.Slf4j;
 import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
-import me.soo.helloworld.exception.language.LanguageLimitExceededException;
+import me.soo.helloworld.mapper.LanguageMapper;
+import me.soo.helloworld.model.language.LanguageData;
 import me.soo.helloworld.model.language.LanguageRequest;
 import me.soo.helloworld.service.LanguageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +46,9 @@ public class ITDeleteLanguage {
     @Autowired
     LanguageService languageService;
 
+    @Autowired
+    LanguageMapper languageMapper;
+
     @BeforeEach
     public void createNewLangRequests() {
         newLearningLangRequest = new ArrayList<>();
@@ -54,10 +58,10 @@ public class ITDeleteLanguage {
         newLearningLangRequest.add(new LanguageRequest(SPANISH, LanguageLevel.BEGINNER));
 
         newCanSpeakLangRequest = new ArrayList<>();
-        newCanSpeakLangRequest.add(new LanguageRequest(RUSSIAN, LanguageLevel.BEGINNER));
-        newCanSpeakLangRequest.add(new LanguageRequest(GERMAN, LanguageLevel.BEGINNER));
-        newCanSpeakLangRequest.add(new LanguageRequest(ITALIAN, LanguageLevel.BEGINNER));
-        newCanSpeakLangRequest.add(new LanguageRequest(CHINESE_CANTONESE, LanguageLevel.BEGINNER));
+        newCanSpeakLangRequest.add(new LanguageRequest(RUSSIAN, LanguageLevel.PROFICIENCY));
+        newCanSpeakLangRequest.add(new LanguageRequest(GERMAN, LanguageLevel.PROFICIENCY));
+        newCanSpeakLangRequest.add(new LanguageRequest(ITALIAN, LanguageLevel.PROFICIENCY));
+        newCanSpeakLangRequest.add(new LanguageRequest(CHINESE_CANTONESE, LanguageLevel.PROFICIENCY));
 
         newNativeLangRequest = new ArrayList<>();
         newNativeLangRequest.add(new LanguageRequest(CHINESE_MANDARIN, LanguageLevel.NATIVE));
@@ -106,24 +110,6 @@ public class ITDeleteLanguage {
     }
 
     @Test
-    @DisplayName("최대로 등록 가능한 언어 개수(16) 내로 삭제 요청이 들어올 시 등록된 언어 삭제에 성공합니다.")
-    public void deleteLanguageSuccess() {
-        languageService.addLanguages(user, newLearningLangRequest, LanguageStatus.LEARNING);
-        languageService.addLanguages(user, newCanSpeakLangRequest, LanguageStatus.CAN_SPEAK);
-        languageService.addLanguages(user, newNativeLangRequest, LanguageStatus.NATIVE);
-
-        List<LanguageRequest> allLang = languageService.getLanguages(user);
-        List<Integer> langIds = allLang.stream()
-                                        .map(langId -> allLang.get(allLang.indexOf(langId)).getId())
-                                        .collect(Collectors.toList());
-
-        languageService.deleteLanguages(user, langIds);
-
-        List<LanguageRequest> allLangAfterDelete = languageService.getLanguages(user);
-        assertSame(allLangAfterDelete.size(), 0);
-    }
-
-    @Test
     @DisplayName("여러 사용가 같은 언어를 등록했다고 하더라도 해당 사용자가 요청한 언어에 대한 정보만 삭제합니다.")
     public void checkDeleteProperlyByUserId() {
         String anotherUser = "another";
@@ -140,8 +126,8 @@ public class ITDeleteLanguage {
 
         languageService.deleteLanguages(user, langInDB);
 
-        List<LanguageRequest> userLangInDB = languageService.getLanguages(user);
-        List<LanguageRequest> anotherUserLangInDB = languageService.getLanguages(anotherUser);
+        List<LanguageData> userLangInDB = languageMapper.getLanguages(user);
+        List<LanguageData> anotherUserLangInDB = languageMapper.getLanguages(anotherUser);
 
         assertTrue(userLangInDB.isEmpty());
         assertSame(anotherUserLangInDB.size(), 12);
@@ -153,13 +139,4 @@ public class ITDeleteLanguage {
         boolean isNotDeleted = langInDB.containsAll(anotherUserLang);
         assertTrue(isNotDeleted);
     }
-
-    @Test
-    @DisplayName("최대로 등록 가능한 언어 개수(16) 이상으로 언어 삭제 요청이 들어올 시 LanguageLimitExceededException 이 발생하며 삭제에 실패합니다.")
-    public void deleteLanguagesFailOverTotalLanguageLimit() {
-        assertThrows(LanguageLimitExceededException.class, () -> {
-                languageService.deleteLanguages(user, overLimitLang);
-        });
-    }
-
 }

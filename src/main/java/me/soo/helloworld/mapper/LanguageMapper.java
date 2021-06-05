@@ -1,6 +1,7 @@
 package me.soo.helloworld.mapper;
 
 import me.soo.helloworld.enumeration.LanguageStatus;
+import me.soo.helloworld.model.language.LanguageData;
 import me.soo.helloworld.model.language.LanguageRequest;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -16,7 +17,7 @@ public interface LanguageMapper {
 
     public int countLanguages(@Param("userId") String userId, @Param("status") LanguageStatus status);
 
-    public List<LanguageRequest> getLanguages(String userId);
+    public List<LanguageData> getLanguages(String userId);
 
     public void updateLevels(@Param("userId") String userId,
                             @Param("languageNewLevels") List<LanguageRequest> languageNewLevels,

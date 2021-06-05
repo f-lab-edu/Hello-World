@@ -5,7 +5,7 @@ import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
 import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.ProfileMapper;
-import me.soo.helloworld.model.language.LanguageDataForProfile;
+import me.soo.helloworld.model.language.LanguageData;
 import me.soo.helloworld.model.recommendation.RecommendationForProfile;
 import me.soo.helloworld.model.user.UserDataOnProfile;
 import me.soo.helloworld.service.FetchNameService;
@@ -63,10 +63,10 @@ public class ProfileServiceTest {
 
     @BeforeEach
     public void createUserProfileData() {
-        LanguageDataForProfile nativeKorean = new LanguageDataForProfile(KOREAN, LanguageLevel.NATIVE, LanguageStatus.NATIVE);
-        LanguageDataForProfile learningEnglish = new LanguageDataForProfile(ENGLISH, LanguageLevel.BEGINNER, LanguageStatus.LEARNING);
+        LanguageData nativeKorean = new LanguageData(KOREAN, LanguageLevel.NATIVE, LanguageStatus.NATIVE);
+        LanguageData learningEnglish = new LanguageData(ENGLISH, LanguageLevel.BEGINNER, LanguageStatus.LEARNING);
 
-        List<LanguageDataForProfile> languagesData = new ArrayList<>();
+        List<LanguageData> languagesData = new ArrayList<>();
         languagesData.add(nativeKorean);
         languagesData.add(learningEnglish);
 

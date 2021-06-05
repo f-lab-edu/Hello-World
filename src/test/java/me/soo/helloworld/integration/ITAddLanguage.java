@@ -47,8 +47,8 @@ public class ITAddLanguage {
         newLearningLang.add(new LanguageRequest(KOREAN, LanguageLevel.UPPER_INTERMEDIATE));
 
         newCanSpeakLang = new ArrayList<>();
-        newCanSpeakLang.add(new LanguageRequest(ENGLISH, LanguageLevel.ADVANCED));
-        newCanSpeakLang.add(new LanguageRequest(FRENCH, LanguageLevel.ADVANCED));
+        newCanSpeakLang.add(new LanguageRequest(ENGLISH, LanguageLevel.PROFICIENCY));
+        newCanSpeakLang.add(new LanguageRequest(FRENCH, LanguageLevel.PROFICIENCY));
 
         newNativeLang = new ArrayList<>();
         newNativeLang.add(new LanguageRequest(ENGLISH, LanguageLevel.NATIVE));
