@@ -3,6 +3,7 @@ package me.soo.helloworld.service.login;
 import me.soo.helloworld.exception.DuplicateLoginRequestException;
 import me.soo.helloworld.model.user.LoginData;
 import me.soo.helloworld.model.user.LoginRequest;
+import me.soo.helloworld.service.PushNotificationService;
 import me.soo.helloworld.service.SessionLoginService;
 import me.soo.helloworld.service.UserService;
 import me.soo.helloworld.util.constant.SessionKeys;
@@ -35,6 +36,9 @@ public class LoginServiceTest {
 
     @Mock
     UserService userService;
+
+    @Mock
+    PushNotificationService pushNotificationService;
 
     /*
         Basic User Fixture
