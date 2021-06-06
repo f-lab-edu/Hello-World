@@ -12,7 +12,7 @@ import java.util.Optional;
 @Mapper
 public interface FriendMapper {
 
-    public void sendFriendRequest(String userId, String targetId);
+    public void insertFriendRequest(String userId, String targetId);
 
     public FriendStatus getFriendStatus(String userId, String targetId);
 
@@ -24,7 +24,7 @@ public interface FriendMapper {
 
     public List<FriendList> getFriendList(FriendListRequest request);
 
-    public Optional<Integer> getFriendshipDuration(@Param("userId") String userId,
-                                                   @Param("targetId") String targetId,
-                                                   @Param("status") FriendStatus status);
+    public Integer getFriendshipDuration(@Param("userId") String userId,
+                                         @Param("targetId") String targetId,
+                                         @Param("status") FriendStatus status);
 }

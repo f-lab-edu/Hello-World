@@ -10,7 +10,7 @@ import me.soo.helloworld.model.recommendation.RecommendationForProfile;
 import me.soo.helloworld.model.recommendation.Recommendation;
 import me.soo.helloworld.model.recommendation.Recommendations;
 import me.soo.helloworld.util.Pagination;
-import me.soo.helloworld.util.validator.TargetUserValidator;
+import me.soo.helloworld.util.validator.Validator;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,7 +68,7 @@ public class RecommendationService {
 
     @Transactional(readOnly = true)
     public List<Recommendations> getRecommendationsAboutTarget(String targetId, Pagination pagination, String userId) {
-        TargetUserValidator.targetExistence(userService.isUserActivated(targetId));
+        Validator.validateTargetExistence(userService.isUserActivated(targetId));
         return recommendationMapper.getRecommendationsAboutTarget(targetId, pagination, userId);
     }
 

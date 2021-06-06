@@ -60,7 +60,7 @@ public class FriendServiceTest {
         verify(userService, never()).isUserActivated(targetId);
         verify(blockUserService, never()).isUserBlocked(userId, targetId);
         verify(friendMapper, never()).getFriendStatus(userId, targetId);
-        verify(friendMapper, never()).sendFriendRequest(userId, targetId);
+        verify(friendMapper, never()).insertFriendRequest(userId, targetId);
         verify(alarmService, never()).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
@@ -76,7 +76,7 @@ public class FriendServiceTest {
         verify(userService, times(1)).isUserActivated(targetId);
         verify(blockUserService, never()).isUserBlocked(userId, targetId);
         verify(friendMapper, never()).getFriendStatus(userId, targetId);
-        verify(friendMapper, never()).sendFriendRequest(userId, targetId);
+        verify(friendMapper, never()).insertFriendRequest(userId, targetId);
         verify(alarmService, never()).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
@@ -93,7 +93,7 @@ public class FriendServiceTest {
         verify(userService, times(1)).isUserActivated(targetId);
         verify(blockUserService,times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, never()).getFriendStatus(userId, targetId);
-        verify(friendMapper, never()).sendFriendRequest(userId, targetId);
+        verify(friendMapper, never()).insertFriendRequest(userId, targetId);
         verify(alarmService, never()).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
@@ -111,7 +111,7 @@ public class FriendServiceTest {
         verify(userService, times(1)).isUserActivated(targetId);
         verify(blockUserService,times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
-        verify(friendMapper, never()).sendFriendRequest(userId, targetId);
+        verify(friendMapper, never()).insertFriendRequest(userId, targetId);
         verify(alarmService, never()).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
@@ -129,7 +129,7 @@ public class FriendServiceTest {
         verify(userService, times(1)).isUserActivated(targetId);
         verify(blockUserService,times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
-        verify(friendMapper, never()).sendFriendRequest(userId, targetId);
+        verify(friendMapper, never()).insertFriendRequest(userId, targetId);
         verify(alarmService, never()).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
@@ -147,7 +147,7 @@ public class FriendServiceTest {
         verify(userService, times(1)).isUserActivated(targetId);
         verify(blockUserService,times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
-        verify(friendMapper, never()).sendFriendRequest(userId, targetId);
+        verify(friendMapper, never()).insertFriendRequest(userId, targetId);
         verify(alarmService, never()).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
@@ -163,7 +163,7 @@ public class FriendServiceTest {
         verify(userService, times(1)).isUserActivated(targetId);
         verify(blockUserService,times(1)).isUserBlocked(userId, targetId);
         verify(friendMapper, times(1)).getFriendStatus(userId, targetId);
-        verify(friendMapper, times(1)).sendFriendRequest(userId, targetId);
+        verify(friendMapper, times(1)).insertFriendRequest(userId, targetId);
         verify(alarmService, times(1)).dispatchAlarm(targetId, userId, AlarmTypes.FRIEND_REQUEST_RECEIVED);
     }
 
