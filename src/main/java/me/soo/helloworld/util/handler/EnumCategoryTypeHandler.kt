@@ -17,27 +17,22 @@ import java.sql.ResultSet
  */
 open class EnumCategoryTypeHandler<E : Enum<E>>(val type: Class<E>) : TypeHandler<EnumCategory> {
 
-    override fun setParameter(ps: PreparedStatement?, i: Int, parameter: EnumCategory?, jdbcType: JdbcType?) =
-        ps!!.setInt(i, parameter!!.getCategory())
+    override fun setParameter(ps: PreparedStatement, i: Int, parameter: EnumCategory, jdbcType: JdbcType?) =
+        ps.setInt(i, parameter.getCategory())
 
-    override fun getResult(rs: ResultSet?, columnName: String?) = getEnumCategory(rs!!.getInt(columnName))
+    override fun getResult(rs: ResultSet, columnName: String) = getEnumCategory(rs.getInt(columnName))
 
-    override fun getResult(rs: ResultSet?, columnIndex: Int) = getEnumCategory(rs!!.getInt(columnIndex))
+    override fun getResult(rs: ResultSet, columnIndex: Int) = getEnumCategory(rs.getInt(columnIndex))
 
-    override fun getResult(cs: CallableStatement?, columnIndex: Int) = getEnumCategory(cs!!.getInt(columnIndex))
+    override fun getResult(cs: CallableStatement, columnIndex: Int) = getEnumCategory(cs.getInt(columnIndex))
 
-    private fun getEnumCategory(category: Int): EnumCategory? {
-        try {
-            val enumConstants = type.enumConstants
+    private fun getEnumCategory(category: Int): EnumCategory {
+        val enumConstants = type.enumConstants.map { it as EnumCategory }
 
-            for (enumCategory in enumConstants) {
-                if (enumCategory is EnumCategory)
-                    if (enumCategory.getCategory() == category) return enumCategory
-            }
-
-            return null
-        } catch (e: TypeException) {
-            throw TypeException("해당 타입은 변환이 불가능 합니다.", e)
+        for (const in enumConstants) {
+            if (const.getCategory() == category) return const
         }
+
+        throw TypeException("해당 타입은 변환이 불가능 합니다.")
     }
 }
