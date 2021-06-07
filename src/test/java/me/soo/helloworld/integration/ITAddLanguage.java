@@ -4,7 +4,7 @@ import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
 import me.soo.helloworld.exception.language.DuplicateLanguageException;
 import me.soo.helloworld.mapper.LanguageMapper;
-import me.soo.helloworld.model.language.LanguageData;
+import me.soo.helloworld.model.language.LanguageRequest;
 import me.soo.helloworld.service.LanguageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,25 +34,25 @@ public class ITAddLanguage {
     @Autowired
     LanguageMapper languageMapper;
 
-    ArrayList<LanguageData> newLearningLang;
+    ArrayList<LanguageRequest> newLearningLang;
 
-    ArrayList<LanguageData> newCanSpeakLang;
+    ArrayList<LanguageRequest> newCanSpeakLang;
 
-    ArrayList<LanguageData> newNativeLang;
+    ArrayList<LanguageRequest> newNativeLang;
 
     @BeforeEach
     public void setUp() {
         newLearningLang = new ArrayList<>();
-        newLearningLang.add(new LanguageData(ENGLISH, LanguageLevel.BEGINNER));
-        newLearningLang.add(new LanguageData(KOREAN, LanguageLevel.UPPER_INTERMEDIATE));
+        newLearningLang.add(new LanguageRequest(ENGLISH, LanguageLevel.BEGINNER));
+        newLearningLang.add(new LanguageRequest(KOREAN, LanguageLevel.UPPER_INTERMEDIATE));
 
         newCanSpeakLang = new ArrayList<>();
-        newCanSpeakLang.add(new LanguageData(ENGLISH, LanguageLevel.ADVANCED));
-        newCanSpeakLang.add(new LanguageData(FRENCH, LanguageLevel.ADVANCED));
+        newCanSpeakLang.add(new LanguageRequest(ENGLISH, LanguageLevel.ADVANCED));
+        newCanSpeakLang.add(new LanguageRequest(FRENCH, LanguageLevel.ADVANCED));
 
         newNativeLang = new ArrayList<>();
-        newNativeLang.add(new LanguageData(ENGLISH, LanguageLevel.NATIVE));
-        newNativeLang.add(new LanguageData(SPANISH, LanguageLevel.NATIVE));
+        newNativeLang.add(new LanguageRequest(ENGLISH, LanguageLevel.NATIVE));
+        newNativeLang.add(new LanguageRequest(SPANISH, LanguageLevel.NATIVE));
     }
     /*
         하나의 언어는 추가하려는 status 를 다르게 지정해도 중복으로 추가할 수 없습니다.

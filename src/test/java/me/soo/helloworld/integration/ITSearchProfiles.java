@@ -4,7 +4,7 @@ import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
 import me.soo.helloworld.exception.language.InvalidLanguageLevelException;
 import me.soo.helloworld.model.condition.SearchConditionsRequest;
-import me.soo.helloworld.model.language.LanguageData;
+import me.soo.helloworld.model.language.LanguageRequest;
 import me.soo.helloworld.model.user.UserProfiles;
 import me.soo.helloworld.service.BlockUserService;
 import me.soo.helloworld.service.LanguageService;
@@ -54,15 +54,15 @@ public class ITSearchProfiles {
 
     Pagination pagination;
 
-    List<LanguageData> nativeEnglish;
+    List<LanguageRequest> nativeEnglish;
 
-    List<LanguageData> nativeKorean;
+    List<LanguageRequest> nativeKorean;
 
-    List<LanguageData> beginnerKorean;
+    List<LanguageRequest> beginnerKorean;
 
-    List<LanguageData> beginnerEnglish;
+    List<LanguageRequest> beginnerEnglish;
 
-    List<LanguageData> intermediateKorean;
+    List<LanguageRequest> intermediateKorean;
 
     Set<LanguageLevel> allLevelsIncludingNativeLevel;
 
@@ -86,19 +86,19 @@ public class ITSearchProfiles {
     @BeforeEach
     public void initLanguages() {
         nativeEnglish = new ArrayList<>();
-        nativeEnglish.add(new LanguageData(ENGLISH, LanguageLevel.NATIVE));
+        nativeEnglish.add(new LanguageRequest(ENGLISH, LanguageLevel.NATIVE));
 
         nativeKorean = new ArrayList<>();
-        nativeKorean.add(new LanguageData(KOREAN, LanguageLevel.NATIVE));
+        nativeKorean.add(new LanguageRequest(KOREAN, LanguageLevel.NATIVE));
 
         beginnerKorean = new ArrayList<>();
-        beginnerKorean.add(new LanguageData(KOREAN, LanguageLevel.BEGINNER));
+        beginnerKorean.add(new LanguageRequest(KOREAN, LanguageLevel.BEGINNER));
 
         beginnerEnglish = new ArrayList<>();
-        beginnerEnglish.add(new LanguageData(ENGLISH, LanguageLevel.BEGINNER));
+        beginnerEnglish.add(new LanguageRequest(ENGLISH, LanguageLevel.BEGINNER));
 
         intermediateKorean = new ArrayList<>();
-        intermediateKorean.add(new LanguageData(KOREAN, LanguageLevel.INTERMEDIATE));
+        intermediateKorean.add(new LanguageRequest(KOREAN, LanguageLevel.INTERMEDIATE));
     }
 
     @BeforeEach

@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
 import me.soo.helloworld.exception.language.LanguageLimitExceededException;
-import me.soo.helloworld.model.language.LanguageData;
+import me.soo.helloworld.model.language.LanguageRequest;
 import me.soo.helloworld.service.LanguageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,11 +32,11 @@ public class ITDeleteLanguage {
 
     private final String user = "Soo1045";
 
-    List<LanguageData> newLearningLangRequest;
+    List<LanguageRequest> newLearningLangRequest;
 
-    List<LanguageData> newCanSpeakLangRequest;
+    List<LanguageRequest> newCanSpeakLangRequest;
 
-    List<LanguageData> newNativeLangRequest;
+    List<LanguageRequest> newNativeLangRequest;
 
     List<Integer> langInDB;
 
@@ -48,22 +48,22 @@ public class ITDeleteLanguage {
     @BeforeEach
     public void createNewLangRequests() {
         newLearningLangRequest = new ArrayList<>();
-        newLearningLangRequest.add(new LanguageData(KOREAN, LanguageLevel.BEGINNER));
-        newLearningLangRequest.add(new LanguageData(ENGLISH, LanguageLevel.BEGINNER));
-        newLearningLangRequest.add(new LanguageData(FRENCH, LanguageLevel.BEGINNER));
-        newLearningLangRequest.add(new LanguageData(SPANISH, LanguageLevel.BEGINNER));
+        newLearningLangRequest.add(new LanguageRequest(KOREAN, LanguageLevel.BEGINNER));
+        newLearningLangRequest.add(new LanguageRequest(ENGLISH, LanguageLevel.BEGINNER));
+        newLearningLangRequest.add(new LanguageRequest(FRENCH, LanguageLevel.BEGINNER));
+        newLearningLangRequest.add(new LanguageRequest(SPANISH, LanguageLevel.BEGINNER));
 
         newCanSpeakLangRequest = new ArrayList<>();
-        newCanSpeakLangRequest.add(new LanguageData(RUSSIAN, LanguageLevel.BEGINNER));
-        newCanSpeakLangRequest.add(new LanguageData(GERMAN, LanguageLevel.BEGINNER));
-        newCanSpeakLangRequest.add(new LanguageData(ITALIAN, LanguageLevel.BEGINNER));
-        newCanSpeakLangRequest.add(new LanguageData(CHINESE_CANTONESE, LanguageLevel.BEGINNER));
+        newCanSpeakLangRequest.add(new LanguageRequest(RUSSIAN, LanguageLevel.BEGINNER));
+        newCanSpeakLangRequest.add(new LanguageRequest(GERMAN, LanguageLevel.BEGINNER));
+        newCanSpeakLangRequest.add(new LanguageRequest(ITALIAN, LanguageLevel.BEGINNER));
+        newCanSpeakLangRequest.add(new LanguageRequest(CHINESE_CANTONESE, LanguageLevel.BEGINNER));
 
         newNativeLangRequest = new ArrayList<>();
-        newNativeLangRequest.add(new LanguageData(CHINESE_MANDARIN, LanguageLevel.NATIVE));
-        newNativeLangRequest.add(new LanguageData(ARABIC, LanguageLevel.NATIVE));
-        newNativeLangRequest.add(new LanguageData(DUTCH, LanguageLevel.NATIVE));
-        newNativeLangRequest.add(new LanguageData(PORTUGUESE, LanguageLevel.NATIVE));
+        newNativeLangRequest.add(new LanguageRequest(CHINESE_MANDARIN, LanguageLevel.NATIVE));
+        newNativeLangRequest.add(new LanguageRequest(ARABIC, LanguageLevel.NATIVE));
+        newNativeLangRequest.add(new LanguageRequest(DUTCH, LanguageLevel.NATIVE));
+        newNativeLangRequest.add(new LanguageRequest(PORTUGUESE, LanguageLevel.NATIVE));
     }
 
     @BeforeEach
@@ -112,14 +112,14 @@ public class ITDeleteLanguage {
         languageService.addLanguages(user, newCanSpeakLangRequest, LanguageStatus.CAN_SPEAK);
         languageService.addLanguages(user, newNativeLangRequest, LanguageStatus.NATIVE);
 
-        List<LanguageData> allLang = languageService.getLanguages(user);
+        List<LanguageRequest> allLang = languageService.getLanguages(user);
         List<Integer> langIds = allLang.stream()
                                         .map(langId -> allLang.get(allLang.indexOf(langId)).getId())
                                         .collect(Collectors.toList());
 
         languageService.deleteLanguages(user, langIds);
 
-        List<LanguageData> allLangAfterDelete = languageService.getLanguages(user);
+        List<LanguageRequest> allLangAfterDelete = languageService.getLanguages(user);
         assertSame(allLangAfterDelete.size(), 0);
     }
 
@@ -140,8 +140,8 @@ public class ITDeleteLanguage {
 
         languageService.deleteLanguages(user, langInDB);
 
-        List<LanguageData> userLangInDB = languageService.getLanguages(user);
-        List<LanguageData> anotherUserLangInDB = languageService.getLanguages(anotherUser);
+        List<LanguageRequest> userLangInDB = languageService.getLanguages(user);
+        List<LanguageRequest> anotherUserLangInDB = languageService.getLanguages(anotherUser);
 
         assertTrue(userLangInDB.isEmpty());
         assertSame(anotherUserLangInDB.size(), 12);
