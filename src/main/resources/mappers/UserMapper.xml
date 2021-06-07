@@ -75,5 +75,4 @@
     <select id="isUserActivated" parameterType="String" resultType="boolean">
         SELECT EXISTS (SELECT userId FROM users WHERE userId = #{userId} AND isDeactivated = 'N')
     </select>
-
 </mapper>

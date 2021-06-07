@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @MapperScan(basePackages = "me.soo.helloworld.mapper")
-@Profile({"local", "test"})
+@Profile("!prod")
 public class LocalMyBatisConfig {
 
     @Bean
