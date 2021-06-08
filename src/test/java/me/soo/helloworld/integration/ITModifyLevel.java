@@ -3,6 +3,8 @@ package me.soo.helloworld.integration;
 import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
 import me.soo.helloworld.exception.language.InvalidLanguageLevelException;
+import me.soo.helloworld.mapper.LanguageMapper;
+import me.soo.helloworld.model.language.LanguageData;
 import me.soo.helloworld.model.language.LanguageRequest;
 import me.soo.helloworld.service.LanguageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +37,9 @@ public class ITModifyLevel {
     @Autowired
     LanguageService languageService;
 
+    @Autowired
+    LanguageMapper languageMapper;
+
     List<LanguageRequest> learningLang;
 
     List<LanguageRequest> canSpeakLang;
@@ -59,10 +64,10 @@ public class ITModifyLevel {
         learningLang.add(new LanguageRequest(SPANISH, LanguageLevel.BEGINNER));
 
         canSpeakLang = new ArrayList<>();
-        canSpeakLang.add(new LanguageRequest(RUSSIAN, LanguageLevel.BEGINNER));
-        canSpeakLang.add(new LanguageRequest(GERMAN, LanguageLevel.BEGINNER));
-        canSpeakLang.add(new LanguageRequest(ITALIAN, LanguageLevel.BEGINNER));
-        canSpeakLang.add(new LanguageRequest(CHINESE_CANTONESE, LanguageLevel.BEGINNER));
+        canSpeakLang.add(new LanguageRequest(RUSSIAN, LanguageLevel.PROFICIENCY));
+        canSpeakLang.add(new LanguageRequest(GERMAN, LanguageLevel.PROFICIENCY));
+        canSpeakLang.add(new LanguageRequest(ITALIAN, LanguageLevel.PROFICIENCY));
+        canSpeakLang.add(new LanguageRequest(CHINESE_CANTONESE, LanguageLevel.PROFICIENCY));
 
         nativeLang = new ArrayList<>();
         nativeLang.add(new LanguageRequest(RUSSIAN, LanguageLevel.NATIVE));
@@ -77,10 +82,10 @@ public class ITModifyLevel {
         learningLangValidLevelSet.add(new LanguageRequest(SPANISH, LanguageLevel.ELEMENTARY));
 
         canSpeakLangValidLevelSet = new ArrayList<>();
-        canSpeakLangValidLevelSet.add(new LanguageRequest(RUSSIAN, LanguageLevel.ADVANCED));
+        canSpeakLangValidLevelSet.add(new LanguageRequest(RUSSIAN, LanguageLevel.PROFICIENCY));
         canSpeakLangValidLevelSet.add(new LanguageRequest(GERMAN, LanguageLevel.PROFICIENCY));
-        canSpeakLangValidLevelSet.add(new LanguageRequest(ITALIAN, LanguageLevel.UPPER_INTERMEDIATE));
-        canSpeakLangValidLevelSet.add(new LanguageRequest(CHINESE_CANTONESE, LanguageLevel.ELEMENTARY));
+        canSpeakLangValidLevelSet.add(new LanguageRequest(ITALIAN, LanguageLevel.PROFICIENCY));
+        canSpeakLangValidLevelSet.add(new LanguageRequest(CHINESE_CANTONESE, LanguageLevel.PROFICIENCY));
 
         learningLangInvalidLevelSet = new ArrayList<>();
         learningLangInvalidLevelSet.add(new LanguageRequest(KOREAN, LanguageLevel.ADVANCED));
@@ -96,21 +101,17 @@ public class ITModifyLevel {
     }
 
     @Test
-    @DisplayName("추가된 언어 Status 가 Native 가 아닌 언어들에 대한 언어 레벨 변경이 이루어질 경우 테스트에 성공합니다.")
+    @DisplayName("추가된 언어 Status 가 Learning 인 언어들에 대한 언어 레벨 변경이 이루어질 경우 테스트에 성공합니다.")
     public void learningLangModifyLevelSuccess() {
         languageService.addLanguages(userId, learningLang, LanguageStatus.LEARNING);
-        languageService.addLanguages(userId, canSpeakLang, LanguageStatus.CAN_SPEAK);
 
-        languageService.modifyLanguageLevels(userId, learningLangValidLevelSet, LanguageStatus.LEARNING);
-        languageService.modifyLanguageLevels(userId, canSpeakLangValidLevelSet, LanguageStatus.CAN_SPEAK);
+        languageService.modifyLevels(userId, learningLangValidLevelSet, LanguageStatus.LEARNING);
 
-        List<LanguageRequest> languageList = languageService.getLanguages(userId);
-
+        List<LanguageData> languageList = languageMapper.getLanguages(userId);
         Map<Integer, LanguageLevel> languageMap = languageList.stream()
-                .collect(Collectors.toMap(LanguageRequest::getId, LanguageRequest::getLevel));
+                .collect(Collectors.toMap(LanguageData::getId, LanguageData::getLevel));
 
         assertTrue(learningLangValidLevelSet.stream().allMatch(languageData -> languageMap.get(languageData.getId()).equals(languageData.getLevel())));
-        assertTrue(canSpeakLangValidLevelSet.stream().allMatch(languageData -> languageMap.get(languageData.getId()).equals(languageData.getLevel())));
     }
 
     @Test
@@ -120,21 +121,31 @@ public class ITModifyLevel {
         languageService.addLanguages(userId, canSpeakLang, LanguageStatus.CAN_SPEAK);
 
         assertThrows(InvalidLanguageLevelException.class, () -> {
-            languageService.modifyLanguageLevels(userId, learningLangInvalidLevelSet, LanguageStatus.LEARNING);
+            languageService.modifyLevels(userId, learningLangInvalidLevelSet, LanguageStatus.LEARNING);
         });
 
         assertThrows(InvalidLanguageLevelException.class, () -> {
-            languageService.modifyLanguageLevels(userId, canSpeakLangInValidLevelSet, LanguageStatus.CAN_SPEAK);
+            languageService.modifyLevels(userId, canSpeakLangInValidLevelSet, LanguageStatus.CAN_SPEAK);
+        });
+    }
+
+    @Test
+    @DisplayName("언어 Status 가 구사가능 언어(CAN_SPEAK) 로 등록된 언어에 대해 레벨 변경 요청이 들어오면 InvalidLanguageLevelException 이 발생하며 테스트에 실패합니다.")
+    public void canSpeakLangModifyLevelFail() {
+        languageService.addLanguages(userId, nativeLang, LanguageStatus.NATIVE);
+
+        assertThrows(InvalidLanguageLevelException.class, () -> {
+            languageService.modifyLevels(userId, nativeLang, LanguageStatus.NATIVE);
         });
     }
 
     @Test
     @DisplayName("언어 Status 가 모국어(Native) 로 등록된 언어에 대해 레벨 변경 요청이 들어오면 InvalidLanguageLevelException 이 발생하며 테스트에 실패합니다.")
-    public void canSpeakLangModifyLevelSuccess() {
+    public void nativeLangModifyLevelFail() {
         languageService.addLanguages(userId, nativeLang, LanguageStatus.NATIVE);
 
         assertThrows(InvalidLanguageLevelException.class, () -> {
-            languageService.modifyLanguageLevels(userId, nativeLang, LanguageStatus.NATIVE);
+            languageService.modifyLevels(userId, nativeLang, LanguageStatus.NATIVE);
         });
     }
 }

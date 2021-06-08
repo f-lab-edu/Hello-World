@@ -26,7 +26,7 @@ class LanguageController(
     @LoginRequired
     @PutMapping("/languages")
     fun modifyLevels(@CurrentUser userId: String, @RequestBody modifyRequest: UpsertLanguageRequest) =
-        languageService.modifyLanguageLevels(userId, modifyRequest.languages, modifyRequest.status)
+        languageService.modifyLevels(userId, modifyRequest.languages, modifyRequest.status)
 
     @LoginRequired
     @DeleteMapping("languages")

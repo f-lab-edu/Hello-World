@@ -23,10 +23,10 @@
         <result property="originCountryId" column="originCountry"/>
         <result property="livingCountryId" column="livingCountry"/>
         <result property="livingTownId" column="livingTown"/>
-        <collection property="languages" ofType="me.soo.helloworld.model.language.LanguageDataForProfile" resultMap="languageDataMap"/>
+        <collection property="languages" ofType="me.soo.helloworld.model.language.LanguageData" resultMap="languageDataMap"/>
     </resultMap>
 
-    <resultMap type="me.soo.helloworld.model.language.LanguageDataForProfile" id="languageDataMap">
+    <resultMap type="me.soo.helloworld.model.language.LanguageData" id="languageDataMap">
         <constructor>
             <idArg column="langId" javaType="_int"/>
             <arg column="level" javaType="me.soo.helloworld.enumeration.LanguageLevel"/>

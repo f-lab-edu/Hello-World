@@ -1,7 +1,7 @@
 package me.soo.helloworld.model.user;
 
 import lombok.*;
-import me.soo.helloworld.model.language.LanguageDataForProfile;
+import me.soo.helloworld.model.language.LanguageData;
 
 import java.util.List;
 
@@ -29,5 +29,5 @@ public class UserDataOnProfile {
 
     private final int livingTownId;
 
-    private List<LanguageDataForProfile> languages;
+    private List<LanguageData> languages;
 }

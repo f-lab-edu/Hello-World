@@ -1,20 +1,18 @@
 package me.soo.helloworld.service;
 
 import lombok.RequiredArgsConstructor;
-import me.soo.helloworld.enumeration.LanguageLevel;
 import me.soo.helloworld.enumeration.LanguageStatus;
 import me.soo.helloworld.exception.InvalidRequestException;
 import me.soo.helloworld.mapper.ProfileMapper;
 import me.soo.helloworld.model.condition.SearchConditions;
 import me.soo.helloworld.model.condition.SearchConditionsRequest;
 import me.soo.helloworld.model.language.Language;
-import me.soo.helloworld.model.language.LanguageDataForProfile;
+import me.soo.helloworld.model.language.LanguageData;
 import me.soo.helloworld.model.user.UserProfile;
 import me.soo.helloworld.model.user.UserDataOnProfile;
 import me.soo.helloworld.model.recommendation.RecommendationForProfile;
 import me.soo.helloworld.model.user.UserProfiles;
 import me.soo.helloworld.util.Pagination;
-import me.soo.helloworld.util.validator.LanguageLevelValidator;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
@@ -22,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static me.soo.helloworld.util.constant.CacheNames.*;
@@ -60,9 +57,7 @@ public class ProfileService {
 
     @Transactional(readOnly = true)
     public List<UserProfiles> searchUserProfiles(SearchConditionsRequest conditionsRequest, String userId, Pagination pagination) {
-        Set<LanguageLevel> learningLangLevels = conditionsRequest.getLearningLanguageLevel();
-        LanguageLevelValidator.validateLevel(learningLangLevels, LanguageStatus.LEARNING);
-
+        LanguageStatus.LEARNING.validateLevel(conditionsRequest.getLearningLanguageLevel());
         SearchConditions conditions = SearchConditions.create(conditionsRequest, userId, pagination);
         return profileMapper.searchUserProfiles(conditions);
     }
@@ -75,7 +70,7 @@ public class ProfileService {
         return fetchNameService.loadAllTownsMap().get(id);
     }
 
-    private List<Language> matchLanguages(List<LanguageDataForProfile> languagesData) {
+    private List<Language> matchLanguages(List<LanguageData> languagesData) {
         Map<Integer, String> allLanguagesMap = fetchNameService.loadAllLanguagesMap();
 
         return languagesData.stream().map(language ->

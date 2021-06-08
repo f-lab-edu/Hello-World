@@ -22,9 +22,9 @@
             WHERE userId = #{userId} AND status = #{status}
     </select>
 
-    <select id="getLanguages" parameterType="String" resultType="me.soo.helloworld.model.language.LanguageRequest">
+    <select id="getLanguages" parameterType="String" resultType="me.soo.helloworld.model.language.LanguageData">
 
-        SELECT langId, level FROM speak
+        SELECT langId, level, status FROM speak
             WHERE userId = #{userId}
     </select>
 
