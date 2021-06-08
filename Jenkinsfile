@@ -46,10 +46,10 @@ pipeline {
                             verbose: true,
                             transfers: [
                                 sshTransfer(
-                                        sourceFiles: "target/*.jar",
-                                        removePrefix: "target",
-                                        remoteDirectory: "/hw", 
-                                        execCommand: ""
+                                    sourceFiles: "target/*.jar",
+                                    removePrefix: "target",
+                                    remoteDirectory: "/hw", 
+                                    execCommand: ""
                                 )
                             ]
                         )
