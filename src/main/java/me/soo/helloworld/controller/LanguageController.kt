@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/my-infos")
 class LanguageController(
 
-    val languageService: LanguageService
+    private val languageService: LanguageService
 ) {
 
     @LoginRequired
