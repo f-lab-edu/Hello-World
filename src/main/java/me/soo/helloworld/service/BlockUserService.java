@@ -8,7 +8,7 @@ import me.soo.helloworld.mapper.FriendMapper;
 import me.soo.helloworld.model.blockuser.BlockUserList;
 import me.soo.helloworld.model.blockuser.BlockUserListRequest;
 import me.soo.helloworld.util.Pagination;
-import me.soo.helloworld.util.validator.TargetUserValidator;
+import me.soo.helloworld.util.validator.Validator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +25,8 @@ public class BlockUserService {
     private final BlockUserMapper blockUserMapper;
 
     public void blockUser(String userId, String targetId) {
-        TargetUserValidator.targetNotSelf(userId, targetId);
-        TargetUserValidator.targetExistence(userService.isUserActivated(targetId));
+        Validator.validateTargetNotSelf(userId, targetId);
+        Validator.validateTargetExistence(userService.isUserActivated(targetId));
 
         if (isUserBlocked(userId, targetId)) {
             throw new DuplicateRequestException("이미 차단된 사용자를 다시 차단할 수 없습니다.");

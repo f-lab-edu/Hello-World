@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.soo.helloworld.mapper.ChatMapper;
 import me.soo.helloworld.model.chat.*;
 import me.soo.helloworld.util.Pagination;
-import me.soo.helloworld.util.validator.TargetUserValidator;
+import me.soo.helloworld.util.validator.Validator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -65,8 +65,8 @@ public class ChatService {
         boolean isChatBoxExist = chatMapper.isChatBoxExist(sender, recipient);
 
         if (!isChatBoxExist) {
-            TargetUserValidator.targetNotSelf(sender, recipient);
-            TargetUserValidator.targetExistence(userService.isUserActivated(recipient));
+            Validator.validateTargetNotSelf(sender, recipient);
+            Validator.validateTargetExistence(userService.isUserActivated(recipient));
             chatMapper.insertChatBox(sender, recipient);
         }
     }
