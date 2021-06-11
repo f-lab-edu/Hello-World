@@ -38,6 +38,7 @@
     </resultMap>
 
     <select id="getUserProfileData" resultMap="userProfileMap">
+
         SELECT
             u.userId AS userId,
             u.gender AS gender,

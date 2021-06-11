@@ -26,5 +26,36 @@ pipeline {
                 }
             }
         }
+        
+        stage('Integration Tests') {
+            steps {
+                script {
+                    sh 'mvn failsafe:integration-test'
+                    junit testResults: '**/target/failsafe-reports/*.xml', allowEmptyResults: true
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps([$class: 'BapSshPromotionPublisherPlugin']) {
+                sshPublisher(
+                    continueOnError: false, failOnError: true,
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: "naver-soo-hw",
+                            verbose: true,
+                            transfers: [
+                                sshTransfer(
+                                    sourceFiles: "target/*.jar",
+                                    removePrefix: "target",
+                                    remoteDirectory: "/hw", 
+                                    execCommand: ""
+                                )
+                            ]
+                        )
+                    ]
+                )
+            }
+        }
     }
 }
